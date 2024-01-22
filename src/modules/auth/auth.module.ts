@@ -1,0 +1,27 @@
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthenticationService } from './application/useCases/auth-usecase';
+import { AuthRepositoryPrisma } from './infra/repository/auth-repository-prisma';
+import { BcryptProvider } from '@/shared/infra/providers/encrypt/bcrypt/bcrypt-provider';
+import { JwtStrategy } from './application/jwt.strategy';
+import { JWTProviderImpl } from '@/shared/infra/providers/jwt/jwt-provider-impl';
+import { AuthController } from './application/controller/auth.controller';
+
+@Module({
+  imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1d' },
+    }),
+  ],
+  providers: [
+    AuthenticationService,
+    { provide: 'EncryptProvider', useClass: BcryptProvider },
+    { provide: 'AuthRepository', useClass: AuthRepositoryPrisma },
+    { provide: 'JWTProvider', useClass: JWTProviderImpl },
+    JwtStrategy,
+  ],
+  controllers: [AuthController],
+  exports: [],
+})
+export class AuthenticationModule {}

@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AccountType {
+  FREE
+  ENTERPRISE
+}
+
+enum UserType {
+  MASTER
+  ADMIN
+  MODERATOR
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Account {
+  id           String      @id @default(uuid())
+  type         AccountType
+  event        Boolean     @default(true)
+  organization Boolean     @default(true)
+  checkin      Boolean     @default(true)
+  certificate  Boolean     @default(false)
+  campaign     Boolean     @default(false)
+  lobby        Boolean     @default(false)
+  videoLibrary Boolean     @default(false)
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  User         User[]
+
+  @@map("accounts")
+}
+
+model InviteAccount {
+  id           String      @id @default(uuid())
+  name         String
+  type         AccountType
+  email        String      @unique
+  token        String      @unique
+  event        Boolean     @default(true)
+  organization Boolean     @default(true)
+  checkin      Boolean     @default(true)
+  certificate  Boolean     @default(false)
+  campaign     Boolean     @default(false)
+  lobby        Boolean     @default(false)
+  videoLibrary Boolean     @default(false)
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  @@map("invite_accounts")
+}
+
+model User {
+  id        String     @id @default(uuid())
+  name      String
+  email     String
+  password  String
+  status    UserStatus @default(ACTIVE)
+  type      UserType   @default(ADMIN)
+  account   Account    @relation(fields: [accountId], references: [id])
+  accountId String     @map("account_id")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@map("users")
+}

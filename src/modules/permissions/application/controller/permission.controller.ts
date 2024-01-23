@@ -10,7 +10,12 @@ import { CreatePermissionUseCase } from '../useCases/create-permission.usecase';
 import { CreatePermissionDto } from './dtos/create-permission.dto';
 import baseRoute from '@/config/routes/base-route';
 import { ListPermissionUseCase } from '../useCases/list-permission.usecase';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExcludeEndpoint,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller(`${baseRoute.base_url_v1}/permissions`)
@@ -22,6 +27,7 @@ export class PermissionController {
   ) {}
 
   @Post()
+  @ApiExcludeEndpoint()
   async createPermission(@Body() params: CreatePermissionDto) {
     return await this.createPermissionUseCase.execute(params);
   }

@@ -1,10 +1,10 @@
 import { randomUUID } from 'crypto';
+import { UnauthorizedException } from '@nestjs/common';
 import { IUserTypeValues, UserType } from './value-object/user-type';
 import { Email } from './value-object/email';
 import { Status } from '@/shared/domain/value-object/status';
 import { Permission } from '@/modules/permissions/domain/permission';
 import { UserPermissions } from './value-object/user-permissions';
-import { UnauthorizedException } from '@nestjs/common';
 
 interface UserProps {
   id?: string;

@@ -6,6 +6,20 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class PermissionRepositoryPrisma implements PermissionRepository {
   constructor(private readonly prisma: PrismaService) {}
+  async list(): Promise<Permission[]> {
+    const permissions = await this.prisma.permissions.findMany();
+
+    return permissions.map((permission) => {
+      return new Permission({
+        id: permission.id,
+        name: permission.name,
+        content: permission.content as any,
+        description: permission.description,
+        createdAt: permission.createdAt,
+        updatedAt: permission.updatedAt,
+      });
+    });
+  }
 
   async findByName(name: string): Promise<Permission> {
     const permission = await this.prisma.permissions.findUnique({

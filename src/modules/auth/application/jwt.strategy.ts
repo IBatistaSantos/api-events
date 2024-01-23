@@ -21,6 +21,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       );
     }
 
-    return done(null, user, payload.iat);
+    const userPayload = {
+      id: user.id,
+      email: user.email,
+      accountId: user.accountId,
+      type: user.type,
+      status: user.status,
+    };
+
+    return done(null, userPayload, payload.iat);
   }
 }

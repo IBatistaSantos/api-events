@@ -63,6 +63,17 @@ export class Permission {
     return this._updatedAt;
   }
 
+  get value() {
+    return {
+      id: this._id,
+      name: this._name,
+      content: this._content,
+      description: this._description,
+      createdAt: this._createdAt,
+      updatedAt: this._updatedAt,
+    };
+  }
+
   private validate() {
     if (!this._name) {
       throw new Error('Permission name is required');

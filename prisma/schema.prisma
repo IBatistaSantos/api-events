@@ -60,16 +60,41 @@ model InviteAccount {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  name      String
-  email     String
-  password  String
-  status    UserStatus @default(ACTIVE)
-  type      UserType   @default(ADMIN)
-  account   Account    @relation(fields: [accountId], references: [id])
-  accountId String     @map("account_id")
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
+  id          String            @id @default(uuid())
+  name        String
+  email       String
+  password    String
+  status      UserStatus        @default(ACTIVE)
+  type        UserType          @default(ADMIN)
+  account     Account           @relation(fields: [accountId], references: [id])
+  accountId   String            @map("account_id")
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+  permissions UserPermissions[]
 
   @@map("users")
+}
+
+model Permissions {
+  id          String            @id @default(uuid())
+  name        String            @unique
+  content     String
+  description String
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+  users       UserPermissions[]
+
+  @@map("permissions")
+}
+
+model UserPermissions {
+  userId       String       @map("user_id")
+  permissionId String       @map("permission_id")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  user         User         @relation(fields: [userId], references: [id])
+  permission   Permissions? @relation(fields: [permissionId], references: [id])
+
+  @@id([userId, permissionId])
+  @@map("user_permissions")
 }

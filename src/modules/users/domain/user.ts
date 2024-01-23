@@ -2,6 +2,9 @@ import { randomUUID } from 'crypto';
 import { IUserTypeValues, UserType } from './value-object/user-type';
 import { Email } from './value-object/email';
 import { Status } from '@/shared/domain/value-object/status';
+import { Permission } from '@/modules/permissions/domain/permission';
+import { UserPermissions } from './value-object/user-permissions';
+import { UnauthorizedException } from '@nestjs/common';
 
 interface UserProps {
   id?: string;
@@ -10,6 +13,7 @@ interface UserProps {
   password: string;
   type: string;
   accountId: string;
+  permissions?: Permission[];
   status?: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -22,6 +26,7 @@ export class User {
   private _password: string;
   private _type: UserType;
   private _accountId: string;
+  private _permissions: UserPermissions;
   private _status: Status;
   private _createdAt: Date;
   private _updatedAt: Date;
@@ -36,6 +41,7 @@ export class User {
     this._status = new Status(props.status);
     this._createdAt = props.createdAt || new Date();
     this._updatedAt = props.updatedAt || new Date();
+    this._permissions = new UserPermissions(props.permissions);
 
     this.validate();
   }
@@ -76,6 +82,10 @@ export class User {
     return this._updatedAt;
   }
 
+  get permissions() {
+    return this._permissions.value;
+  }
+
   private validate() {
     if (!this._name) {
       throw new Error('Name is required');
@@ -89,6 +99,39 @@ export class User {
     if (!this._password) throw new Error('Password is required');
     if (!this._type) throw new Error('Type is required');
     if (!this._accountId) throw new Error('Account id is required');
+  }
+
+  applyPermission(admin: User, permission: Permission[]) {
+    const isSameAccount = admin.accountId === this.accountId;
+    if (!isSameAccount) {
+      throw new UnauthorizedException('Not authorized');
+    }
+
+    const hasPermission = admin.type === 'ADMIN' || admin.type === 'MASTER';
+    if (!hasPermission) {
+      throw new UnauthorizedException('Not authorized');
+    }
+
+    const adminIsMaster = admin.type === 'MASTER';
+    if (adminIsMaster) {
+      this._permissions.apply(permission);
+      return;
+    }
+    const isAdmin = admin.type === 'ADMIN';
+
+    const hasPermissionApplyPermission = admin.permissions.find(
+      (permission) => permission.name === 'apply-permission',
+    );
+
+    if (!hasPermissionApplyPermission) {
+      throw new UnauthorizedException('Not authorized');
+    }
+
+    if (isAdmin && this.type === 'MASTER') {
+      throw new UnauthorizedException('Not applied permission for user master');
+    }
+
+    this._permissions.apply(permission);
   }
 
   changeName(name: string) {
@@ -130,6 +173,7 @@ export class User {
       email: this._email.value,
       type: this._type.value,
       status: this._status.value,
+      permissions: this._permissions.value,
       accountId: this._accountId,
       createdAt: this._createdAt,
       updatedAt: this._updatedAt,

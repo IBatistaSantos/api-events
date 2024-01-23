@@ -1,3 +1,5 @@
+import { Permissions } from '@/modules/permissions/application/contants';
+import { Permission } from '@/modules/permissions/domain/permission';
 import { User } from '@/modules/users/domain/user';
 import { faker } from '@faker-js/faker';
 
@@ -55,6 +57,7 @@ describe('User', () => {
       name,
       email,
       accountId,
+      permissions: [],
       status: 'ACTIVE',
       type: 'MASTER',
       createdAt: user.createdAt,
@@ -238,5 +241,273 @@ describe('User', () => {
         type: 'MASTER',
       });
     }).toThrow('Account id is required');
+  });
+
+  describe('applyPermission', () => {
+    it('Deve ser possivel aplicar permissão para o usuário', () => {
+      const accountId = faker.string.uuid();
+      const user = new User({
+        accountId,
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'ADMIN',
+      });
+
+      const admin = new User({
+        accountId,
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'MASTER',
+      });
+
+      const permission = new Permission({
+        content: 'campaign',
+        name: Permissions.APPLY_PERMISSION,
+        createdAt: new Date(),
+        description: faker.lorem.sentence(),
+        id: faker.string.uuid(),
+        updatedAt: new Date(),
+      });
+
+      user.applyPermission(admin, [permission]);
+
+      expect(user.permissions).toEqual([
+        {
+          content: 'campaign',
+          description: permission.description,
+          id: permission.id,
+          name: Permissions.APPLY_PERMISSION,
+        },
+      ]);
+    });
+
+    it('Deve ser possivel aplicar permissão para o usuário admin', () => {
+      const accountId = faker.string.uuid();
+      const user = new User({
+        accountId,
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'ADMIN',
+      });
+
+      const admin = new User({
+        accountId,
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'MASTER',
+      });
+
+      const permission = new Permission({
+        content: 'campaign',
+        name: Permissions.APPLY_PERMISSION,
+        createdAt: new Date(),
+        description: faker.lorem.sentence(),
+        id: faker.string.uuid(),
+        updatedAt: new Date(),
+      });
+
+      user.applyPermission(admin, [permission]);
+
+      expect(user.permissions).toEqual([
+        {
+          content: 'campaign',
+          description: permission.description,
+          id: permission.id,
+          name: Permissions.APPLY_PERMISSION,
+        },
+      ]);
+    });
+
+    it('Deve ser possivel aplicar permissão para um outro usuário admin somente se tiver a permicao', () => {
+      const accountId = faker.string.uuid();
+      const user = new User({
+        accountId,
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'ADMIN',
+      });
+
+      const admin = new User({
+        accountId,
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'ADMIN',
+        permissions: [
+          new Permission({
+            content: 'campaign',
+            name: Permissions.APPLY_PERMISSION,
+            id: faker.string.uuid(),
+          }),
+        ],
+      });
+
+      const permission = new Permission({
+        content: 'campaign',
+        name: Permissions.APPLY_PERMISSION,
+        createdAt: new Date(),
+        description: faker.lorem.sentence(),
+        id: faker.string.uuid(),
+        updatedAt: new Date(),
+      });
+
+      user.applyPermission(admin, [permission]);
+
+      expect(user.permissions).toEqual([
+        {
+          content: 'campaign',
+          description: permission.description,
+          id: permission.id,
+          name: Permissions.APPLY_PERMISSION,
+        },
+      ]);
+    });
+
+    it('Nao deve permitir um usuario ADMIN aplicar uma permissao para um usuario master', () => {
+      const accountId = faker.string.uuid();
+      const user = new User({
+        accountId,
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'MASTER',
+      });
+
+      const admin = new User({
+        accountId,
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'ADMIN',
+        permissions: [
+          new Permission({
+            content: 'campaign',
+            name: Permissions.APPLY_PERMISSION,
+            id: faker.string.uuid(),
+          }),
+        ],
+      });
+
+      const permission = new Permission({
+        content: 'campaign',
+        name: Permissions.APPLY_PERMISSION,
+        createdAt: new Date(),
+        description: faker.lorem.sentence(),
+        id: faker.string.uuid(),
+        updatedAt: new Date(),
+      });
+
+      expect(() => {
+        user.applyPermission(admin, [permission]);
+      }).toThrow('Not applied permission for user master');
+    });
+
+    it('Nao deve permitir um usuario ADMIN aplicar uma permissao para um usuario de outra conta', () => {
+      const accountId = faker.string.uuid();
+      const user = new User({
+        accountId,
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'ADMIN',
+      });
+
+      const admin = new User({
+        accountId: faker.string.uuid(),
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'ADMIN',
+        permissions: [
+          new Permission({
+            content: 'campaign',
+            name: Permissions.APPLY_PERMISSION,
+            id: faker.string.uuid(),
+          }),
+        ],
+      });
+
+      const permission = new Permission({
+        content: 'campaign',
+        name: Permissions.APPLY_PERMISSION,
+        createdAt: new Date(),
+        description: faker.lorem.sentence(),
+        id: faker.string.uuid(),
+        updatedAt: new Date(),
+      });
+
+      expect(() => {
+        user.applyPermission(admin, [permission]);
+      }).toThrow('Not authorized');
+    });
+
+    it('Nao deve permitir um usuario ADMIN aplicar uma permissao para um usuario ADMIN sem a permissao', () => {
+      const accountId = faker.string.uuid();
+      const user = new User({
+        accountId,
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'ADMIN',
+      });
+
+      const admin = new User({
+        accountId,
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'ADMIN',
+      });
+
+      const permission = new Permission({
+        content: 'campaign',
+        name: Permissions.APPLY_PERMISSION,
+        createdAt: new Date(),
+        description: faker.lorem.sentence(),
+        id: faker.string.uuid(),
+        updatedAt: new Date(),
+      });
+
+      expect(() => {
+        user.applyPermission(admin, [permission]);
+      }).toThrow('Not authorized');
+    });
+
+    it('Nao deve permitir um usuario MODERATOR aplicar uma permissao em outro usuario', () => {
+      const accountId = faker.string.uuid();
+      const user = new User({
+        accountId,
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'ADMIN',
+      });
+
+      const admin = new User({
+        accountId,
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'MODERATOR',
+      });
+
+      const permission = new Permission({
+        content: 'campaign',
+        name: Permissions.APPLY_PERMISSION,
+        createdAt: new Date(),
+        description: faker.lorem.sentence(),
+        id: faker.string.uuid(),
+        updatedAt: new Date(),
+      });
+
+      expect(() => {
+        user.applyPermission(admin, [permission]);
+      }).toThrow('Not authorized');
+    });
   });
 });

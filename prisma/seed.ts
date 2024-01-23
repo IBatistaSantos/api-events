@@ -3,6 +3,31 @@ const prisma = new PrismaClient();
 async function seed() {
   const permissions = [
     {
+      name: 'apply_permission',
+      content: 'permission',
+      description: 'Permissão para aplicar permissões aos usuários',
+    },
+    {
+      name: 'create_user',
+      content: 'user',
+      description: 'Permissão para criar usuário',
+    },
+    {
+      name: 'edit_user',
+      content: 'user',
+      description: 'Permissão para editar usuário',
+    },
+    {
+      name: 'delete_user',
+      content: 'user',
+      description: 'Permissão para deletar usuário',
+    },
+    {
+      name: 'create_organization',
+      content: 'organization',
+      description: 'Permissão para criar uma organização',
+    },
+    {
       name: 'delete_organization',
       content: 'organization',
       description: 'Permissão para deletar a organização',

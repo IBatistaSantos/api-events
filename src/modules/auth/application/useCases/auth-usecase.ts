@@ -36,9 +36,12 @@ export class AuthenticationService {
       userId: user.id,
       type: user.type,
     });
+
+    const userData = user.toJSON();
+    delete userData.permissions;
     return {
       accessToken,
-      user: user.toJSON(),
+      user: userData,
     };
   }
 

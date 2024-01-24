@@ -1,4 +1,4 @@
-import { Permissions } from '@/modules/permissions/application/contants';
+import { ListPermissions } from '@/modules/permissions/domain/list-permisions';
 import { Permission } from '@/modules/permissions/domain/permission';
 import { User } from '@/modules/users/domain/user';
 import { faker } from '@faker-js/faker';
@@ -147,100 +147,102 @@ describe('User', () => {
     expect(user.type).toBe('ADMIN');
   });
 
-  it('Deve falhar ao criar um usuário com email inválido', () => {
-    expect(() => {
-      new User({
-        accountId: faker.string.uuid(),
-        email: 'invalid',
-        name: faker.person.fullName(),
-        password: faker.internet.password({ length: 8 }),
-        type: 'MASTER',
-      });
-    }).toThrow('Invalid email');
-  });
+  describe('validate', () => {
+    it('Deve falhar ao criar um usuário com email inválido', () => {
+      expect(() => {
+        new User({
+          accountId: faker.string.uuid(),
+          email: 'invalid',
+          name: faker.person.fullName(),
+          password: faker.internet.password({ length: 8 }),
+          type: 'MASTER',
+        });
+      }).toThrow('Invalid email');
+    });
 
-  it('Deve falhar ao criar um usuário com tipo inválido', () => {
-    expect(() => {
-      new User({
-        accountId: faker.string.uuid(),
-        email: faker.internet.email(),
-        name: faker.person.fullName(),
-        password: faker.internet.password({ length: 8 }),
-        type: 'INVALID',
-      });
-    }).toThrow('Invalid type');
-  });
+    it('Deve falhar ao criar um usuário com tipo inválido', () => {
+      expect(() => {
+        new User({
+          accountId: faker.string.uuid(),
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+          password: faker.internet.password({ length: 8 }),
+          type: 'INVALID',
+        });
+      }).toThrow('Invalid type');
+    });
 
-  it('Deve falhar ao criar um usuario com somente o primeiro nome', () => {
-    expect(() => {
-      new User({
-        accountId: faker.string.uuid(),
-        email: faker.internet.email(),
-        name: faker.person.firstName(),
-        password: faker.internet.password({ length: 8 }),
-        type: 'MASTER',
-      });
-    }).toThrow('Name must have first and last name');
-  });
+    it('Deve falhar ao criar um usuario com somente o primeiro nome', () => {
+      expect(() => {
+        new User({
+          accountId: faker.string.uuid(),
+          email: faker.internet.email(),
+          name: faker.person.firstName(),
+          password: faker.internet.password({ length: 8 }),
+          type: 'MASTER',
+        });
+      }).toThrow('Name must have first and last name');
+    });
 
-  it('Deve falhar ao criar um usuario sem nome', () => {
-    expect(() => {
-      new User({
-        accountId: faker.string.uuid(),
-        email: faker.internet.email(),
-        name: '',
-        password: faker.internet.password({ length: 8 }),
-        type: 'MASTER',
-      });
-    }).toThrow('Name is required');
-  });
+    it('Deve falhar ao criar um usuario sem nome', () => {
+      expect(() => {
+        new User({
+          accountId: faker.string.uuid(),
+          email: faker.internet.email(),
+          name: '',
+          password: faker.internet.password({ length: 8 }),
+          type: 'MASTER',
+        });
+      }).toThrow('Name is required');
+    });
 
-  it('Deve falhar ao criar um usuario sem email', () => {
-    expect(() => {
-      new User({
-        accountId: faker.string.uuid(),
-        email: '',
-        name: faker.person.fullName(),
-        password: faker.internet.password({ length: 8 }),
-        type: 'MASTER',
-      });
-    }).toThrow('Email is required');
-  });
+    it('Deve falhar ao criar um usuario sem email', () => {
+      expect(() => {
+        new User({
+          accountId: faker.string.uuid(),
+          email: '',
+          name: faker.person.fullName(),
+          password: faker.internet.password({ length: 8 }),
+          type: 'MASTER',
+        });
+      }).toThrow('Email is required');
+    });
 
-  it('Deve falhar ao criar um usuario sem senha', () => {
-    expect(() => {
-      new User({
-        accountId: faker.string.uuid(),
-        email: faker.internet.email(),
-        name: faker.person.fullName(),
-        password: '',
-        type: 'MASTER',
-      });
-    }).toThrow('Password is required');
-  });
+    it('Deve falhar ao criar um usuario sem senha', () => {
+      expect(() => {
+        new User({
+          accountId: faker.string.uuid(),
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+          password: '',
+          type: 'MASTER',
+        });
+      }).toThrow('Password is required');
+    });
 
-  it('Deve falhar ao criar um usuario sem tipo', () => {
-    expect(() => {
-      new User({
-        accountId: faker.string.uuid(),
-        email: faker.internet.email(),
-        name: faker.person.fullName(),
-        password: faker.internet.password({ length: 8 }),
-        type: '',
-      });
-    }).toThrow('Type is required');
-  });
+    it('Deve falhar ao criar um usuario sem tipo', () => {
+      expect(() => {
+        new User({
+          accountId: faker.string.uuid(),
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+          password: faker.internet.password({ length: 8 }),
+          type: '',
+        });
+      }).toThrow('Type is required');
+    });
 
-  it('Deve falhar ao criar um usuario sem id da conta', () => {
-    expect(() => {
-      new User({
-        accountId: '',
-        email: faker.internet.email(),
-        name: faker.person.fullName(),
-        password: faker.internet.password({ length: 8 }),
-        type: 'MASTER',
-      });
-    }).toThrow('Account id is required');
+    it('Deve falhar ao criar um usuario sem id da conta', () => {
+      expect(() => {
+        new User({
+          accountId: '',
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+          password: faker.internet.password({ length: 8 }),
+          type: 'MASTER',
+        });
+      }).toThrow('Account id is required');
+    });
   });
 
   describe('applyPermission', () => {
@@ -264,7 +266,7 @@ describe('User', () => {
 
       const permission = new Permission({
         content: 'campaign',
-        name: Permissions.APPLY_PERMISSION,
+        name: ListPermissions.APPLY_PERMISSION,
         createdAt: new Date(),
         description: faker.lorem.sentence(),
         id: faker.string.uuid(),
@@ -278,7 +280,7 @@ describe('User', () => {
           content: 'campaign',
           description: permission.description,
           id: permission.id,
-          name: Permissions.APPLY_PERMISSION,
+          name: ListPermissions.APPLY_PERMISSION,
         },
       ]);
     });
@@ -303,7 +305,7 @@ describe('User', () => {
 
       const permission = new Permission({
         content: 'campaign',
-        name: Permissions.APPLY_PERMISSION,
+        name: ListPermissions.APPLY_PERMISSION,
         createdAt: new Date(),
         description: faker.lorem.sentence(),
         id: faker.string.uuid(),
@@ -317,7 +319,7 @@ describe('User', () => {
           content: 'campaign',
           description: permission.description,
           id: permission.id,
-          name: Permissions.APPLY_PERMISSION,
+          name: ListPermissions.APPLY_PERMISSION,
         },
       ]);
     });
@@ -341,7 +343,7 @@ describe('User', () => {
         permissions: [
           new Permission({
             content: 'campaign',
-            name: Permissions.APPLY_PERMISSION,
+            name: ListPermissions.APPLY_PERMISSION,
             id: faker.string.uuid(),
           }),
         ],
@@ -349,7 +351,7 @@ describe('User', () => {
 
       const permission = new Permission({
         content: 'campaign',
-        name: Permissions.APPLY_PERMISSION,
+        name: ListPermissions.APPLY_PERMISSION,
         createdAt: new Date(),
         description: faker.lorem.sentence(),
         id: faker.string.uuid(),
@@ -363,7 +365,7 @@ describe('User', () => {
           content: 'campaign',
           description: permission.description,
           id: permission.id,
-          name: Permissions.APPLY_PERMISSION,
+          name: ListPermissions.APPLY_PERMISSION,
         },
       ]);
     });
@@ -387,7 +389,7 @@ describe('User', () => {
         permissions: [
           new Permission({
             content: 'campaign',
-            name: Permissions.APPLY_PERMISSION,
+            name: ListPermissions.APPLY_PERMISSION,
             id: faker.string.uuid(),
           }),
         ],
@@ -395,7 +397,7 @@ describe('User', () => {
 
       const permission = new Permission({
         content: 'campaign',
-        name: Permissions.APPLY_PERMISSION,
+        name: ListPermissions.APPLY_PERMISSION,
         createdAt: new Date(),
         description: faker.lorem.sentence(),
         id: faker.string.uuid(),
@@ -426,7 +428,7 @@ describe('User', () => {
         permissions: [
           new Permission({
             content: 'campaign',
-            name: Permissions.APPLY_PERMISSION,
+            name: ListPermissions.APPLY_PERMISSION,
             id: faker.string.uuid(),
           }),
         ],
@@ -434,7 +436,7 @@ describe('User', () => {
 
       const permission = new Permission({
         content: 'campaign',
-        name: Permissions.APPLY_PERMISSION,
+        name: ListPermissions.APPLY_PERMISSION,
         createdAt: new Date(),
         description: faker.lorem.sentence(),
         id: faker.string.uuid(),
@@ -466,7 +468,7 @@ describe('User', () => {
 
       const permission = new Permission({
         content: 'campaign',
-        name: Permissions.APPLY_PERMISSION,
+        name: ListPermissions.APPLY_PERMISSION,
         createdAt: new Date(),
         description: faker.lorem.sentence(),
         id: faker.string.uuid(),
@@ -498,7 +500,7 @@ describe('User', () => {
 
       const permission = new Permission({
         content: 'campaign',
-        name: Permissions.APPLY_PERMISSION,
+        name: ListPermissions.APPLY_PERMISSION,
         createdAt: new Date(),
         description: faker.lorem.sentence(),
         id: faker.string.uuid(),
@@ -508,6 +510,58 @@ describe('User', () => {
       expect(() => {
         user.applyPermission(admin, [permission]);
       }).toThrow('Not authorized');
+    });
+  });
+
+  describe('can', () => {
+    it('Deve retornar true se o usuario for master', () => {
+      const user = new User({
+        accountId: faker.string.uuid(),
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'MASTER',
+      });
+
+      expect(user.can(ListPermissions.CREATE_ORGANIZATION)).toBe(true);
+    });
+
+    it('Deve retornar true se o usuario tiver a permissao', () => {
+      const user = new User({
+        accountId: faker.string.uuid(),
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'ADMIN',
+        permissions: [
+          new Permission({
+            content: 'campaign',
+            name: ListPermissions.APPLY_PERMISSION,
+            id: faker.string.uuid(),
+          }),
+        ],
+      });
+
+      expect(user.can(ListPermissions.APPLY_PERMISSION)).toBe(true);
+    });
+
+    it('Deve retornar false se o usuario nao tiver a permissao', () => {
+      const user = new User({
+        accountId: faker.string.uuid(),
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password({ length: 8 }),
+        type: 'ADMIN',
+        permissions: [
+          new Permission({
+            content: 'campaign',
+            name: ListPermissions.APPLY_PERMISSION,
+            id: faker.string.uuid(),
+          }),
+        ],
+      });
+
+      expect(user.can(ListPermissions.CREATE_ORGANIZATION)).toBe(false);
     });
   });
 });

@@ -86,19 +86,9 @@ export class User {
     return this._permissions.value;
   }
 
-  private validate() {
-    if (!this._name) {
-      throw new Error('Name is required');
-    }
-
-    if (this.name.split(' ').length === 1) {
-      throw new Error('Name must have first and last name');
-    }
-
-    if (!this._email) throw new Error('Email is required');
-    if (!this._password) throw new Error('Password is required');
-    if (!this._type) throw new Error('Type is required');
-    if (!this._accountId) throw new Error('Account id is required');
+  can(name: string) {
+    if (this._type.isMaster()) return true;
+    return this._permissions.has(name);
   }
 
   applyPermission(admin: User, permission: Permission[]) {
@@ -178,5 +168,20 @@ export class User {
       createdAt: this._createdAt,
       updatedAt: this._updatedAt,
     };
+  }
+
+  private validate() {
+    if (!this._name) {
+      throw new Error('Name is required');
+    }
+
+    if (this.name.split(' ').length === 1) {
+      throw new Error('Name must have first and last name');
+    }
+
+    if (!this._email) throw new Error('Email is required');
+    if (!this._password) throw new Error('Password is required');
+    if (!this._type) throw new Error('Type is required');
+    if (!this._accountId) throw new Error('Account id is required');
   }
 }

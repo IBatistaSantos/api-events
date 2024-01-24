@@ -28,6 +28,10 @@ export class UserPermissions {
     );
   }
 
+  has(name: string) {
+    return this._permissions.some((permission) => permission.name === name);
+  }
+
   get value() {
     return this._permissions.map((permission) => ({
       id: permission.id,

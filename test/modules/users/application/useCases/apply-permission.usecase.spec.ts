@@ -1,4 +1,4 @@
-import { Permissions } from '@/modules/permissions/application/contants';
+import { ListPermissions } from '@/modules/permissions/domain/list-permisions';
 import { Permission } from '@/modules/permissions/domain/permission';
 import { UserRepository } from '@/modules/users/application/repository/user.repository';
 import { ApplyPermissionUseCase } from '@/modules/users/application/useCases/apply-permission.usecase';
@@ -34,7 +34,7 @@ describe('ApplyPermissionUseCase', () => {
         permissions: [
           new Permission({
             content: 'campaign',
-            name: Permissions.APPLY_PERMISSION,
+            name: ListPermissions.APPLY_PERMISSION,
             id: faker.string.uuid(),
           }),
         ],
@@ -73,7 +73,7 @@ describe('ApplyPermissionUseCase', () => {
         permissions: [
           new Permission({
             content: 'campaign',
-            name: Permissions.APPLY_PERMISSION,
+            name: ListPermissions.APPLY_PERMISSION,
             id: faker.string.uuid(),
           }),
         ],

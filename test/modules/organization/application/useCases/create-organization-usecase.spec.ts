@@ -2,8 +2,8 @@ import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MockProxy, mock } from 'jest-mock-extended';
 
-import { OrganizationRepository } from '@/modules/organization/apllication/repository/organization.repository';
-import { CreateOrganizationUseCase } from '@/modules/organization/apllication/useCases/create-organization-usecase';
+import { OrganizationRepository } from '@/modules/organization/application/repository/organization.repository';
+import { CreateOrganizationUseCase } from '@/modules/organization/application/useCases/create-organization-usecase';
 import { ListPermissions } from '@/modules/permissions/domain/list-permisions';
 import { Permission } from '@/modules/permissions/domain/permission';
 import { User } from '@/modules/users/domain/user';

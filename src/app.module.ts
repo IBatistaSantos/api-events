@@ -4,6 +4,7 @@ import { AccountModule } from './modules/accounts/account.module';
 import { AuthenticationModule } from './modules/auth/auth.module';
 import { PermissionModule } from './modules/permissions/permission.module';
 import { UserModule } from './modules/users/user.module';
+import { OrganizationModule } from './modules/organization/organization.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { UserModule } from './modules/users/user.module';
     AuthenticationModule,
     PermissionModule,
     UserModule,
+    OrganizationModule,
   ],
   controllers: [],
   providers: [],

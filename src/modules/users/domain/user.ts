@@ -91,6 +91,10 @@ export class User {
     return this._permissions.has(name);
   }
 
+  isMaster() {
+    return this._type.isMaster();
+  }
+
   applyPermission(admin: User, permission: Permission[]) {
     const isSameAccount = admin.accountId === this.accountId;
     if (!isSameAccount) {

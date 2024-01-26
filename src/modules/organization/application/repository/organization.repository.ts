@@ -7,5 +7,7 @@ export interface OrganizationRepository {
     accountId: string,
   ): Promise<Organization>;
   save(organization: Organization): Promise<void>;
+  findById(id: string): Promise<Organization>;
   findByCreator(createdBy: string, accountId: string): Promise<User>;
+  listByAccountId(accountId: string): Promise<Organization[]>;
 }

@@ -9,6 +9,45 @@ import { PrismaService } from '@/shared/infra/prisma/repository/prisma.client.se
 @Injectable()
 export class OrganizationRepositoryPrisma implements OrganizationRepository {
   constructor(private readonly prismaService: PrismaService) {}
+  async listByAccountId(accountId: string): Promise<Organization[]> {
+    const organizations = await this.prismaService.organization.findMany({
+      where: {
+        accountId,
+        status: 'ACTIVE',
+      },
+    });
+
+    return organizations.map((organization) => {
+      return new Organization({
+        id: organization.id,
+        name: organization.name,
+        accountId: organization.accountId,
+        createdBy: organization.createdBy,
+        createdAt: organization.createdAt,
+        status: organization.status,
+      });
+    });
+  }
+  async findById(id: string): Promise<Organization> {
+    const organization = await this.prismaService.organization.findFirst({
+      where: {
+        id,
+        status: 'ACTIVE',
+      },
+    });
+
+    if (!organization) return null;
+
+    return new Organization({
+      id: organization.id,
+      name: organization.name,
+      accountId: organization.accountId,
+      createdBy: organization.createdBy,
+      createdAt: organization.createdAt,
+      status: organization.status,
+    });
+  }
+
   async findByNameAndAccountId(
     name: string,
     accountId: string,
@@ -34,6 +73,28 @@ export class OrganizationRepositoryPrisma implements OrganizationRepository {
   }
 
   async save(organization: Organization): Promise<void> {
+    const existing = await this.prismaService.organization.findUnique({
+      where: {
+        id: organization.id,
+        status: 'ACTIVE',
+      },
+    });
+
+    if (existing) {
+      await this.prismaService.organization.update({
+        where: {
+          id: organization.id,
+        },
+        data: {
+          name: organization.name,
+          description: organization.description,
+          status: organization.status as any,
+          updatedAt: organization.updatedAt,
+        },
+      });
+      return;
+    }
+
     await this.prismaService.organization.create({
       data: {
         id: organization.id,

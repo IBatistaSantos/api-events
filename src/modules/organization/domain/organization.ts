@@ -84,6 +84,14 @@ export class Organization {
     this._status.deactivate();
   }
 
+  update(name: string, description: string): void {
+    this._name = name || this._name;
+    this._description = description || this._description;
+    this._updatedAt = new Date();
+
+    this.validate();
+  }
+
   private validate() {
     if (!this._name) {
       throw new BadRequestException('Name is required');

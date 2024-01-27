@@ -38,10 +38,20 @@ export class CreateOrganizationUseCase {
     }
 
     const hasPermitted = user.can(ListPermissions.CREATE_ORGANIZATION);
-
     if (!hasPermitted) {
       throw new BadRequestException('User not permitted');
     }
+
+    const account =
+      await this.organizationRepository.findByAccountId(accountId);
+    if (!account) {
+      throw new BadRequestException('Account not found');
+    }
+
+    const countOrganization =
+      await this.organizationRepository.listByAccountId(accountId);
+
+    account.validateMaxOrganization(countOrganization.length);
 
     const organization = new Organization({
       name,

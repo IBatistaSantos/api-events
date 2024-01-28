@@ -16,7 +16,8 @@
     "!test/**",
     "!dist/**",
     "!**/src/shared/infra/**/**/*.ts",
-    "!**/src/shared/infra/providers/**/*.ts"
+    "!**/src/shared/infra/providers/**/*.ts",
+    "!**/prisma/**"
   ],
   "coverageDirectory": "./coverage",
   "testEnvironment": "node",

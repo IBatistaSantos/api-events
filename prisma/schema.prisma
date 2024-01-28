@@ -2,6 +2,13 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider    = "prisma-erd-generator"
+  output      = "./erd.png"
+  theme       = "dark"
+  ignoreEnums = true
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -61,18 +68,19 @@ model InviteAccount {
 }
 
 model User {
-  id            String            @id @default(uuid())
-  name          String
-  email         String
-  password      String
-  status        UserStatus        @default(ACTIVE)
-  type          UserType          @default(ADMIN)
-  account       Account           @relation(fields: [accountId], references: [id])
-  accountId     String            @map("account_id")
-  createdAt     DateTime          @default(now()) @map("created_at")
-  updatedAt     DateTime          @updatedAt @map("updated_at")
-  permissions   UserPermissions[]
-  organizations Organization[]
+  id               String             @id @default(uuid())
+  name             String
+  email            String
+  password         String
+  status           UserStatus         @default(ACTIVE)
+  type             UserType           @default(ADMIN)
+  account          Account            @relation(fields: [accountId], references: [id])
+  accountId        String             @map("account_id")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+  permissions      UserPermissions[]
+  organizations    Organization[]
+  UserOrganization UserOrganization[]
 
   @@map("users")
 }
@@ -111,8 +119,21 @@ model Organization {
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
 
-  account Account @relation(fields: [accountId], references: [id])
-  user    User    @relation(fields: [createdBy], references: [id])
+  account          Account            @relation(fields: [accountId], references: [id])
+  user             User               @relation(fields: [createdBy], references: [id])
+  UserOrganization UserOrganization[]
 
   @@map("organizations")
+}
+
+model UserOrganization {
+  userId         String       @map("user_id")
+  organizationId String       @map("organization_id")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+  user           User         @relation(fields: [userId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@id([userId, organizationId])
+  @@map("user_organizations")
 }

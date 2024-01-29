@@ -1,10 +1,12 @@
 import { randomUUID } from 'crypto';
-import { UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { IUserTypeValues, UserType } from './value-object/user-type';
 import { Email } from './value-object/email';
 import { Status } from '@/shared/domain/value-object/status';
 import { Permission } from '@/modules/permissions/domain/permission';
 import { UserPermissions } from './value-object/user-permissions';
+import { Organization } from '@/modules/organization/domain/organization';
+import { UserOrganizations } from './value-object/user-organizations';
 
 interface UserProps {
   id?: string;
@@ -13,6 +15,7 @@ interface UserProps {
   password: string;
   type: string;
   accountId: string;
+  organizations?: Organization[];
   permissions?: Permission[];
   status?: string;
   createdAt?: Date;
@@ -30,6 +33,7 @@ export class User {
   private _status: Status;
   private _createdAt: Date;
   private _updatedAt: Date;
+  private _organizations: UserOrganizations;
 
   constructor(props: UserProps) {
     this._id = props.id || randomUUID();
@@ -42,6 +46,7 @@ export class User {
     this._createdAt = props.createdAt || new Date();
     this._updatedAt = props.updatedAt || new Date();
     this._permissions = new UserPermissions(props.permissions);
+    this._organizations = new UserOrganizations(props.organizations ?? []);
 
     this.validate();
   }
@@ -52,6 +57,10 @@ export class User {
 
   get name() {
     return this._name;
+  }
+
+  get organizations() {
+    return this._organizations?.organizations;
   }
 
   get email() {
@@ -126,6 +135,47 @@ export class User {
     }
 
     this._permissions.apply(permission);
+  }
+
+  hasOrganization(organizationId: string) {
+    if (!this.organizations || !this.organizations.length) return false;
+    return this._organizations.has(organizationId);
+  }
+
+  addOrganizations(organizations: Organization[], admin: User) {
+    const isMaster = this._type.isMaster();
+    if (isMaster) throw new BadRequestException('User is master');
+
+    const isAdminMater = admin.isMaster();
+    if (!isAdminMater) {
+      const hasSameOrganization = organizations.every((organization) => {
+        return admin.hasOrganization(organization.id);
+      });
+      if (!hasSameOrganization) {
+        throw new UnauthorizedException('Not authorized');
+      }
+    }
+
+    const isSameAccount = organizations.every(
+      (organization) => organization.accountId === admin.accountId,
+    );
+
+    if (!isSameAccount) {
+      throw new UnauthorizedException('Organization is not same account');
+    }
+
+    const isActive = organizations.every(
+      (organization) => organization.isActive,
+    );
+
+    if (!isActive) {
+      throw new UnauthorizedException('Organization is not active');
+    }
+    this._organizations.add(organizations);
+  }
+
+  removeOrganization(organizationId: string) {
+    this._organizations.remove(organizationId);
   }
 
   changeName(name: string) {

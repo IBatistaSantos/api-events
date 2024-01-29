@@ -50,10 +50,11 @@ describe('ListOrganizationUseCase', () => {
         }),
       );
     repository.listByAccountId.mockResolvedValue([organization]);
+    repository.findByIds.mockResolvedValue([]);
     provider = module.get<ListOrganizationUseCase>(ListOrganizationUseCase);
   });
 
-  it('Deve retornar a lista de organizacao de uma conta', async () => {
+  it('Deve retornar a lista de todas as organizacoes para o MASTER', async () => {
     const response = await provider.execute({
       accountId: faker.string.uuid(),
       userId: faker.string.uuid(),
@@ -74,7 +75,7 @@ describe('ListOrganizationUseCase', () => {
     ).rejects.toThrow('User not found');
   });
 
-  it('Deve retornar um erro caso o usuario nao seja um MASTER', async () => {
+  it('Deve retornar a lista de organizacao que o ADMIN estiver atrelada', async () => {
     repository.findByCreator.mockResolvedValueOnce(
       new User({
         accountId: faker.string.uuid(),
@@ -90,13 +91,17 @@ describe('ListOrganizationUseCase', () => {
           }),
         ],
         id: faker.string.uuid(),
+        organizations: [organization],
       }),
     );
-    await expect(
-      provider.execute({
-        accountId: faker.string.uuid(),
-        userId: faker.string.uuid(),
-      }),
-    ).rejects.toThrow('User not allowed');
+
+    repository.findByIds.mockResolvedValueOnce([organization]);
+
+    const organizations = await provider.execute({
+      accountId: faker.string.uuid(),
+      userId: faker.string.uuid(),
+    });
+    expect(organizations.length).toBe(1);
+    expect(organizations[0].id).toBe(organization.id);
   });
 });

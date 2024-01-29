@@ -5,10 +5,39 @@ import { Organization } from '@/modules/organization/domain/organization';
 import { Permission } from '@/modules/permissions/domain/permission';
 import { User } from '@/modules/users/domain/user';
 import { PrismaService } from '@/shared/infra/prisma/repository/prisma.client.service';
+import { Account } from '@/modules/accounts/domain/account';
 
 @Injectable()
 export class OrganizationRepositoryPrisma implements OrganizationRepository {
   constructor(private readonly prismaService: PrismaService) {}
+  async findByAccountId(accountId: string): Promise<Account> {
+    const account = await this.prismaService.account.findUnique({
+      where: {
+        id: accountId,
+      },
+    });
+
+    if (!account) return null;
+
+    const accountPermissions = {
+      certificate: account.certificate,
+      campaign: account.campaign,
+      organization: account.organization,
+      event: account.event,
+      checkIn: account.checkin,
+      lobby: account.lobby,
+      videoLibrary: account.videoLibrary,
+    };
+
+    return new Account({
+      id: account.id,
+      type: account.type,
+      createdAt: account.createdAt,
+      updatedAt: account.updatedAt,
+      accountPermissions,
+    });
+  }
+
   async listByAccountId(accountId: string): Promise<Organization[]> {
     const organizations = await this.prismaService.organization.findMany({
       where: {

@@ -27,20 +27,32 @@ export class ListOrganizationUseCase {
 
     const isMaster = user.isMaster();
 
-    if (!isMaster) {
-      throw new BadRequestException('User not allowed');
+    if (isMaster) {
+      const organizations =
+        await this.organizationRepository.listByAccountId(accountId);
+
+      return organizations.map((organization) =>
+        this.mapOrganization(organization),
+      );
     }
 
-    const organizations =
-      await this.organizationRepository.listByAccountId(accountId);
+    const ids = user.organizations.map((organization) => organization.id);
 
-    return organizations.map((organization) => ({
+    const organizations = await this.organizationRepository.findByIds(ids);
+
+    return organizations.map((organization) =>
+      this.mapOrganization(organization),
+    );
+  }
+
+  private mapOrganization(organization) {
+    return {
       id: organization.id,
       name: organization.name,
       accountId: organization.accountId,
       createdAt: organization.createdAt,
       status: organization.status,
       description: organization.description,
-    }));
+    };
   }
 }

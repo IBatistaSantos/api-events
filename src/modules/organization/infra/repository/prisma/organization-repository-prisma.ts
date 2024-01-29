@@ -10,6 +10,27 @@ import { Account } from '@/modules/accounts/domain/account';
 @Injectable()
 export class OrganizationRepositoryPrisma implements OrganizationRepository {
   constructor(private readonly prismaService: PrismaService) {}
+  async findByIds(ids: string[]): Promise<Organization[]> {
+    const organizations = await this.prismaService.organization.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+        status: 'ACTIVE',
+      },
+    });
+
+    return organizations.map((organization) => {
+      return new Organization({
+        id: organization.id,
+        name: organization.name,
+        accountId: organization.accountId,
+        createdBy: organization.createdBy,
+        createdAt: organization.createdAt,
+        status: organization.status,
+      });
+    });
+  }
   async findByAccountId(accountId: string): Promise<Account> {
     const account = await this.prismaService.account.findUnique({
       where: {
@@ -145,7 +166,12 @@ export class OrganizationRepositoryPrisma implements OrganizationRepository {
         accountId,
         status: 'ACTIVE',
       },
-      include: { permissions: { include: { permission: true } } },
+      include: {
+        permissions: { include: { permission: true } },
+        UserOrganization: {
+          include: { organization: true },
+        },
+      },
     });
 
     if (!user) return null;
@@ -161,6 +187,17 @@ export class OrganizationRepositoryPrisma implements OrganizationRepository {
       });
     });
 
+    const organizations = user.UserOrganization.map(({ organization }) => {
+      return new Organization({
+        id: organization.id,
+        name: organization.name,
+        accountId: organization.accountId,
+        createdBy: organization.createdBy,
+        createdAt: organization.createdAt,
+        status: organization.status,
+      });
+    });
+
     return new User({
       id: user.id,
       name: user.name,
@@ -172,6 +209,7 @@ export class OrganizationRepositoryPrisma implements OrganizationRepository {
       status: user.status,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      organizations,
     });
   }
 }

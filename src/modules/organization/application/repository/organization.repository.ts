@@ -9,6 +9,7 @@ export interface OrganizationRepository {
   ): Promise<Organization>;
   save(organization: Organization): Promise<void>;
   findById(id: string): Promise<Organization>;
+  findByIds(ids: string[]): Promise<Organization[]>;
   findByCreator(createdBy: string, accountId: string): Promise<User>;
   findByAccountId(accountId: string): Promise<Account>;
   listByAccountId(accountId: string): Promise<Organization[]>;

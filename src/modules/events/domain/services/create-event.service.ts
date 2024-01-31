@@ -1,6 +1,7 @@
 import { DateProvider } from '@/shared/infra/providers/date/date-provider';
 import { Events } from '../events';
 import { Session } from '@/modules/sessions/domain/session';
+import { BadRequestException } from '@nestjs/common';
 
 interface Input {
   name: string;
@@ -46,13 +47,11 @@ export class CreateEventService {
       throw new Error('Date is required');
     }
 
-    const isBeforeDate = date.every((date) => {
-      return this.dateProvider.isBefore(new Date(date), new Date());
+    date.forEach((date) => {
+      const isBefore = this.dateProvider.isBefore(new Date(date), new Date());
+      if (isBefore)
+        throw new BadRequestException('Date is before current date');
     });
-
-    if (isBeforeDate) {
-      throw new Error('Date is before current date');
-    }
 
     return this.sortDate(date);
   }

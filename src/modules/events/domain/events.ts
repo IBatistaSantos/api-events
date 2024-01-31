@@ -14,7 +14,7 @@ export interface EventsProps {
   organizationId: string;
   accountId: string;
   private?: boolean;
-  sessionId: string[];
+  sessionId?: string[];
   featureFlags?: Partial<FeatureFlagsProps>;
   status?: string;
   createdAt?: Date;
@@ -30,7 +30,7 @@ export class Events {
   private _organizationId: string;
   private _accountId: string;
   private _private: boolean;
-  private _sessionId: string[];
+  private _sessionId?: string[];
   private _featureFlags: FeatureFlags;
   private _status: Status;
   private _createdAt: Date;
@@ -45,7 +45,7 @@ export class Events {
     this._organizationId = props.organizationId;
     this._accountId = props.accountId;
     this._private = props.private || false;
-    this._sessionId = props.sessionId;
+    this._sessionId = props?.sessionId || [];
     this._featureFlags = new FeatureFlags(props?.featureFlags);
     this._status = new Status(props.status);
     this._createdAt = props.createdAt || new Date();
@@ -112,8 +112,7 @@ export class Events {
     if (!this._organizationId) {
       throw new BadRequestException('OrganizationId is required');
     }
-    if (!this._sessionId || !this._sessionId.length)
-      throw new BadRequestException('SessionId is required');
+
     if (!this._accountId)
       throw new BadRequestException('AccountId is required');
   }

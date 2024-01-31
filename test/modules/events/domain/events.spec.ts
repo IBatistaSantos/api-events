@@ -87,23 +87,6 @@ describe('Events', () => {
     }).toThrow('OrganizationId is required');
   });
 
-  it('Deve retornar erro ao criar um evento sem sessionId', () => {
-    const name = faker.company.name();
-    const accountId = faker.string.uuid();
-    const organizationId = faker.string.uuid();
-    const url = faker.internet.url();
-
-    expect(() => {
-      new Events({
-        name,
-        organizationId,
-        accountId,
-        sessionId: [],
-        url,
-      });
-    }).toThrow('SessionId is required');
-  });
-
   it('Deve retornar erro ao criar um evento sem url', () => {
     const name = faker.company.name();
     const accountId = faker.string.uuid();

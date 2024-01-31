@@ -2,7 +2,7 @@ export class InscriptionType {
   private _inscriptionType: string;
 
   constructor(props: string) {
-    this._inscriptionType = props || 'released';
+    this._inscriptionType = props || 'RELEASED';
 
     this.validate();
   }
@@ -12,7 +12,7 @@ export class InscriptionType {
   }
 
   private validate() {
-    const inscriptionTypes = ['released', 'private'];
+    const inscriptionTypes = ['RELEASED', 'PAUSED', 'FINISHED'];
     if (!inscriptionTypes.includes(this._inscriptionType)) {
       throw new Error('Invalid inscription type');
     }

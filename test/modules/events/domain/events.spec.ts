@@ -29,7 +29,7 @@ describe('Events', () => {
     expect(event.private).toBeFalsy();
     expect(event.createdAt).toBeDefined();
     expect(event.url).toBe(url);
-    expect(event.inscriptionType).toBe('released');
+    expect(event.inscriptionType).toBe('RELEASED');
     expect(event.status).toBe('ACTIVE');
     expect(event.updatedAt).toBeDefined();
     expect(event.type).toBe('DIGITAL');

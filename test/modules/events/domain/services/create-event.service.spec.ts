@@ -31,7 +31,7 @@ describe('CreateEventService', () => {
     expect(event.id).toBeDefined();
     expect(event.name).toBe(params.name);
     expect(event.url).toBe(params.url);
-    expect(event.inscriptionType).toBe('released');
+    expect(event.inscriptionType).toBe('RELEASED');
 
     expect(sessions.length).toBe(2);
     expect(sessions[0].id).toBeDefined();
@@ -56,7 +56,7 @@ describe('CreateEventService', () => {
     expect(event.id).toBeDefined();
     expect(event.name).toBe(params.name);
     expect(event.url).toBe(params.url);
-    expect(event.inscriptionType).toBe('released');
+    expect(event.inscriptionType).toBe('RELEASED');
 
     expect(sessions.length).toBe(1);
     expect(sessions[0].id).toBeDefined();

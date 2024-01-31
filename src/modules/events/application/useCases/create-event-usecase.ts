@@ -1,7 +1,7 @@
 import { DateProvider } from '@/shared/infra/providers/date/date-provider';
 import { CreateEventService } from '../../domain/services/create-event.service';
 import { EventRepository } from '../repository/event.repository';
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ListPermissions } from '@/modules/permissions/domain/list-permisions';
 
 interface Input {
@@ -38,30 +38,30 @@ export class CreateEventUseCase {
 
     const manager = await this.eventRepository.findManagerById(userId);
     if (!manager) {
-      throw new Error('Manager not found');
+      throw new BadRequestException('Manager not found');
     }
 
     const isPermitted = manager.can(ListPermissions.CREATE_EVENT);
     if (!isPermitted) {
-      throw new Error('Manager not permitted');
+      throw new BadRequestException('Manager not permitted');
     }
 
     const organization =
       await this.eventRepository.findOrganizationById(organizationId);
     if (!organization) {
-      throw new Error('Organization not found');
+      throw new BadRequestException('Organization not found');
     }
 
     const isSameAccount = organization.accountId === accountId;
     if (!isSameAccount) {
-      throw new Error(
+      throw new BadRequestException(
         'You are not allowed to create an event for this account',
       );
     }
 
     const account = await this.eventRepository.findAccountById(accountId);
     if (!account) {
-      throw new Error('Account not found');
+      throw new BadRequestException('Account not found');
     }
 
     const quantityEvents =
@@ -70,7 +70,7 @@ export class CreateEventUseCase {
     account.validateMaxEvent(quantityEvents);
     const eventExists = await this.eventRepository.findByURL(url);
     if (eventExists) {
-      throw new Error('Event already exists');
+      throw new BadRequestException('Event already exists');
     }
 
     const createEventService = new CreateEventService(this.dateProvider);

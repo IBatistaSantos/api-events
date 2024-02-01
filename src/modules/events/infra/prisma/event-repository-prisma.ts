@@ -12,6 +12,52 @@ import { Permission } from '@/modules/permissions/domain/permission';
 @Injectable()
 export class EventRepositoryPrisma implements EventRepository {
   constructor(private readonly prismaService: PrismaService) {}
+
+  async list(accountId: string, organizationId?: string): Promise<Events[]> {
+    const events = await this.prismaService.event.findMany({
+      where: {
+        ...(organizationId && { organizationId }),
+        status: 'ACTIVE',
+        accountId,
+      },
+      include: { featuresFlags: true },
+    });
+
+    if (!events) return [];
+
+    return events.map((event) => {
+      return new Events({
+        accountId: event.accountId,
+        name: event.name,
+        organizationId: event.organizationId,
+        url: event.url,
+        id: event.id,
+        createdAt: event.createdAt,
+        private: event.private,
+        inscriptionType: event.incriptionType,
+        status: event.status,
+        type: event.type,
+        updatedAt: event.updatedAt,
+        featureFlags: {
+          auth: {
+            captcha: event.featuresFlags.captcha,
+            codeAccess: event.featuresFlags.codeAccess,
+            confirmEmail: event.featuresFlags.confirmEmail,
+            emailRequired: event.featuresFlags.emailRequired,
+            passwordRequired: event.featuresFlags.passwordRequired,
+            singleAccess: event.featuresFlags.singleAccess,
+          },
+          mail: {
+            sendMailInscription: event.featuresFlags.sendMailInscription,
+          },
+          sales: {
+            hasInstallments: event.featuresFlags.hasInstallments,
+            tickets: event.featuresFlags.ticket,
+          },
+        },
+      });
+    });
+  }
   async save(event: Events): Promise<void> {
     const featuresFlags = await this.prismaService.eventFeatureFlag.create({
       data: {

@@ -12,4 +12,5 @@ export interface EventRepository {
   findManagerById(id: string): Promise<User>;
   findOrganizationById(id: string): Promise<Organization>;
   findAccountById(id: string): Promise<Account>;
+  list(accountId: string, organizationId?: string): Promise<Events[]>;
 }

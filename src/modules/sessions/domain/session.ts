@@ -56,6 +56,44 @@ export class Session {
     this._isCurrent = isCurrent;
   }
 
+  toJSON() {
+    return {
+      id: this._id,
+      eventId: this._eventId,
+      date: this._date,
+      hourStart: this._hourStart,
+      hourEnd: this._hourEnd,
+      isCurrent: this._isCurrent,
+    };
+  }
+
+  static sort(sessions: Session[]) {
+    return sessions
+      .map((session) => session.toJSON())
+      .sort((a, b) => {
+        if (a.isCurrent && !b.isCurrent) {
+          return -1;
+        }
+        if (!a.isCurrent && b.isCurrent) {
+          return 1;
+        }
+
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+
+        if (dateA.getTime() === dateB.getTime()) {
+          if (a.hourEnd === null && b.hourEnd !== null) {
+            return -1;
+          }
+          if (a.hourEnd !== null && b.hourEnd === null) {
+            return 1;
+          }
+        }
+
+        return dateA.getTime() - dateB.getTime();
+      });
+  }
+
   private validate() {
     if (!this._eventId) {
       throw new Error('EventId is required');
@@ -68,16 +106,5 @@ export class Session {
     if (!this._hourStart) {
       throw new Error('HourStart is required');
     }
-  }
-
-  toJSON() {
-    return {
-      id: this._id,
-      eventId: this._eventId,
-      date: this._date,
-      hourStart: this._hourStart,
-      hourEnd: this._hourEnd,
-      isCurrent: this._isCurrent,
-    };
   }
 }

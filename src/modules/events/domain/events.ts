@@ -116,4 +116,22 @@ export class Events {
     if (!this._accountId)
       throw new BadRequestException('AccountId is required');
   }
+
+  toDTO() {
+    return {
+      id: this._id,
+      name: this._name,
+      type: this._type.type,
+      url: this._url,
+      inscriptionType: this._inscriptionType.value,
+      organizationId: this._organizationId,
+      accountId: this._accountId,
+      private: this._private,
+      sessionId: this._sessionId,
+      featureFlags: this._featureFlags.value,
+      status: this._status.value,
+      createdAt: this._createdAt.toISOString(),
+      updatedAt: this._updatedAt.toISOString(),
+    };
+  }
 }

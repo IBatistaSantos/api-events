@@ -1,6 +1,5 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { EventRepository } from '../repository/event.repository';
-import { Events } from '../../domain/events';
 
 interface Input {
   userId: string;
@@ -10,9 +9,12 @@ interface Input {
 
 @Injectable()
 export class ListEventUseCase {
-  constructor(private readonly eventRepository: EventRepository) {}
+  constructor(
+    @Inject('EventRepository')
+    private readonly eventRepository: EventRepository,
+  ) {}
 
-  async execute(params: Input): Promise<Events[]> {
+  async execute(params: Input) {
     const { userId, organizationId, accountId } = params;
     const manager = await this.eventRepository.findManagerById(userId);
     if (!manager) {
@@ -41,6 +43,6 @@ export class ListEventUseCase {
     }
 
     const events = await this.eventRepository.list(accountId, organizationId);
-    return events;
+    return events.map((event) => event.toDTO());
   }
 }

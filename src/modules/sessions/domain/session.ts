@@ -69,4 +69,15 @@ export class Session {
       throw new Error('HourStart is required');
     }
   }
+
+  toJSON() {
+    return {
+      id: this._id,
+      eventId: this._eventId,
+      date: this._date,
+      hourStart: this._hourStart,
+      hourEnd: this._hourEnd,
+      isCurrent: this._isCurrent,
+    };
+  }
 }

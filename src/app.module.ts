@@ -6,6 +6,7 @@ import { PermissionModule } from './modules/permissions/permission.module';
 import { UserModule } from './modules/users/user.module';
 import { OrganizationModule } from './modules/organization/organization.module';
 import { EventModule } from './modules/events/event.module';
+import { SessionModule } from './modules/sessions/session.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { EventModule } from './modules/events/event.module';
     UserModule,
     OrganizationModule,
     EventModule,
+    SessionModule,
   ],
   controllers: [],
   providers: [],

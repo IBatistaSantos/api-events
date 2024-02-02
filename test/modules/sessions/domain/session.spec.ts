@@ -51,4 +51,52 @@ describe('Session', () => {
 
     expect(() => new Session(params)).toThrow('Date is required');
   });
+
+  describe('sort', () => {
+    it('Deve ordenar as sessões com preferencia as current`s', () => {
+      const sessions = [
+        new Session({
+          date: '2022-12-12',
+          eventId: faker.string.uuid(),
+          hourStart: '12:00',
+          hourEnd: '14:00',
+          isCurrent: false,
+        }),
+        new Session({
+          date: '2022-12-12',
+          eventId: faker.string.uuid(),
+          hourStart: '12:00',
+          hourEnd: '14:00',
+          isCurrent: true,
+        }),
+      ];
+
+      const sorted = Session.sort(sessions);
+
+      expect(sorted[0].isCurrent).toBeTruthy();
+    });
+
+    it('Deve ordenar as sessões por data ', () => {
+      const sessions = [
+        new Session({
+          date: '2022-12-12',
+          eventId: faker.string.uuid(),
+          hourStart: '12:00',
+          hourEnd: '14:00',
+          isCurrent: false,
+        }),
+        new Session({
+          date: '2022-09-13',
+          eventId: faker.string.uuid(),
+          hourStart: '12:00',
+          hourEnd: '14:00',
+          isCurrent: false,
+        }),
+      ];
+
+      const sorted = Session.sort(sessions);
+
+      expect(sorted[0].date).toBe('2022-09-13');
+    });
+  });
 });

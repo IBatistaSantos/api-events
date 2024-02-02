@@ -4,12 +4,14 @@ import { SessionRepositoryPrisma } from './infra/repository/prisma/session-prism
 import { DateProviderDateFns } from '@/shared/infra/providers/date/implementations/dateFns/date-provider-datefns';
 import { SessionController } from './application/controller/session.controller';
 import { FindCurrentSessionUseCase } from './application/useCases/find-current-session-usecase';
+import { ListSessionUseCase } from './application/useCases/list-session.usecase';
 
 @Module({
   controllers: [SessionController],
   providers: [
     CreateSessionUseCase,
     FindCurrentSessionUseCase,
+    ListSessionUseCase,
     {
       provide: 'SessionRepository',
       useClass: SessionRepositoryPrisma,

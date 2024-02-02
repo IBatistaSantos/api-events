@@ -1,3 +1,4 @@
+import { Status } from '@/shared/domain/value-object/status';
 import { randomUUID } from 'crypto';
 
 interface SessionProps {
@@ -7,6 +8,8 @@ interface SessionProps {
   hourStart: string;
   hourEnd?: string;
   isCurrent?: boolean;
+  finished?: boolean;
+  status?: string;
 }
 
 export class Session {
@@ -16,6 +19,8 @@ export class Session {
   private _hourStart: string;
   private _hourEnd: string;
   private _isCurrent: boolean;
+  private _finished: boolean;
+  private _status: Status;
 
   constructor(props: SessionProps) {
     this._id = props.id || randomUUID();
@@ -23,7 +28,9 @@ export class Session {
     this._date = props.date;
     this._hourStart = props.hourStart;
     this._hourEnd = props.hourEnd;
+    this._finished = props.finished || false;
     this._isCurrent = props.isCurrent || false;
+    this._status = new Status(props.status);
 
     this.validate();
   }
@@ -52,8 +59,21 @@ export class Session {
     return this._isCurrent;
   }
 
+  get finished(): boolean {
+    return this._finished;
+  }
+
+  get status(): string {
+    return this._status.value;
+  }
+
   changeCurrent(isCurrent: boolean) {
     this._isCurrent = isCurrent;
+  }
+
+  finish(): void {
+    this._finished = true;
+    this._isCurrent = false;
   }
 
   toJSON() {

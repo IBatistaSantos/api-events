@@ -6,6 +6,27 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class SessionRepositoryPrisma implements SessionRepository {
   constructor(private readonly prismaService: PrismaService) {}
+  async listByEventId(eventId: string): Promise<Session[]> {
+    const sessions = await this.prismaService.session.findMany({
+      where: {
+        eventId,
+      },
+    });
+
+    if (!sessions) return [];
+
+    return sessions.map(
+      (session) =>
+        new Session({
+          id: session.id,
+          eventId: session.eventId,
+          date: session.date,
+          hourStart: session.hourStart,
+          hourEnd: session.hourEnd,
+          isCurrent: session.isCurrent,
+        }),
+    );
+  }
 
   async findByDate(date: string, eventId: string): Promise<Session> {
     const session = await this.prismaService.session.findFirst({

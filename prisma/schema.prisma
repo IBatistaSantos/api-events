@@ -194,15 +194,17 @@ model EventFeatureFlag {
 }
 
 model Session {
-  id        String   @id @default(uuid())
+  id        String     @id @default(uuid())
   date      String
-  hourStart String   @map("hour_start")
-  hourEnd   String?  @map("hour_end")
-  isCurrent Boolean  @default(false) @map("is_current")
-  eventId   String   @map("event_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  Event     Event    @relation(fields: [eventId], references: [id])
+  hourStart String     @map("hour_start")
+  hourEnd   String?    @map("hour_end")
+  isCurrent Boolean    @default(false) @map("is_current")
+  finished  Boolean    @default(false) @map("finished")
+  eventId   String     @map("event_id")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  status    UserStatus @default(ACTIVE)
+  Event     Event      @relation(fields: [eventId], references: [id])
 
   @@map("sessions")
 }

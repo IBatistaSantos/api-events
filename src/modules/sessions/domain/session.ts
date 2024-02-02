@@ -52,6 +52,10 @@ export class Session {
     return this._isCurrent;
   }
 
+  changeCurrent(isCurrent: boolean) {
+    this._isCurrent = isCurrent;
+  }
+
   private validate() {
     if (!this._eventId) {
       throw new Error('EventId is required');

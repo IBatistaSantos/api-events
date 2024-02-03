@@ -16,6 +16,6 @@ export class ListSessionUseCase {
   async execute(params: Input) {
     const { eventId } = params;
     const sessions = await this.sessionRepository.listByEventId(eventId);
-    return Session.sort(sessions);
+    return Session.sort(sessions).map((session) => session.toJSON());
   }
 }

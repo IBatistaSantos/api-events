@@ -1,10 +1,11 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+
 import baseRoute from '@/config/routes/base-route';
 import { SendInviteAccountUseCase } from '../useCases/send-invite-account-useCase';
 import { SendInviteAccountDTO } from './dtos/send-invite.dto';
 import { CreateAccountUseCase } from '../useCases/create-account-usecase';
 import { CreateAccountDTO } from './dtos/create-account.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller(`${baseRoute.base_url_v1}/accounts`)
 @ApiTags('accounts')

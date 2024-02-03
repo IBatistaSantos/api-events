@@ -7,6 +7,27 @@ import { UserStatus } from '@prisma/client';
 @Injectable()
 export class SessionRepositoryPrisma implements SessionRepository {
   constructor(private readonly prismaService: PrismaService) {}
+  async findById(id: string): Promise<Session> {
+    const session = await this.prismaService.session.findUnique({
+      where: {
+        id,
+        status: 'ACTIVE',
+      },
+    });
+
+    if (!session) return null;
+
+    return new Session({
+      id: session.id,
+      eventId: session.eventId,
+      date: session.date,
+      hourStart: session.hourStart,
+      hourEnd: session.hourEnd,
+      finished: session.finished,
+      status: session.status,
+      isCurrent: session.isCurrent,
+    });
+  }
   async listByEventId(eventId: string): Promise<Session[]> {
     const sessions = await this.prismaService.session.findMany({
       where: {

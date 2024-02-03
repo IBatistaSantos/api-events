@@ -84,34 +84,34 @@ export class Session {
       hourStart: this._hourStart,
       hourEnd: this._hourEnd,
       isCurrent: this._isCurrent,
+      finished: this._finished,
+      status: this._status.value,
     };
   }
 
   static sort(sessions: Session[]) {
-    return sessions
-      .map((session) => session.toJSON())
-      .sort((a, b) => {
-        if (a.isCurrent && !b.isCurrent) {
+    return sessions.sort((a, b) => {
+      if (a.isCurrent && !b.isCurrent) {
+        return -1;
+      }
+      if (!a.isCurrent && b.isCurrent) {
+        return 1;
+      }
+
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+
+      if (dateA.getTime() === dateB.getTime()) {
+        if (a.hourEnd === null && b.hourEnd !== null) {
           return -1;
         }
-        if (!a.isCurrent && b.isCurrent) {
+        if (a.hourEnd !== null && b.hourEnd === null) {
           return 1;
         }
+      }
 
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
-
-        if (dateA.getTime() === dateB.getTime()) {
-          if (a.hourEnd === null && b.hourEnd !== null) {
-            return -1;
-          }
-          if (a.hourEnd !== null && b.hourEnd === null) {
-            return 1;
-          }
-        }
-
-        return dateA.getTime() - dateB.getTime();
-      });
+      return dateA.getTime() - dateB.getTime();
+    });
   }
 
   private validate() {

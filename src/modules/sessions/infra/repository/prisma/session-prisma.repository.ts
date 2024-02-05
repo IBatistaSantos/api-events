@@ -114,7 +114,6 @@ export class SessionRepositoryPrisma implements SessionRepository {
   }
 
   async update(session: Session): Promise<void> {
-    console.log('update session', session.id);
     await this.prismaService.session.update({
       where: {
         id: session.id,

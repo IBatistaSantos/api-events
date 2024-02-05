@@ -71,9 +71,10 @@ export class Session {
     this._isCurrent = isCurrent;
   }
 
-  finish(): void {
+  finish(hourEnd?: string): void {
     this._finished = true;
     this._isCurrent = false;
+    this._hourEnd = hourEnd || new Date().getHours().toString() + ':00';
   }
 
   toJSON() {

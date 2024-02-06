@@ -77,6 +77,11 @@ export class Session {
     this._hourEnd = hourEnd || new Date().getHours().toString() + ':00';
   }
 
+  delete() {
+    this._status = new Status('INACTIVE');
+    this._isCurrent = false;
+  }
+
   toJSON() {
     return {
       id: this._id,

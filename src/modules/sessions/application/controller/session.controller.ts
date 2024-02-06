@@ -15,7 +15,7 @@ import { FindCurrentSessionUseCase } from '../useCases/find-current-session-usec
 import { ListSessionUseCase } from '../useCases/list-session.usecase';
 import { FinishSessionUseCase } from '../useCases/finish-session.usecase';
 import { FinishSessionDTO } from './dtos/finish-session.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller(`${baseRoute.base_url_v1}/sessions`)
 @ApiTags('sessions')
@@ -50,18 +50,93 @@ export class SessionController {
 
   @Get('event/:eventId/current')
   @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: 200,
+    description: 'The current session has been successfully found.',
+    schema: {
+      example: {
+        id: '1',
+        eventId: '1',
+        date: '2021-10-10',
+        hourStart: '10:00',
+        hourEnd: '11:00',
+        finished: false,
+        isCurrent: true,
+      },
+    },
+  })
+  @ApiParam({
+    name: 'eventId',
+    type: String,
+    required: true,
+    description: 'ID Event',
+  })
   async findCurrent(@Param('eventId') eventId: string) {
     return await this.findCurrentSessionUseCase.execute({ eventId });
   }
 
   @Get('event/:eventId')
   @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: 200,
+    description: 'The sessions have been successfully listed.',
+    schema: {
+      example: [
+        {
+          id: '1',
+          eventId: '1',
+          date: '2021-10-10',
+          hourStart: '10:00',
+          hourEnd: '11:00',
+          finished: false,
+          isCurrent: true,
+        },
+      ],
+    },
+  })
+  @ApiParam({
+    name: 'eventId',
+    type: String,
+    required: true,
+    description: 'ID Event',
+  })
   async list(@Param('eventId') eventId: string) {
     return await this.listSessionUseCase.execute({ eventId });
   }
 
   @Patch(':id/finish')
   @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: 200,
+    description: 'The session has been successfully finished.',
+    schema: {
+      example: {
+        id: '1',
+        eventId: '1',
+        date: '2021-10-10',
+        hourStart: '10:00',
+        hourEnd: '11:00',
+        finished: true,
+        isCurrent: false,
+      },
+    },
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+    description: 'ID Session',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Session not finished, because the date is not today',
+    schema: {
+      example: {
+        statusCode: 400,
+        message: 'Session not finished, because the date is not today',
+      },
+    },
+  })
   async finish(@Param('id') sessionId: string, @Body() body: FinishSessionDTO) {
     return await this.finishSessionUseCase.execute({
       sessionId,

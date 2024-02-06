@@ -15,8 +15,10 @@ import { FindCurrentSessionUseCase } from '../useCases/find-current-session-usec
 import { ListSessionUseCase } from '../useCases/list-session.usecase';
 import { FinishSessionUseCase } from '../useCases/finish-session.usecase';
 import { FinishSessionDTO } from './dtos/finish-session.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller(`${baseRoute.base_url_v1}/sessions`)
+@ApiTags('sessions')
 export class SessionController {
   constructor(
     private readonly createSessionUseCase: CreateSessionUseCase,
@@ -27,6 +29,21 @@ export class SessionController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: 201,
+    description: 'The session has been successfully created.',
+    schema: {
+      example: {
+        id: '1',
+        eventId: '1',
+        date: '2021-10-10',
+        hourStart: '10:00',
+        hourEnd: '11:00',
+        finished: false,
+        isCurrent: true,
+      },
+    },
+  })
   async create(@Body() body: CreateSessionDTO) {
     return await this.createSessionUseCase.execute(body);
   }

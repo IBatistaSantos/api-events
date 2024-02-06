@@ -14,6 +14,7 @@ import { CreateSessionDTO } from './dtos/create-session.dto';
 import { FindCurrentSessionUseCase } from '../useCases/find-current-session-usecase';
 import { ListSessionUseCase } from '../useCases/list-session.usecase';
 import { FinishSessionUseCase } from '../useCases/finish-session.usecase';
+import { FinishSessionDTO } from './dtos/finish-session.dto';
 
 @Controller(`${baseRoute.base_url_v1}/sessions`)
 export class SessionController {
@@ -44,9 +45,10 @@ export class SessionController {
 
   @Patch(':id/finish')
   @UseGuards(AuthGuard('jwt'))
-  async finish(@Param('id') sessionId: string) {
+  async finish(@Param('id') sessionId: string, @Body() body: FinishSessionDTO) {
     return await this.finishSessionUseCase.execute({
       sessionId,
+      hourEnd: body.hourEnd,
     });
   }
 }

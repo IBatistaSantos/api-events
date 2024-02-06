@@ -2,20 +2,26 @@ import baseRoute from '@/config/routes/base-route';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { CreateSessionUseCase } from '../useCases/create-session.usecase';
+import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+
+import { CreateSessionUseCase } from '../useCases/create-session.usecase';
 import { CreateSessionDTO } from './dtos/create-session.dto';
+
 import { FindCurrentSessionUseCase } from '../useCases/find-current-session-usecase';
 import { ListSessionUseCase } from '../useCases/list-session.usecase';
+
 import { FinishSessionUseCase } from '../useCases/finish-session.usecase';
 import { FinishSessionDTO } from './dtos/finish-session.dto';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+
+import { DeleteSessionUseCase } from '../useCases/delete-session.usecase';
 
 @Controller(`${baseRoute.base_url_v1}/sessions`)
 @ApiTags('sessions')
@@ -25,6 +31,7 @@ export class SessionController {
     private readonly findCurrentSessionUseCase: FindCurrentSessionUseCase,
     private readonly listSessionUseCase: ListSessionUseCase,
     private readonly finishSessionUseCase: FinishSessionUseCase,
+    private readonly deleteSessionUseCase: DeleteSessionUseCase,
   ) {}
 
   @Post()
@@ -142,5 +149,21 @@ export class SessionController {
       sessionId,
       hourEnd: body.hourEnd,
     });
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: 200,
+    description: 'The session has been successfully deleted.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+    description: 'ID Session',
+  })
+  async delete(@Param('id') sessionId: string) {
+    return await this.deleteSessionUseCase.execute({ sessionId });
   }
 }

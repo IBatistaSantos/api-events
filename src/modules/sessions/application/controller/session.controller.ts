@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -22,6 +23,8 @@ import { FinishSessionUseCase } from '../useCases/finish-session.usecase';
 import { FinishSessionDTO } from './dtos/finish-session.dto';
 
 import { DeleteSessionUseCase } from '../useCases/delete-session.usecase';
+import { UpdateSessionUseCase } from '../useCases/update-session.usecase';
+import { UpdateSessionDTO } from './dtos/update-session.dto';
 
 @Controller(`${baseRoute.base_url_v1}/sessions`)
 @ApiTags('sessions')
@@ -32,6 +35,7 @@ export class SessionController {
     private readonly listSessionUseCase: ListSessionUseCase,
     private readonly finishSessionUseCase: FinishSessionUseCase,
     private readonly deleteSessionUseCase: DeleteSessionUseCase,
+    private readonly updateSessionUseCase: UpdateSessionUseCase,
   ) {}
 
   @Post()
@@ -109,6 +113,37 @@ export class SessionController {
   })
   async list(@Param('eventId') eventId: string) {
     return await this.listSessionUseCase.execute({ eventId });
+  }
+
+  @Put(':id')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: 200,
+    description: 'The session has been successfully updated.',
+    schema: {
+      example: {
+        id: '1',
+        eventId: '1',
+        date: '2021-10-10',
+        hourStart: '10:00',
+        hourEnd: '11:00',
+        finished: false,
+        isCurrent: true,
+      },
+    },
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+    description: 'ID Session',
+  })
+  update(@Param() id: string, @Body() params: UpdateSessionDTO) {
+    return this.updateSessionUseCase.execute(id, {
+      date: params.date,
+      hourEnd: params.hourEnd,
+      hourStart: params.hourStart,
+    });
   }
 
   @Patch(':id/finish')

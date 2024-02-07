@@ -71,6 +71,12 @@ export class Session {
     this._isCurrent = isCurrent;
   }
 
+  update(params: Partial<SessionProps>) {
+    this._date = params.date || this._date;
+    this._hourStart = params.hourStart || this._hourStart;
+    this._hourEnd = params.hourEnd || this._hourEnd;
+  }
+
   finish(hourEnd?: string): void {
     this._finished = true;
     this._isCurrent = false;

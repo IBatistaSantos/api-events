@@ -1,0 +1,210 @@
+import { Status } from '@/shared/domain/value-object/status';
+import { Chat, ChatProps } from './value-object/chat';
+import { randomUUID } from 'crypto';
+import { TranslationLive } from './value-object/translation';
+
+type TypeLink = 'YOUTUBE' | 'VIMEO' | 'WHEREBY' | 'TEAMS' | 'ZOOM' | 'OTHER';
+
+interface LiveProps {
+  id?: string;
+  sessionId: string;
+  eventId: string;
+  title?: string;
+  link: string;
+  typeLink: string;
+  disableChat?: boolean;
+  disableReactions?: boolean;
+  enableTranslate?: boolean;
+  finished?: boolean;
+  finishedAt?: Date;
+  isMain?: boolean;
+  translation?: TranslationLive[];
+  chat?: ChatProps;
+  createdAt?: Date;
+  updatedAt?: Date;
+  status?: string;
+}
+
+export class Live {
+  private _id: string;
+  private _sessionId: string;
+  private _eventId: string;
+  private _title: string;
+  private _link: string;
+  private _typeLink: TypeLink;
+  private _enableTranslate: boolean;
+  private _finished: boolean;
+  private _finishedAt: Date;
+  private _isMain: boolean;
+  private _disableChatLives: boolean;
+  private _disableReactionsLive: boolean;
+  private _translation: TranslationLive[];
+  private _chat: Chat;
+  private _createdAt: Date;
+  private _updatedAt: Date;
+  private _status: Status;
+
+  constructor(props: LiveProps) {
+    this._id = props.id || randomUUID();
+    this._sessionId = props.sessionId;
+    this._eventId = props.eventId;
+    this._title = props.title;
+    this._link = props.link;
+    this._typeLink = props.typeLink as TypeLink;
+    this._enableTranslate = props.enableTranslate || false;
+    this._finished = props.finished || false;
+    this._finishedAt = props.finishedAt;
+    this._isMain = props.isMain || false;
+    this._translation = props.translation || [];
+    this._chat = new Chat(props.chat);
+    this._disableChatLives = props.disableChat || false;
+    this._disableReactionsLive = props.disableReactions || false;
+    this._createdAt = props.createdAt || new Date();
+    this._updatedAt = props.updatedAt || new Date();
+    this._status = new Status(props.status);
+
+    this.validate();
+  }
+
+  get id(): string {
+    return this._id;
+  }
+
+  get sessionId(): string {
+    return this._sessionId;
+  }
+
+  get eventId(): string {
+    return this._eventId;
+  }
+
+  get title(): string {
+    return this._title;
+  }
+
+  get link(): string {
+    return this._link;
+  }
+
+  get typeLink(): TypeLink {
+    return this._typeLink;
+  }
+
+  get enableTranslate(): boolean {
+    return this._enableTranslate;
+  }
+
+  get finished(): boolean {
+    return this._finished;
+  }
+
+  get finishedAt(): Date {
+    return this._finishedAt;
+  }
+
+  get isMain(): boolean {
+    return this._isMain;
+  }
+
+  get translation() {
+    return this._translation.map((translation) => translation.toJSON());
+  }
+
+  get chat(): Chat {
+    return this._chat;
+  }
+
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
+  get status(): Status {
+    return this._status;
+  }
+
+  addTranslation(language: string, text: string, link: string): void {
+    const existingTranslation = this._translation.find(
+      (translation) => translation.language === language,
+    );
+
+    if (existingTranslation) {
+      existingTranslation.changeLink(link);
+      existingTranslation.changeText(text);
+      return;
+    }
+
+    const translation = new TranslationLive({
+      language,
+      link,
+      text,
+    });
+
+    this._translation.push(translation);
+    this._enableTranslate = true;
+  }
+
+  removeTranslation(language: string): void {
+    this._translation = this._translation.filter(
+      (t) => t.language !== language,
+    );
+
+    if (!this._translation.length) {
+      this._enableTranslate = false;
+    }
+  }
+
+  updateTranslation(translation: TranslationLive): void {
+    this._translation = this._translation.map((t) => {
+      if (t.language === translation.language) {
+        return translation;
+      }
+      return t;
+    });
+  }
+
+  disableChat(): void {
+    this._disableChatLives = true;
+  }
+
+  disableReactions(): void {
+    this._disableReactionsLive = true;
+  }
+
+  changeLink(link: string): void {
+    this._link = link;
+  }
+
+  finish(): void {
+    this._finished = true;
+    this._finishedAt = new Date();
+  }
+
+  private validate() {
+    if (!this._sessionId) {
+      throw new Error('The session id is required');
+    }
+
+    if (!this._eventId) {
+      throw new Error('The event id is required');
+    }
+
+    if (!this._link) {
+      throw new Error('The link is required');
+    }
+
+    if (!this._typeLink) {
+      throw new Error('The type link is required');
+    }
+
+    const type = this._typeLink;
+    if (
+      !['YOUTUBE', 'VIMEO', 'WHEREBY', 'TEAMS', 'ZOOM', 'OTHER'].includes(type)
+    ) {
+      throw new Error('The type link is invalid');
+    }
+  }
+}

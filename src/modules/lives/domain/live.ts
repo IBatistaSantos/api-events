@@ -190,9 +190,9 @@ export class Live {
     this._link = link;
   }
 
-  finish(): void {
+  finish(finishedAt?: Date): void {
     this._finished = true;
-    this._finishedAt = new Date();
+    this._finishedAt = finishedAt || new Date();
   }
 
   private validate() {

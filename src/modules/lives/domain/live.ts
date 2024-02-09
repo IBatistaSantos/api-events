@@ -126,6 +126,14 @@ export class Live {
     return this._status;
   }
 
+  removeChat(): void {
+    this._disableChatLives = true;
+  }
+
+  removeReactions(): void {
+    this._disableReactionsLive = true;
+  }
+
   addTranslation(language: string, text: string, link: string): void {
     const existingTranslation = this._translation.find(
       (translation) => translation.language === language,
@@ -166,12 +174,12 @@ export class Live {
     });
   }
 
-  disableChat(): void {
-    this._disableChatLives = true;
+  get disableChat() {
+    return this._disableChatLives;
   }
 
-  disableReactions(): void {
-    this._disableReactionsLive = true;
+  get disableReactions() {
+    return this._disableReactionsLive;
   }
 
   changeLink(link: string): void {
@@ -206,5 +214,25 @@ export class Live {
     ) {
       throw new Error('The type link is invalid');
     }
+  }
+
+  toJSON() {
+    return {
+      id: this._id,
+      sessionId: this._sessionId,
+      eventId: this._eventId,
+      title: this._title,
+      link: this._link,
+      typeLink: this._typeLink,
+      enableTranslate: this._enableTranslate,
+      finished: this._finished,
+      finishedAt: this._finishedAt,
+      isMain: this._isMain,
+      translation: this._translation.map((t) => t.toJSON()),
+      chat: this._chat.toJSON(),
+      createdAt: this._createdAt,
+      updatedAt: this._updatedAt,
+      status: this._status.value,
+    };
   }
 }

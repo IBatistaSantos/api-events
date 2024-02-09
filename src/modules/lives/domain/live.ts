@@ -5,6 +5,10 @@ import { TranslationLive } from './value-object/translation';
 
 type TypeLink = 'YOUTUBE' | 'VIMEO' | 'WHEREBY' | 'TEAMS' | 'ZOOM' | 'OTHER';
 
+type UpdateLive = Omit<LiveProps, 'id' | 'createdAt' | 'updatedAt' | 'status'>;
+
+type UpdateLiveProps = Partial<UpdateLive>;
+
 interface LiveProps {
   id?: string;
   sessionId: string;
@@ -193,6 +197,23 @@ export class Live {
   finish(finishedAt?: Date): void {
     this._finished = true;
     this._finishedAt = finishedAt || new Date();
+  }
+
+  update(props: UpdateLiveProps) {
+    const { title, link, typeLink, chat, translation } = props;
+
+    if (translation) {
+      this._translation = translation.map((t) => new TranslationLive(t));
+    }
+
+    if (chat) {
+      this._chat = new Chat(chat);
+    }
+
+    this._title = title || this._title;
+    this._link = link || this._link;
+    this._typeLink = (typeLink as TypeLink) || this._typeLink;
+    this._updatedAt = new Date();
   }
 
   private validate() {

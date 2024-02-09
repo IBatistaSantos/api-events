@@ -126,6 +126,10 @@ export class Live {
     return this._status;
   }
 
+  delete() {
+    this._status.deactivate();
+  }
+
   removeChat(): void {
     this._disableChatLives = true;
   }

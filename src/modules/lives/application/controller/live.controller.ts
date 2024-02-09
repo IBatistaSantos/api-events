@@ -21,6 +21,7 @@ import { FinishLiveUseCase } from '../useCases/finish-live.usecase';
 import { FinishLiveDTO } from './dtos/finish-live.dto';
 import { UpdateLiveUseCase } from '../useCases/update-live.usecase';
 import { UpdateLiveDTO } from './dtos/update-live.dto';
+import { DisableChatLiveUseCase } from '../useCases/disable-chat-live.usecase';
 
 @Controller(`${baseRoute.base_url_v1}/lives`)
 @ApiTags('Lives')
@@ -32,6 +33,7 @@ export class LiveController {
     private readonly deleteLiveUseCase: RemoveLiveUseCase,
     private readonly finishLiveUseCase: FinishLiveUseCase,
     private readonly updateLiveUseCase: UpdateLiveUseCase,
+    private readonly disableLiveUseCase: DisableChatLiveUseCase,
   ) {}
 
   @Post()
@@ -78,5 +80,11 @@ export class LiveController {
       liveId,
       finishedAt: body.finishedAt,
     });
+  }
+
+  @Patch('/:liveId/chat/disable')
+  @UseGuards(AuthGuard('jwt'))
+  async disableChatLive(@Param('liveId') liveId: string) {
+    return this.disableLiveUseCase.execute(liveId);
   }
 }

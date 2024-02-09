@@ -7,6 +7,7 @@ import { UserModule } from './modules/users/user.module';
 import { OrganizationModule } from './modules/organization/organization.module';
 import { EventModule } from './modules/events/event.module';
 import { SessionModule } from './modules/sessions/session.module';
+import { LiveModule } from './modules/lives/live.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { SessionModule } from './modules/sessions/session.module';
     OrganizationModule,
     EventModule,
     SessionModule,
+    LiveModule,
   ],
   controllers: [],
   providers: [],

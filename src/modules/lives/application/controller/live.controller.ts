@@ -1,11 +1,20 @@
 import baseRoute from '@/config/routes/base-route';
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateLiveUseCase } from '../useCases/create-live.usecase';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateLiveDTO } from './dtos/create-live.dto';
 import { DetailsLiveUseCase } from '../useCases/details-live.usecase';
 import { ListLiveSessionIdUseCase } from '../useCases/list-live-sessionId.usecase';
+import { RemoveLiveUseCase } from '../useCases/remove-live.usecase';
 
 @Controller(`${baseRoute.base_url_v1}/lives`)
 @ApiTags('Lives')
@@ -14,6 +23,7 @@ export class LiveController {
     private readonly createLiveUseCase: CreateLiveUseCase,
     private readonly detailsLiveUseCase: DetailsLiveUseCase,
     private readonly listLiveSessionIdUseCase: ListLiveSessionIdUseCase,
+    private readonly deleteLiveUseCase: RemoveLiveUseCase,
   ) {}
 
   @Post()
@@ -30,5 +40,11 @@ export class LiveController {
   @Get('/events/:eventId')
   async listLiveSessionId(@Param('eventId') eventId: string) {
     return this.listLiveSessionIdUseCase.execute({ eventId });
+  }
+
+  @Delete('/:liveId')
+  @UseGuards(AuthGuard('jwt'))
+  async deleteLive(@Param('liveId') liveId: string) {
+    return this.deleteLiveUseCase.execute(liveId);
   }
 }

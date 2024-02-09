@@ -8,6 +8,7 @@ import { RemoveLiveUseCase } from './application/useCases/remove-live.usecase';
 import { FinishLiveUseCase } from './application/useCases/finish-live.usecase';
 import { DisableChatLiveUseCase } from './application/useCases/disable-chat-live.usecase';
 import { UpdateLiveUseCase } from './application/useCases/update-live.usecase';
+import { DisableReactionLiveUseCase } from './application/useCases/disable-reaction-live.usecase';
 
 @Module({
   controllers: [LiveController],
@@ -19,6 +20,7 @@ import { UpdateLiveUseCase } from './application/useCases/update-live.usecase';
     FinishLiveUseCase,
     UpdateLiveUseCase,
     DisableChatLiveUseCase,
+    DisableReactionLiveUseCase,
     {
       provide: 'LiveRepository',
       useClass: LivePrismaRepository,

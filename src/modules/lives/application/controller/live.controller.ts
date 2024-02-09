@@ -26,7 +26,7 @@ import { DisableReactionLiveUseCase } from '../useCases/disable-reaction-live.us
 import { ReloadLiveUseCase } from '../useCases/reload-live.usecase';
 
 @Controller(`${baseRoute.base_url_v1}/lives`)
-@ApiTags('Lives')
+@ApiTags('lives')
 export class LiveController {
   constructor(
     private readonly createLiveUseCase: CreateLiveUseCase,

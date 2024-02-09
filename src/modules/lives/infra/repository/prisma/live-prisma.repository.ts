@@ -4,6 +4,7 @@ import { TranslationLive } from '@/modules/lives/domain/value-object/translation
 import { Session } from '@/modules/sessions/domain/session';
 import { PrismaService } from '@/shared/infra/prisma/repository/prisma.client.service';
 import { Injectable } from '@nestjs/common';
+import { UserStatus } from '@prisma/client';
 
 @Injectable()
 export class LivePrismaRepository implements LiveRepository {
@@ -82,6 +83,7 @@ export class LivePrismaRepository implements LiveRepository {
     const live = await this.prismaService.live.findUnique({
       where: {
         id,
+        status: 'ACTIVE',
       },
       include: {
         chat: true,
@@ -91,7 +93,7 @@ export class LivePrismaRepository implements LiveRepository {
 
     if (!live) return null;
 
-    const liveTranslation = live.LiveTranslation.map((translation) => {
+    const liveTranslation = live.LiveTranslation?.map((translation) => {
       return new TranslationLive({
         language: translation.language,
         link: translation.link,
@@ -102,8 +104,8 @@ export class LivePrismaRepository implements LiveRepository {
     return new Live({
       id: live.id,
       chat: {
-        title: live.chat.title,
-        type: live.chat.type as any,
+        title: live.chat?.title,
+        type: live.chat?.type as any,
       },
       createdAt: live.createdAt,
       disableChat: live.disableChat,
@@ -126,6 +128,7 @@ export class LivePrismaRepository implements LiveRepository {
     const session = await this.prismaService.session.findUnique({
       where: {
         id: sessionId,
+        status: 'ACTIVE',
       },
     });
 
@@ -224,6 +227,58 @@ export class LivePrismaRepository implements LiveRepository {
         typeLink: live.typeLink,
         chatId: chat.id,
         LiveTranslation: {
+          create: live.translation.map((translation) => {
+            return {
+              language: translation.language,
+              link: translation.link,
+              text: translation.text,
+            };
+          }),
+        },
+      },
+    });
+  }
+
+  async update(live: Live): Promise<void> {
+    await this.prismaService.liveChat.deleteMany({
+      where: {
+        Live: {
+          some: {
+            id: live.id,
+          },
+        },
+      },
+    });
+
+    const chat = await this.prismaService.liveChat.create({
+      data: {
+        title: live.chat.title,
+        type: live.chat.type,
+      },
+    });
+
+    await this.prismaService.live.update({
+      where: {
+        id: live.id,
+      },
+      data: {
+        disableChat: live.disableChat,
+        disableReactions: live.disableReactions,
+        enableTranslate: live.enableTranslate,
+        eventId: live.eventId,
+        finished: live.finished,
+        finishedAt: live.finishedAt,
+        isMain: live.isMain,
+        link: live.link,
+        sessionId: live.sessionId,
+        title: live.title,
+        typeLink: live.typeLink,
+        chatId: chat.id,
+        createdAt: live.createdAt,
+        updatedAt: live.updatedAt,
+        status: live.status.value as UserStatus,
+        LiveTranslation: {
+          deleteMany: {},
           create: live.translation.map((translation) => {
             return {
               language: translation.language,

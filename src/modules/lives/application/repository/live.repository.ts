@@ -9,4 +9,5 @@ export interface LiveRepository {
   listBySessionId(sessionId: string): Promise<Live[]>;
   removeMainLive(liveIds: string[]): Promise<void>;
   save(live: Live): Promise<void>;
+  update(live: Live): Promise<void>;
 }

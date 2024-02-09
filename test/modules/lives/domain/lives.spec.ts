@@ -40,7 +40,7 @@ describe('Live', () => {
       },
     };
     const live = new Live(params);
-    live.disableChat();
+    live.removeChat();
 
     expect(live.disableChat).toBeTruthy();
   });
@@ -57,7 +57,7 @@ describe('Live', () => {
       },
     };
     const live = new Live(params);
-    live.disableReactions();
+    live.removeReactions();
 
     expect(live.disableReactions).toBeTruthy();
   });

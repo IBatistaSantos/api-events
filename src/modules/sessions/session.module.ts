@@ -7,6 +7,7 @@ import { FindCurrentSessionUseCase } from './application/useCases/find-current-s
 import { ListSessionUseCase } from './application/useCases/list-session.usecase';
 import { FinishSessionUseCase } from './application/useCases/finish-session.usecase';
 import { DeleteSessionUseCase } from './application/useCases/delete-session.usecase';
+import { UpdateSessionUseCase } from './application/useCases/update-session.usecase';
 
 @Module({
   controllers: [SessionController],
@@ -16,6 +17,7 @@ import { DeleteSessionUseCase } from './application/useCases/delete-session.usec
     ListSessionUseCase,
     FinishSessionUseCase,
     DeleteSessionUseCase,
+    UpdateSessionUseCase,
     {
       provide: 'SessionRepository',
       useClass: SessionRepositoryPrisma,

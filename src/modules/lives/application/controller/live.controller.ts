@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { CreateLiveUseCase } from '../useCases/create-live.usecase';
@@ -18,6 +19,8 @@ import { ListLiveSessionIdUseCase } from '../useCases/list-live-sessionId.usecas
 import { RemoveLiveUseCase } from '../useCases/remove-live.usecase';
 import { FinishLiveUseCase } from '../useCases/finish-live.usecase';
 import { FinishLiveDTO } from './dtos/finish-live.dto';
+import { UpdateLiveUseCase } from '../useCases/update-live.usecase';
+import { UpdateLiveDTO } from './dtos/update-live.dto';
 
 @Controller(`${baseRoute.base_url_v1}/lives`)
 @ApiTags('Lives')
@@ -28,6 +31,7 @@ export class LiveController {
     private readonly listLiveSessionIdUseCase: ListLiveSessionIdUseCase,
     private readonly deleteLiveUseCase: RemoveLiveUseCase,
     private readonly finishLiveUseCase: FinishLiveUseCase,
+    private readonly updateLiveUseCase: UpdateLiveUseCase,
   ) {}
 
   @Post()
@@ -50,6 +54,18 @@ export class LiveController {
   @UseGuards(AuthGuard('jwt'))
   async deleteLive(@Param('liveId') liveId: string) {
     return this.deleteLiveUseCase.execute(liveId);
+  }
+
+  @Put('/:liveId')
+  @UseGuards(AuthGuard('jwt'))
+  async updateLive(
+    @Param('liveId') liveId: string,
+    @Body() body: UpdateLiveDTO,
+  ) {
+    return this.updateLiveUseCase.execute({
+      liveId,
+      data: body,
+    });
   }
 
   @Patch('/:liveId/finish')

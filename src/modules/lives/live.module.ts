@@ -4,6 +4,7 @@ import { LivePrismaRepository } from './infra/repository/prisma/live-prisma.repo
 import { LiveController } from './application/controller/live.controller';
 import { ListLiveSessionIdUseCase } from './application/useCases/list-live-sessionId.usecase';
 import { DetailsLiveUseCase } from './application/useCases/details-live.usecase';
+import { RemoveLiveUseCase } from './application/useCases/remove-live.usecase';
 
 @Module({
   controllers: [LiveController],
@@ -11,6 +12,7 @@ import { DetailsLiveUseCase } from './application/useCases/details-live.usecase'
     CreateLiveUseCase,
     ListLiveSessionIdUseCase,
     DetailsLiveUseCase,
+    RemoveLiveUseCase,
     {
       provide: 'LiveRepository',
       useClass: LivePrismaRepository,

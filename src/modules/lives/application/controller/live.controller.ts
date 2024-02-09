@@ -23,6 +23,7 @@ import { UpdateLiveUseCase } from '../useCases/update-live.usecase';
 import { UpdateLiveDTO } from './dtos/update-live.dto';
 import { DisableChatLiveUseCase } from '../useCases/disable-chat-live.usecase';
 import { DisableReactionLiveUseCase } from '../useCases/disable-reaction-live.usecase';
+import { ReloadLiveUseCase } from '../useCases/reload-live.usecase';
 
 @Controller(`${baseRoute.base_url_v1}/lives`)
 @ApiTags('Lives')
@@ -36,6 +37,7 @@ export class LiveController {
     private readonly updateLiveUseCase: UpdateLiveUseCase,
     private readonly disableChatLiveUseCase: DisableChatLiveUseCase,
     private readonly disableReactionLiveUseCase: DisableReactionLiveUseCase,
+    private readonly reloadLiveUseCase: ReloadLiveUseCase,
   ) {}
 
   @Post()
@@ -94,5 +96,11 @@ export class LiveController {
   @UseGuards(AuthGuard('jwt'))
   async disableReactionLive(@Param('liveId') liveId: string) {
     return this.disableReactionLiveUseCase.execute(liveId);
+  }
+
+  @Patch('/:liveId/reload')
+  @UseGuards(AuthGuard('jwt'))
+  async reloadLive(@Param('liveId') liveId: string) {
+    return this.reloadLiveUseCase.execute(liveId);
   }
 }

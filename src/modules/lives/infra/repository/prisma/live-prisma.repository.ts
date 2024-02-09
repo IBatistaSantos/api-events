@@ -8,6 +8,49 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class LivePrismaRepository implements LiveRepository {
   constructor(private readonly prismaService: PrismaService) {}
+  async findById(id: string): Promise<Live> {
+    const live = await this.prismaService.live.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        chat: true,
+        LiveTranslation: true,
+      },
+    });
+
+    if (!live) return null;
+
+    const liveTranslation = live.LiveTranslation.map((translation) => {
+      return new TranslationLive({
+        language: translation.language,
+        link: translation.link,
+        text: translation.text,
+      });
+    });
+
+    return new Live({
+      id: live.id,
+      chat: {
+        title: live.chat.title,
+        type: live.chat.type as any,
+      },
+      createdAt: live.createdAt,
+      disableChat: live.disableChat,
+      disableReactions: live.disableReactions,
+      enableTranslate: live.enableTranslate,
+      eventId: live.eventId,
+      finished: live.finished,
+      finishedAt: live.finishedAt,
+      isMain: live.isMain,
+      link: live.link,
+      sessionId: live.sessionId,
+      title: live.title,
+      translation: liveTranslation,
+      typeLink: live.typeLink,
+      updatedAt: live.updatedAt,
+    });
+  }
 
   async findSessionById(sessionId: string): Promise<Session> {
     const session = await this.prismaService.session.findUnique({

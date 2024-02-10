@@ -27,8 +27,8 @@ describe('Guest', () => {
       statusGuest: 'waiting_approved',
       approvedAt: null,
       approvedBy: null,
-      rejectedAt: null,
-      rejectedBy: null,
+      recusedAt: null,
+      recusedBy: null,
       createdAt: guest.createdAt,
       updatedAt: guest.updatedAt,
     });
@@ -61,8 +61,8 @@ describe('Guest', () => {
 
     expect(guest.isConfirmed).toBeFalsy();
     expect(guest.statusGuest).toBe('refused');
-    expect(guest.rejectedAt).toBeDefined();
-    expect(guest.rejectedBy).toBe('user');
+    expect(guest.recusedAt).toBeDefined();
+    expect(guest.recusedBy).toBe('user');
   });
 
   it('Deve confirmar um convidado', () => {

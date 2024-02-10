@@ -13,8 +13,8 @@ interface GuestProps {
   status?: string;
   approvedAt?: Date;
   approvedBy?: string;
-  rejectedAt?: Date;
-  rejectedBy?: string;
+  recusedAt?: Date;
+  recusedBy?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -24,8 +24,8 @@ export class Guest {
   private _email: string;
   private _isConfirmed: boolean;
   private _eventId: string;
-  private _rejectedAt: Date;
-  private _rejectedBy: string;
+  private _recusedAt: Date;
+  private _recusedBy: string;
   private _approvedAt: Date;
   private _approvedBy: string;
   private _statusGuest: GuestStatus;
@@ -43,8 +43,8 @@ export class Guest {
     this._status = new Status(props.status);
     this._approvedAt = props.approvedAt || null;
     this._approvedBy = props.approvedBy || null;
-    this._rejectedAt = props.rejectedAt || null;
-    this._rejectedBy = props.rejectedBy || null;
+    this._recusedAt = props.recusedAt || null;
+    this._recusedBy = props.recusedBy || null;
     this._createdAt = props.createdAt || new Date();
     this._updatedAt = props.updatedAt || new Date();
 
@@ -87,12 +87,12 @@ export class Guest {
     return this._approvedBy;
   }
 
-  get rejectedAt(): Date {
-    return this._rejectedAt;
+  get recusedAt(): Date {
+    return this._recusedAt;
   }
 
-  get rejectedBy(): string {
-    return this._rejectedBy;
+  get recusedBy(): string {
+    return this._recusedBy;
   }
 
   get createdAt(): Date {
@@ -103,7 +103,7 @@ export class Guest {
     return this._updatedAt;
   }
 
-  refuse(rejectedAt: string): void {
+  refuse(recusedAt: string): void {
     if (this._statusGuest.isRefused) {
       throw new BadRequestException('Guest already refused');
     }
@@ -113,8 +113,8 @@ export class Guest {
     }
 
     this._statusGuest = GuestStatus.refused();
-    this._rejectedAt = new Date();
-    this._rejectedBy = rejectedAt;
+    this._recusedAt = new Date();
+    this._recusedBy = recusedAt;
   }
 
   approved(approvedBy: string): void {
@@ -151,8 +151,8 @@ export class Guest {
       statusGuest: this._statusGuest.value,
       approvedAt: this._approvedAt,
       approvedBy: this._approvedBy,
-      rejectedAt: this._rejectedAt,
-      rejectedBy: this._rejectedBy,
+      recusedAt: this._recusedAt,
+      recusedBy: this._recusedBy,
       createdAt: this._createdAt,
       updatedAt: this._updatedAt,
     };

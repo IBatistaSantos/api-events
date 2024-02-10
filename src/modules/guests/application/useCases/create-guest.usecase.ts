@@ -19,7 +19,10 @@ export class CreateGuestUseCase {
 
   async execute(params: Input) {
     const { approvedBy, email, eventId, name } = params;
-    const existingGuest = await this.guestRepository.findByEmail(email);
+    const existingGuest = await this.guestRepository.findByEmail(
+      email,
+      eventId,
+    );
     if (existingGuest) {
       throw new BadRequestException('Guest already exists');
     }

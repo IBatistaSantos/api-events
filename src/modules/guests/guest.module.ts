@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { GuestController } from './application/controller/guest.controller';
 import { CreateGuestUseCase } from './application/useCases/create-guest.usecase';
+import { GuestPrismaRepository } from './infra/repository/prisma/guest-prisma.repository';
 
 @Module({
   imports: [],
@@ -9,7 +10,7 @@ import { CreateGuestUseCase } from './application/useCases/create-guest.usecase'
     CreateGuestUseCase,
     {
       provide: 'GuestRepository',
-      useValue: {},
+      useClass: GuestPrismaRepository,
     },
   ],
   exports: [],

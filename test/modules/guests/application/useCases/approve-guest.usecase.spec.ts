@@ -3,7 +3,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MockProxy, mock } from 'jest-mock-extended';
 
 import { GuestRepository } from '@/modules/guests/application/repository/guest.repository';
-import { CreateGuestUseCase } from '@/modules/guests/application/useCases/create-guest.usecase';
 import { Guest } from '@/modules/guests/domain/guest';
 import { ApproveGuestUseCase } from '@/modules/guests/application/useCases/approve-guest.usecase';
 
@@ -15,8 +14,8 @@ describe('ApproveGuestUseCase', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         {
-          provide: CreateGuestUseCase,
-          useClass: CreateGuestUseCase,
+          provide: ApproveGuestUseCase,
+          useClass: ApproveGuestUseCase,
         },
         {
           provide: 'GuestRepository',
@@ -31,7 +30,7 @@ describe('ApproveGuestUseCase', () => {
         eventId: faker.string.uuid(),
         name: faker.person.fullName(),
         isConfirmed: false,
-        statusGuest: 'approved',
+        statusGuest: 'waiting_approved',
         status: 'ACTIVE',
       }),
     );

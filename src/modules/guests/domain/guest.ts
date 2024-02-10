@@ -122,6 +122,14 @@ export class Guest {
       throw new BadRequestException('Guest refused');
     }
 
+    if (this._statusGuest.isApproved) {
+      throw new BadRequestException('Guest already approved');
+    }
+
+    if (this._statusGuest.isConfirmed) {
+      throw new BadRequestException('Guest already confirmed');
+    }
+
     this._statusGuest = GuestStatus.approved();
     this._approvedAt = new Date();
     this._approvedBy = approvedBy;

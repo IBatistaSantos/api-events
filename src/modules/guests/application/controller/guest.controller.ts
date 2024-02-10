@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   Patch,
   Post,
@@ -14,6 +15,7 @@ import { CreateGuestDTO } from './dtos/create-guest.dto';
 import baseRoute from '@/config/routes/base-route';
 import { ApproveGuestUseCase } from '../useCases/approve-guest.usecase';
 import { RecuseGuestUseCase } from '../useCases/recuse-guest.usecase';
+import { ListGuestUseCase } from '../useCases/list-guests.usecase';
 
 @Controller(`${baseRoute.base_url_v1}/guests`)
 @ApiTags('guests')
@@ -22,6 +24,7 @@ export class GuestController {
     private readonly createGuestUseCase: CreateGuestUseCase,
     private readonly approveGuestUseCase: ApproveGuestUseCase,
     private readonly recuseGuestUseCase: RecuseGuestUseCase,
+    private readonly listGuestUseCase: ListGuestUseCase,
   ) {}
 
   @Post()
@@ -78,5 +81,11 @@ export class GuestController {
       guestId,
       recusedBy: user.id,
     });
+  }
+
+  @Get('/event/:eventId')
+  @UseGuards(AuthGuard('jwt'))
+  async listGuests(@Param('eventId') eventId: string) {
+    return await this.listGuestUseCase.execute({ eventId });
   }
 }

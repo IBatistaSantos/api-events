@@ -170,6 +170,21 @@ export class Guest {
     };
   }
 
+  static sort(guests: Guest[]) {
+    const sortStatus = {
+      waiting_approved: 1,
+      approved: 2,
+      refused: 3,
+      confirmed: 4,
+    };
+    return guests.sort((a, b) => {
+      const statusA = sortStatus[a.statusGuest];
+      const statusB = sortStatus[b.statusGuest];
+
+      return statusA - statusB;
+    });
+  }
+
   private validate() {
     if (!this._name) {
       throw new BadRequestException('Name is required');

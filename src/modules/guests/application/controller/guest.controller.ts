@@ -4,8 +4,9 @@ import { CreateGuestUseCase } from '../useCases/create-guest.usecase';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/shared/decorator/get-decorator';
 import { CreateGuestDTO } from './dtos/create-guest.dto';
+import baseRoute from '@/config/routes/base-route';
 
-@Controller('guests')
+@Controller(`${baseRoute.base_url_v1}/guests`)
 @ApiTags('guests')
 export class GuestController {
   constructor(private readonly createGuestUseCase: CreateGuestUseCase) {}

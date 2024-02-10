@@ -1,15 +1,26 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateGuestUseCase } from '../useCases/create-guest.usecase';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/shared/decorator/get-decorator';
 import { CreateGuestDTO } from './dtos/create-guest.dto';
 import baseRoute from '@/config/routes/base-route';
+import { ApproveGuestUseCase } from '../useCases/approve-guest.usecase';
 
 @Controller(`${baseRoute.base_url_v1}/guests`)
 @ApiTags('guests')
 export class GuestController {
-  constructor(private readonly createGuestUseCase: CreateGuestUseCase) {}
+  constructor(
+    private readonly createGuestUseCase: CreateGuestUseCase,
+    private readonly approveGuestUseCase: ApproveGuestUseCase,
+  ) {}
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
@@ -46,6 +57,15 @@ export class GuestController {
     return await this.createGuestUseCase.execute({
       approvedBy: user.id,
       ...body,
+    });
+  }
+
+  @Patch('/:guestId/approve')
+  @UseGuards(AuthGuard('jwt'))
+  async approveGuest(@GetUser() user: any, @Param('guestId') guestId: string) {
+    return await this.approveGuestUseCase.execute({
+      guestId,
+      approvedBy: user.id,
     });
   }
 }

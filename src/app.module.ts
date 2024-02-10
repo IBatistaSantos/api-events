@@ -8,6 +8,7 @@ import { OrganizationModule } from './modules/organization/organization.module';
 import { EventModule } from './modules/events/event.module';
 import { SessionModule } from './modules/sessions/session.module';
 import { LiveModule } from './modules/lives/live.module';
+import { GuestModule } from './modules/guests/guest.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { LiveModule } from './modules/lives/live.module';
     EventModule,
     SessionModule,
     LiveModule,
+    GuestModule,
   ],
   controllers: [],
   providers: [],

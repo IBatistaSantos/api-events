@@ -7,6 +7,34 @@ import { GuestStatus, UserStatus } from '@prisma/client';
 @Injectable()
 export class GuestPrismaRepository implements GuestRepository {
   constructor(private readonly prisma: PrismaService) {}
+  async findById(id: string): Promise<Guest> {
+    const guest = await this.prisma.guest.findFirst({
+      where: {
+        id,
+        status: 'ACTIVE',
+      },
+    });
+
+    if (!guest) {
+      return null;
+    }
+
+    return new Guest({
+      id: guest.id,
+      name: guest.name,
+      email: guest.email,
+      eventId: guest.eventId,
+      isConfirmed: guest.isConfirmed,
+      statusGuest: guest.statusGuest,
+      status: guest.status,
+      approvedAt: guest.approvedAt,
+      approvedBy: guest.approvedBy,
+      recusedAt: guest.recusedAt,
+      recusedBy: guest.recusedBy,
+      createdAt: guest.createdAt,
+      updatedAt: guest.updatedAt,
+    });
+  }
   async findByEmail(email: string): Promise<Guest> {
     const guest = await this.prisma.guest.findFirst({
       where: {

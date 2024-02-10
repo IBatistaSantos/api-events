@@ -56,7 +56,6 @@ describe('Guest', () => {
       name: faker.person.fullName(),
     });
 
-    guest.approved(faker.string.uuid());
     guest.refuse('user');
 
     expect(guest.isConfirmed).toBeFalsy();

@@ -5,6 +5,7 @@ import { GuestPrismaRepository } from './infra/repository/prisma/guest-prisma.re
 import { ApproveGuestUseCase } from './application/useCases/approve-guest.usecase';
 import { RecuseGuestUseCase } from './application/useCases/recuse-guest.usecase';
 import { ListGuestUseCase } from './application/useCases/list-guests.usecase';
+import { ImportGuestUseCase } from './application/useCases/import-guest.usecase';
 
 @Module({
   imports: [],
@@ -14,6 +15,7 @@ import { ListGuestUseCase } from './application/useCases/list-guests.usecase';
     ApproveGuestUseCase,
     RecuseGuestUseCase,
     ListGuestUseCase,
+    ImportGuestUseCase,
     {
       provide: 'GuestRepository',
       useClass: GuestPrismaRepository,

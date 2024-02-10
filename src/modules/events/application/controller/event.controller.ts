@@ -4,7 +4,7 @@ import { CreateEventUseCase } from '../useCases/create-event-usecase';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/shared/decorator/get-decorator';
 import { CreateEventDTO } from './dtos/create-event.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ListEventUseCase } from '../useCases/list-event-usecase';
 
 @Controller(`${baseRoute.base_url_v1}/events`)
@@ -17,6 +17,54 @@ export class EventController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: 201,
+    description: 'The event has been successfully created.',
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        name: { type: 'string' },
+        url: { type: 'string' },
+        inscriptionType: { type: 'string' },
+        organizationId: { type: 'string' },
+        accountId: { type: 'string' },
+        private: { type: 'boolean' },
+        featureFlags: {
+          type: 'object',
+          properties: {
+            auth: {
+              type: 'object',
+              properties: {
+                singleAccess: { type: 'boolean' },
+                confirmEmail: { type: 'boolean' },
+                codeAccess: { type: 'boolean' },
+                passwordRequired: { type: 'boolean' },
+                emailRequired: { type: 'boolean' },
+                captcha: { type: 'boolean' },
+              },
+            },
+            sales: {
+              type: 'object',
+              properties: {
+                tickets: { type: 'boolean' },
+                hasInstallments: { type: 'boolean' },
+              },
+            },
+            mail: {
+              type: 'object',
+              properties: {
+                sendMailInscription: { type: 'boolean' },
+              },
+            },
+          },
+        },
+        status: { type: 'string' },
+        createdAt: { type: 'string' },
+        updatedAt: { type: 'string' },
+      },
+    },
+  })
   async createEvent(
     @GetUser() user: any,
     @Body() createEventDto: CreateEventDTO,
@@ -32,6 +80,57 @@ export class EventController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    status: 200,
+    description: 'The events has been successfully listed.',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          name: { type: 'string' },
+          url: { type: 'string' },
+          inscriptionType: { type: 'string' },
+          organizationId: { type: 'string' },
+          accountId: { type: 'string' },
+          private: { type: 'boolean' },
+          featureFlags: {
+            type: 'object',
+            properties: {
+              auth: {
+                type: 'object',
+                properties: {
+                  singleAccess: { type: 'boolean' },
+                  confirmEmail: { type: 'boolean' },
+                  codeAccess: { type: 'boolean' },
+                  passwordRequired: { type: 'boolean' },
+                  emailRequired: { type: 'boolean' },
+                  captcha: { type: 'boolean' },
+                },
+              },
+              sales: {
+                type: 'object',
+                properties: {
+                  tickets: { type: 'boolean' },
+                  hasInstallments: { type: 'boolean' },
+                },
+              },
+              mail: {
+                type: 'object',
+                properties: {
+                  sendMailInscription: { type: 'boolean' },
+                },
+              },
+            },
+          },
+          status: { type: 'string' },
+          createdAt: { type: 'string' },
+          updatedAt: { type: 'string' },
+        },
+      },
+    },
+  })
   async listEvents(@GetUser() user: any, @Query() organizationId: string) {
     const userId = user.id;
     const accountId = user.accountId;

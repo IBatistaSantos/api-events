@@ -13,6 +13,7 @@ import { GetUser } from '@/shared/decorator/get-decorator';
 import { CreateGuestDTO } from './dtos/create-guest.dto';
 import baseRoute from '@/config/routes/base-route';
 import { ApproveGuestUseCase } from '../useCases/approve-guest.usecase';
+import { RecuseGuestUseCase } from '../useCases/recuse-guest.usecase';
 
 @Controller(`${baseRoute.base_url_v1}/guests`)
 @ApiTags('guests')
@@ -20,6 +21,7 @@ export class GuestController {
   constructor(
     private readonly createGuestUseCase: CreateGuestUseCase,
     private readonly approveGuestUseCase: ApproveGuestUseCase,
+    private readonly recuseGuestUseCase: RecuseGuestUseCase,
   ) {}
 
   @Post()
@@ -66,6 +68,15 @@ export class GuestController {
     return await this.approveGuestUseCase.execute({
       guestId,
       approvedBy: user.id,
+    });
+  }
+
+  @Patch('/:guestId/recuse')
+  @UseGuards(AuthGuard('jwt'))
+  async recuseGuest(@GetUser() user: any, @Param('guestId') guestId: string) {
+    return await this.recuseGuestUseCase.execute({
+      guestId,
+      recusedBy: user.id,
     });
   }
 }

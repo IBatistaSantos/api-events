@@ -127,7 +127,8 @@ export class Panelist {
     this._office = props.office || this._office;
     this._photo = props.photo || this._photo;
     this._sectionName = props.sectionName || this._sectionName;
-    this._isPrincipal = props.isPrincipal || this._isPrincipal;
+    this._isPrincipal =
+      props.isPrincipal !== undefined ? props.isPrincipal : this._isPrincipal;
     this._colorPrincipal = props.colorPrincipal || this._colorPrincipal;
     this._increaseSize = props.increaseSize || this._increaseSize;
     this._updatedAt = new Date();

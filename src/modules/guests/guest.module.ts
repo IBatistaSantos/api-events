@@ -6,6 +6,7 @@ import { ApproveGuestUseCase } from './application/useCases/approve-guest.usecas
 import { RecuseGuestUseCase } from './application/useCases/recuse-guest.usecase';
 import { ListGuestUseCase } from './application/useCases/list-guests.usecase';
 import { ImportGuestUseCase } from './application/useCases/import-guest.usecase';
+import { SendRequestGuestUseCase } from './application/useCases/send-request-guest.usecase';
 
 @Module({
   imports: [],
@@ -16,6 +17,7 @@ import { ImportGuestUseCase } from './application/useCases/import-guest.usecase'
     RecuseGuestUseCase,
     ListGuestUseCase,
     ImportGuestUseCase,
+    SendRequestGuestUseCase,
     {
       provide: 'GuestRepository',
       useClass: GuestPrismaRepository,

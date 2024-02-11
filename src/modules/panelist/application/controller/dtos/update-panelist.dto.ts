@@ -1,19 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUUID,
 } from 'class-validator';
 
-export class CreatePanelistDTO {
-  @IsString({
-    message: 'O nome do painelista deve ser uma string',
-  })
+export class UpdatePanelistDTO {
   @IsNotEmpty({
     message: 'O nome do painelista é obrigatório',
   })
+  @IsOptional()
   @ApiProperty({
     example: 'John Doe',
     description: 'O nome do painelista',
@@ -21,7 +19,7 @@ export class CreatePanelistDTO {
   })
   name: string;
 
-  @IsString()
+  @IsOptional()
   @IsNotEmpty({
     message: 'O email do painelista é obrigatório',
   })
@@ -32,19 +30,6 @@ export class CreatePanelistDTO {
     required: true,
   })
   email: string;
-
-  @IsNotEmpty({
-    message: 'O ID do evento do painelista é obrigatório',
-  })
-  @IsUUID(undefined, {
-    message: 'O ID do evento do painelista deve ser um UUID válido',
-  })
-  @ApiProperty({
-    example: '123e4567-e89b-12d3-a456-426614174000',
-    description: 'O ID do evento do painelista',
-    required: true,
-  })
-  eventId: string;
 
   @IsString()
   @IsNotEmpty()
@@ -63,6 +48,17 @@ export class CreatePanelistDTO {
     required: false,
   })
   description?: string;
+
+  @IsBoolean({
+    message: 'O painelista principal deve ser um booleano',
+  })
+  @IsOptional()
+  @ApiProperty({
+    example: 'true',
+    description: 'O painelista é principal',
+    required: false,
+  })
+  isPrincipal?: boolean;
 
   @IsString()
   @IsOptional()

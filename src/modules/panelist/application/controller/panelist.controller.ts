@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -16,6 +17,8 @@ import { CreatePanelistDTO } from './dtos/create-panelist.dto';
 import { DeletePanelistUseCase } from '../useCases/delete-panelist.usecase';
 import { DetailsPanelistUseCase } from '../useCases/details-panelist.usecase';
 import { ListPanelistUseCase } from '../useCases/list-panelist.usecase';
+import { UpdatePanelistUseCase } from '../useCases/update-panelist.usecase';
+import { UpdatePanelistDTO } from './dtos/update-panelist.dto';
 
 @Controller(`${baseRoute.base_url_v1}/panelists`)
 @ApiTags('panelists')
@@ -25,6 +28,7 @@ export class PanelistController {
     private readonly deletePanelistUseCase: DeletePanelistUseCase,
     private readonly detailsPanelistUseCase: DetailsPanelistUseCase,
     private readonly listPanelistUseCase: ListPanelistUseCase,
+    private readonly updatePanelistUseCase: UpdatePanelistUseCase,
   ) {}
 
   @Post()
@@ -70,6 +74,18 @@ export class PanelistController {
   async getPanelist(@Param('id') id: string) {
     return await this.detailsPanelistUseCase.execute({
       panelistId: id,
+    });
+  }
+
+  @Put('/:id')
+  @UseGuards(AuthGuard('jwt'))
+  async updatePanelist(
+    @Param('id') id: string,
+    @Body() body: UpdatePanelistDTO,
+  ) {
+    return await this.updatePanelistUseCase.execute({
+      panelistId: id,
+      data: body,
     });
   }
 

@@ -33,10 +33,8 @@ export class UpdatePanelistUseCase {
     if (!panelist) {
       throw new NotFoundException('Painelista não encontrado');
     }
-
     const isDifferentEmail = panelist.email !== data.email;
-
-    if (isDifferentEmail) {
+    if (data.email && isDifferentEmail) {
       const existing = await this.panelistRepository.findByEmail(
         data.email,
         panelist.eventId,

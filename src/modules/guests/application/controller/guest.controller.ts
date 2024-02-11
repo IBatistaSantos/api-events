@@ -22,6 +22,7 @@ import {
   ImportGuestSuccess,
 } from '../useCases/import-guest.usecase';
 import { ImportGuestDTO } from './dtos/import-guest.dto';
+import { SendRequestGuestUseCase } from '../useCases/send-request-guest.usecase';
 
 @Controller(`${baseRoute.base_url_v1}/guests`)
 @ApiTags('guests')
@@ -32,6 +33,7 @@ export class GuestController {
     private readonly recuseGuestUseCase: RecuseGuestUseCase,
     private readonly listGuestUseCase: ListGuestUseCase,
     private readonly importGuestUseCase: ImportGuestUseCase,
+    private readonly sendRequestGuestUseCase: SendRequestGuestUseCase,
   ) {}
 
   @Post()
@@ -154,5 +156,10 @@ export class GuestController {
   })
   async listGuests(@Param('eventId') eventId: string) {
     return await this.listGuestUseCase.execute({ eventId });
+  }
+
+  @Post('/invite')
+  async sendRequestGuest(@Body() body: CreateGuestDTO) {
+    return await this.sendRequestGuestUseCase.execute(body);
   }
 }

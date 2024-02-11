@@ -5,6 +5,7 @@ import { PanelistController } from './application/controller/panelist.controller
 import { DeletePanelistUseCase } from './application/useCases/delete-panelist.usecase';
 import { DetailsPanelistUseCase } from './application/useCases/details-panelist.usecase';
 import { ListPanelistUseCase } from './application/useCases/list-panelist.usecase';
+import { UpdatePanelistUseCase } from './application/useCases/update-panelist.usecase';
 
 @Module({
   controllers: [PanelistController],
@@ -15,6 +16,7 @@ import { ListPanelistUseCase } from './application/useCases/list-panelist.usecas
     DeletePanelistUseCase,
     DetailsPanelistUseCase,
     ListPanelistUseCase,
+    UpdatePanelistUseCase,
     {
       provide: 'PanelistRepository',
       useClass: PanelistPrismaRepository,

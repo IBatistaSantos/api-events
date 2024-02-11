@@ -9,6 +9,7 @@ import { EventModule } from './modules/events/event.module';
 import { SessionModule } from './modules/sessions/session.module';
 import { LiveModule } from './modules/lives/live.module';
 import { GuestModule } from './modules/guests/guest.module';
+import { PanelistModule } from './modules/panelist/panelist.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { GuestModule } from './modules/guests/guest.module';
     SessionModule,
     LiveModule,
     GuestModule,
+    PanelistModule,
   ],
   controllers: [],
   providers: [],

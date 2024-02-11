@@ -1,4 +1,5 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { NotFoundException } from '@/shared/domain/errors/errors';
 import { LiveRepository } from '../repository/live.repository';
 
 @Injectable()

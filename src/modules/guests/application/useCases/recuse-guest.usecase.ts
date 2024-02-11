@@ -1,5 +1,6 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { GuestRepository } from '../repository/guest.repository';
+import { NotFoundException } from '@/shared/domain/errors/errors';
 
 interface Input {
   guestId: string;

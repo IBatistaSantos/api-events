@@ -1,10 +1,6 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PanelistRepository } from '../repository/panelist.repository';
+import { BadException, NotFoundException } from '@/shared/domain/errors/errors';
 
 interface InputData {
   name: string;
@@ -47,9 +43,7 @@ export class UpdatePanelistUseCase {
       );
 
       if (existing) {
-        throw new BadRequestException(
-          'Painelista já cadastrado com este email',
-        );
+        throw new BadException('Painelista já cadastrado com este email');
       }
     }
 

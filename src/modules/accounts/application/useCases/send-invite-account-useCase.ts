@@ -1,9 +1,10 @@
-import { BadRequestException, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { AccountPermissionProps } from '../../domain/value-object/account-permission';
 import { AccountRepository } from '../repository/account-repository';
 import { JWTProvider } from '@/shared/infra/providers/jwt/jwt.provider';
 import { EmailService } from '@/shared/infra/services/mail/email.provider';
 import { Account } from '../../domain/account';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface Input {
   name: string;
@@ -27,7 +28,7 @@ export class SendInviteAccountUseCase {
 
     const existsAccount = await this.accountRepository.findByEmail(email);
     if (existsAccount) {
-      throw new BadRequestException('Account already exists');
+      throw new BadException('Account already exists');
     }
 
     const token = this.jwtProvider.generateToken({ email });

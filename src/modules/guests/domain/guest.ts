@@ -1,7 +1,8 @@
-import { Status } from '@/shared/domain/value-object/status';
 import { randomUUID } from 'crypto';
+
+import { Status } from '@/shared/domain/value-object/status';
 import { GuestStatus } from './value-object/guest-status';
-import { BadRequestException } from '@nestjs/common';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface GuestProps {
   id?: string;
@@ -105,15 +106,15 @@ export class Guest {
 
   refuse(recusedAt: string): void {
     if (this._statusGuest.isRefused) {
-      throw new BadRequestException('Guest already refused');
+      throw new BadException('Guest already refused');
     }
 
     if (this._statusGuest.isApproved) {
-      throw new BadRequestException('Guest already approved');
+      throw new BadException('Guest already approved');
     }
 
     if (this._statusGuest.isConfirmed) {
-      throw new BadRequestException('Guest already confirmed');
+      throw new BadException('Guest already confirmed');
     }
 
     this._statusGuest = GuestStatus.refused();
@@ -123,15 +124,15 @@ export class Guest {
 
   approved(approvedBy: string): void {
     if (this._statusGuest.isRefused) {
-      throw new BadRequestException('Guest refused');
+      throw new BadException('Guest refused');
     }
 
     if (this._statusGuest.isApproved) {
-      throw new BadRequestException('Guest already approved');
+      throw new BadException('Guest already approved');
     }
 
     if (this._statusGuest.isConfirmed) {
-      throw new BadRequestException('Guest already confirmed');
+      throw new BadException('Guest already confirmed');
     }
 
     this._statusGuest = GuestStatus.approved();
@@ -141,11 +142,11 @@ export class Guest {
 
   confirm(): void {
     if (this._statusGuest.isRefused) {
-      throw new BadRequestException('Guest refused');
+      throw new BadException('Guest refused');
     }
 
     if (!this._statusGuest.isApproved) {
-      throw new BadRequestException('Guest not approved');
+      throw new BadException('Guest not approved');
     }
 
     this._statusGuest = GuestStatus.confirmed();
@@ -187,15 +188,15 @@ export class Guest {
 
   private validate() {
     if (!this._name) {
-      throw new BadRequestException('Name is required');
+      throw new BadException('Name is required');
     }
 
     if (!this._email) {
-      throw new BadRequestException('Email is required');
+      throw new BadException('Email is required');
     }
 
     if (!this._eventId) {
-      throw new BadRequestException('EventId is required');
+      throw new BadException('EventId is required');
     }
   }
 }

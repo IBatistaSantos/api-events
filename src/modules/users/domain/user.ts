@@ -1,5 +1,4 @@
 import { randomUUID } from 'crypto';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { IUserTypeValues, UserType } from './value-object/user-type';
 import { Email } from './value-object/email';
 import { Status } from '@/shared/domain/value-object/status';
@@ -7,6 +6,10 @@ import { Permission } from '@/modules/permissions/domain/permission';
 import { UserPermissions } from './value-object/user-permissions';
 import { Organization } from '@/modules/organization/domain/organization';
 import { UserOrganizations } from './value-object/user-organizations';
+import {
+  BadException,
+  UnauthorizedException,
+} from '@/shared/domain/errors/errors';
 
 interface UserProps {
   id?: string;
@@ -144,7 +147,7 @@ export class User {
 
   addOrganizations(organizations: Organization[], admin: User) {
     const isMaster = this._type.isMaster();
-    if (isMaster) throw new BadRequestException('User is master');
+    if (isMaster) throw new BadException('User is master');
 
     const isAdminMater = admin.isMaster();
     if (!isAdminMater) {
@@ -226,16 +229,16 @@ export class User {
 
   private validate() {
     if (!this._name) {
-      throw new Error('Name is required');
+      throw new BadException('Name is required');
     }
 
     if (this.name.split(' ').length === 1) {
-      throw new Error('Name must have first and last name');
+      throw new BadException('Name must have first and last name');
     }
 
-    if (!this._email) throw new Error('Email is required');
-    if (!this._password) throw new Error('Password is required');
-    if (!this._type) throw new Error('Type is required');
-    if (!this._accountId) throw new Error('Account id is required');
+    if (!this._email) throw new BadException('Email is required');
+    if (!this._password) throw new BadException('Password is required');
+    if (!this._type) throw new BadException('Type is required');
+    if (!this._accountId) throw new BadException('Account id is required');
   }
 }

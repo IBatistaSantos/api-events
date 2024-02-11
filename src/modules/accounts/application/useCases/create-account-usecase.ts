@@ -1,9 +1,10 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { AccountRepository } from '../repository/account-repository';
 import { Account } from '../../domain/account';
 import { JWTProvider } from '@/shared/infra/providers/jwt/jwt.provider';
 import { User } from '@/modules/users/domain/user';
 import { EncryptProvider } from '@/shared/infra/providers/encrypt/encrypt-provider';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface Input {
   token: string;
@@ -27,21 +28,19 @@ export class CreateAccountUseCase {
     const { token, password, confirmPassword } = params;
 
     if (password !== confirmPassword) {
-      throw new BadRequestException(
-        'Password and confirm password must be equals',
-      );
+      throw new BadException('Password and confirm password must be equals');
     }
 
     const { exp } = this.jwtProvider.verifyToken<{ exp: number }>(token);
 
     const inviteAccount = await this.accountRepository.findByToken(token);
     if (!inviteAccount) {
-      throw new BadRequestException('Invalid token');
+      throw new BadException('Invalid token');
     }
 
     if (Date.now() > exp * 1000) {
       await this.accountRepository.deleteInvite(token);
-      throw new BadRequestException('Token expired');
+      throw new BadException('Token expired');
     }
 
     const { type, name, email, permissions } = inviteAccount;

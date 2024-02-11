@@ -1,8 +1,9 @@
 import { DateProvider } from '@/shared/infra/providers/date/date-provider';
 import { CreateEventService } from '../../domain/services/create-event.service';
 import { EventRepository } from '../repository/event.repository';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ListPermissions } from '@/modules/permissions/domain/list-permisions';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface Input {
   name: string;
@@ -38,30 +39,30 @@ export class CreateEventUseCase {
 
     const manager = await this.eventRepository.findManagerById(userId);
     if (!manager) {
-      throw new BadRequestException('Manager not found');
+      throw new BadException('Manager not found');
     }
 
     const isPermitted = manager.can(ListPermissions.CREATE_EVENT);
     if (!isPermitted) {
-      throw new BadRequestException('Manager not permitted');
+      throw new BadException('Manager not permitted');
     }
 
     const organization =
       await this.eventRepository.findOrganizationById(organizationId);
     if (!organization) {
-      throw new BadRequestException('Organization not found');
+      throw new BadException('Organization not found');
     }
 
     const isSameAccount = organization.accountId === accountId;
     if (!isSameAccount) {
-      throw new BadRequestException(
+      throw new BadException(
         'You are not allowed to create an event for this account',
       );
     }
 
     const account = await this.eventRepository.findAccountById(accountId);
     if (!account) {
-      throw new BadRequestException('Account not found');
+      throw new BadException('Account not found');
     }
 
     const quantityEvents =
@@ -70,7 +71,7 @@ export class CreateEventUseCase {
     account.validateMaxEvent(quantityEvents);
     const eventExists = await this.eventRepository.findByURL(url);
     if (eventExists) {
-      throw new BadRequestException('Event already exists');
+      throw new BadException('Event already exists');
     }
 
     const createEventService = new CreateEventService(this.dateProvider);

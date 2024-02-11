@@ -1,7 +1,8 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { SessionRepository } from '../repository/session.repository';
 import { DateProvider } from '@/shared/infra/providers/date/date-provider';
 import { Session } from '../../domain/session';
+import { NotFoundException } from '@/shared/domain/errors/errors';
 
 interface Input {
   date: string;

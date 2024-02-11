@@ -1,5 +1,6 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { EventRepository } from '../repository/event.repository';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface Input {
   userId: string;
@@ -18,28 +19,28 @@ export class ListEventUseCase {
     const { userId, organizationId, accountId } = params;
     const manager = await this.eventRepository.findManagerById(userId);
     if (!manager) {
-      throw new BadRequestException('Manager not found');
+      throw new BadException('Manager not found');
     }
 
     const isMaster = manager.isMaster();
     if (!isMaster && !organizationId) {
-      throw new BadRequestException('OrganizationId is required');
+      throw new BadException('OrganizationId is required');
     }
 
     const organizationIds = manager.organizations.map((org) => org.id);
 
     if (!isMaster && !organizationIds.includes(organizationId)) {
-      throw new BadRequestException('Manager is not part of this organization');
+      throw new BadException('Manager is not part of this organization');
     }
 
     const account = await this.eventRepository.findAccountById(accountId);
     if (!account) {
-      throw new BadRequestException('Account not found');
+      throw new BadException('Account not found');
     }
 
     const isSameAccount = account.id === manager.accountId;
     if (!isSameAccount) {
-      throw new BadRequestException('Account is not the same as manager');
+      throw new BadException('Account is not the same as manager');
     }
 
     const events = await this.eventRepository.list(accountId, organizationId);

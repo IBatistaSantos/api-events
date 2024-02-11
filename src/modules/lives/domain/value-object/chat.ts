@@ -1,3 +1,5 @@
+import { BadException } from '@/shared/domain/errors/errors';
+
 type TypeChat = 'open' | 'moderate';
 
 export interface ChatProps {
@@ -27,7 +29,7 @@ export class Chat {
   changeType(type: TypeChat): void {
     const isTypeValid = ['open', 'moderate'].includes(type);
     if (!isTypeValid) {
-      throw new Error('Invalid chat type');
+      throw new BadException('Invalid chat type');
     }
     this._type = type;
   }
@@ -41,11 +43,11 @@ export class Chat {
 
   private validate() {
     if (!this._type) {
-      throw new Error('Type is required');
+      throw new BadException('Type is required');
     }
 
     if (!['open', 'moderate'].includes(this._type)) {
-      throw new Error('Invalid chat type');
+      throw new BadException('Invalid chat type');
     }
   }
 }

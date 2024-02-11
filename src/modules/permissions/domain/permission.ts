@@ -1,3 +1,4 @@
+import { BadException } from '@/shared/domain/errors/errors';
 import { randomUUID } from 'crypto';
 
 export enum PermissionAvailable {
@@ -76,16 +77,16 @@ export class Permission {
 
   private validate() {
     if (!this._name) {
-      throw new Error('Permission name is required');
+      throw new BadException('Permission name is required');
     }
 
     if (!this._content) {
-      throw new Error('Permission content is required');
+      throw new BadException('Permission content is required');
     }
 
     const content = this._content as any;
     if (!Object.values(PermissionAvailable).includes(content)) {
-      throw new Error('Permission content not allowed');
+      throw new BadException('Permission content not allowed');
     }
   }
 }

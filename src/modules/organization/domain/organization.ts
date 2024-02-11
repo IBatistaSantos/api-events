@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { Status } from '@/shared/domain/value-object/status';
-import { BadRequestException } from '@nestjs/common';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface OrganizationProps {
   id?: string;
@@ -94,11 +94,11 @@ export class Organization {
 
   private validate() {
     if (!this._name) {
-      throw new BadRequestException('Name is required');
+      throw new BadException('Name is required');
     }
 
     if (!this._accountId) {
-      throw new BadRequestException('Account id is required');
+      throw new BadException('Account id is required');
     }
   }
 }

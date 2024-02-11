@@ -1,7 +1,8 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Session } from '../../domain/session';
 import { SessionRepository } from '../repository/session.repository';
 import { DateProvider } from '@/shared/infra/providers/date/date-provider';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface Input {
   eventId: string;
@@ -26,12 +27,12 @@ export class CreateSessionUseCase {
     const isBeforeDate = this.dateProvider.isBefore(new Date(date), new Date());
 
     if (isBeforeDate) {
-      throw new BadRequestException('Date is before the current date');
+      throw new BadException('Date is before the current date');
     }
 
     const session = await this.sessionRepository.findByDate(date, eventId);
     if (session) {
-      throw new BadRequestException('Session already exists');
+      throw new BadException('Session already exists');
     }
 
     let isCurrent = false;

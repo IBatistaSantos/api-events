@@ -1,6 +1,7 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Permission } from '../../domain/permission';
 import { PermissionRepository } from '../repository/permission-repository';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface Input {
   name: string;
@@ -19,7 +20,7 @@ export class CreatePermissionUseCase {
     const existing = await this.permissionRepository.findByName(params.name);
 
     if (existing) {
-      throw new BadRequestException('Permission already exists');
+      throw new BadException('Permission already exists');
     }
 
     const permission = new Permission({

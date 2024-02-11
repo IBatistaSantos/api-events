@@ -1,3 +1,5 @@
+import { BadException } from '@/shared/domain/errors/errors';
+
 export class Email {
   private _value: string;
   constructor(private readonly data: string) {
@@ -11,11 +13,11 @@ export class Email {
 
   private validate() {
     if (!this.value) {
-      throw new Error('Email is required');
+      throw new BadException('Email is required');
     }
 
     if (!this.value.includes('@')) {
-      throw new Error('Invalid email');
+      throw new BadException('Invalid email');
     }
 
     this._value = this.value;

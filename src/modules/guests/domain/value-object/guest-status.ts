@@ -1,3 +1,5 @@
+import { BadException } from '@/shared/domain/errors/errors';
+
 export class GuestStatus {
   private _value: string;
 
@@ -29,7 +31,7 @@ export class GuestStatus {
     if (
       !['waiting_approved', 'approved', 'confirmed', 'refused'].includes(value)
     ) {
-      throw new Error('Invalid status');
+      throw new BadException('Invalid status');
     }
   }
 

@@ -1,4 +1,5 @@
 import { UserType } from '@/modules/users/domain/value-object/user-type';
+import { BadException } from '@/shared/domain/errors/errors';
 
 describe('UserType', () => {
   it('Deve retornar a instancia de UserType', () => {
@@ -8,7 +9,9 @@ describe('UserType', () => {
   });
 
   it('Deve retornar um erro quando o tipo for invalido', () => {
-    expect(() => new UserType('INVALID')).toThrow(new Error('Invalid type'));
+    expect(() => new UserType('INVALID')).toThrow(
+      new BadException('Invalid type'),
+    );
   });
 
   it('Deve retornar true quando o tipo for ADMIN', () => {

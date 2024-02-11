@@ -1,3 +1,5 @@
+import { BadException } from '@/shared/domain/errors/errors';
+
 export class InscriptionType {
   private _inscriptionType: string;
 
@@ -14,7 +16,7 @@ export class InscriptionType {
   private validate() {
     const inscriptionTypes = ['RELEASED', 'PAUSED', 'FINISHED'];
     if (!inscriptionTypes.includes(this._inscriptionType)) {
-      throw new Error('Invalid inscription type');
+      throw new BadException('Invalid inscription type');
     }
   }
 }

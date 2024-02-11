@@ -1,3 +1,5 @@
+import { BadException } from '@/shared/domain/errors/errors';
+
 export enum UserTypeValues {
   MASTER = 'MASTER',
   ADMIN = 'ADMIN',
@@ -22,11 +24,11 @@ export class UserType {
 
   private validate() {
     if (!this.value) {
-      throw new Error('Type is required');
+      throw new BadException('Type is required');
     }
 
     if (!Object.values(UserTypeValues).includes(this.value as any)) {
-      throw new Error('Invalid type');
+      throw new BadException('Invalid type');
     }
 
     this._value = this.value;

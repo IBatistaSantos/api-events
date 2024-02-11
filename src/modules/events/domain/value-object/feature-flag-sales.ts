@@ -1,3 +1,5 @@
+import { BadException } from '@/shared/domain/errors/errors';
+
 export interface FeatureFlagsSalesProps {
   tickets: boolean;
   hasInstallments: boolean;
@@ -31,7 +33,7 @@ export class FeatureFlagsSales {
 
   private validate() {
     if (!this._tickets && this._hasInstallments) {
-      throw new Error("You can't have installments without tickets");
+      throw new BadException("You can't have installments without tickets");
     }
   }
 }

@@ -1,5 +1,6 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { OrganizationRepository } from '../repository/organization.repository';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface Input {
   userId: string;
@@ -22,7 +23,7 @@ export class ListOrganizationUseCase {
     );
 
     if (!user) {
-      throw new BadRequestException('User not found');
+      throw new BadException('User not found');
     }
 
     const isMaster = user.isMaster();

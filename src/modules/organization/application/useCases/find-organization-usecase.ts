@@ -1,5 +1,6 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { OrganizationRepository } from '../repository/organization.repository';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface Input {
   organizationId: string;
@@ -21,7 +22,7 @@ export class FindOrganizationUseCase {
       await this.organizationRepository.findById(organizationId);
 
     if (!organization) {
-      throw new BadRequestException('Organization not found');
+      throw new BadException('Organization not found');
     }
 
     const user = await this.organizationRepository.findByCreator(
@@ -30,13 +31,13 @@ export class FindOrganizationUseCase {
     );
 
     if (!user) {
-      throw new BadRequestException('User not found');
+      throw new BadException('User not found');
     }
 
     const isSameAccount = organization.accountId === user.accountId;
 
     if (!isSameAccount) {
-      throw new BadRequestException('User not allowed');
+      throw new BadException('User not allowed');
     }
 
     return {

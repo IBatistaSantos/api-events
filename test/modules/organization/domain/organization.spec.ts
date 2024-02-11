@@ -1,7 +1,7 @@
-import { BadRequestException } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 
 import { Organization } from '@/modules/organization/domain/organization';
+import { BadException } from '@/shared/domain/errors/errors';
 
 describe('Organization', () => {
   it('should have the correct properties', () => {
@@ -81,7 +81,7 @@ describe('Organization', () => {
         description: faker.lorem.paragraph(),
         createdBy: faker.string.uuid(),
       });
-    }).toThrow(BadRequestException);
+    }).toThrow(BadException);
   });
 
   it('should throw BadRequestException if accountId is not provided', () => {
@@ -93,6 +93,6 @@ describe('Organization', () => {
         description: faker.lorem.paragraph(),
         createdBy: faker.string.uuid(),
       });
-    }).toThrow(BadRequestException);
+    }).toThrow(BadException);
   });
 });

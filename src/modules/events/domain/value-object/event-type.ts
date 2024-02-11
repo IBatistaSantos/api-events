@@ -1,3 +1,5 @@
+import { BadException } from '@/shared/domain/errors/errors';
+
 export class EventType {
   private _type: string;
   constructor(type: string) {
@@ -12,7 +14,7 @@ export class EventType {
 
   private validate(value: any): void {
     if (!['DIGITAL', 'PRESENCIAL', 'HIBRIDO'].includes(value)) {
-      throw new Error('Invalid event type');
+      throw new BadException('Invalid event type');
     }
   }
 }

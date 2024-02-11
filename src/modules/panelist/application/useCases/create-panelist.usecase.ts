@@ -1,6 +1,7 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Panelist } from '../../domain/panelist';
 import { PanelistRepository } from '../repository/panelist.repository';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface Input {
   name: string;
@@ -27,7 +28,7 @@ export class CreatePanelistUseCase {
     const existing = await this.panelistRepository.findByEmail(email, eventId);
 
     if (existing) {
-      throw new BadRequestException('Painelista já cadastrado com este email');
+      throw new BadException('Painelista já cadastrado com este email');
     }
 
     const panelist = new Panelist(props);

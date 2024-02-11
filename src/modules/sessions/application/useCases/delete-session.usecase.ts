@@ -1,11 +1,7 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { SessionRepository } from '../repository/session.repository';
 import { Session } from '../../domain/session';
+import { BadException, NotFoundException } from '@/shared/domain/errors/errors';
 
 export class Input {
   sessionId: string;
@@ -27,7 +23,7 @@ export class DeleteSessionUseCase {
     }
 
     if (session.finished) {
-      throw new BadRequestException('Session is already finished');
+      throw new BadException('Session is already finished');
     }
 
     await this.changeCurrentSession(session, sessionId);
@@ -48,7 +44,7 @@ export class DeleteSessionUseCase {
     );
 
     if (!listSessions.length) {
-      throw new BadRequestException('No session available');
+      throw new BadException('No session available');
     }
 
     const sessionCurrent = Session.sort(listSessions)[0];

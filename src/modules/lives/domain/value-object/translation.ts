@@ -1,3 +1,5 @@
+import { BadException } from '@/shared/domain/errors/errors';
+
 interface TranslationLiveProps {
   language: string;
   link: string;
@@ -47,15 +49,15 @@ export class TranslationLive {
 
   private validate(): void {
     if (this._language.length < 2) {
-      throw new Error('The language must be at least 2 characters');
+      throw new BadException('The language must be at least 2 characters');
     }
 
     if (!this._link) {
-      throw new Error('The link is required');
+      throw new BadException('The link is required');
     }
 
     if (!this._text) {
-      throw new Error('The text is required');
+      throw new BadException('The text is required');
     }
   }
 }

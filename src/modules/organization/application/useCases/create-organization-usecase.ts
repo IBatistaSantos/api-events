@@ -1,7 +1,8 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Organization } from '../../domain/organization';
 import { ListPermissions } from '@/modules/permissions/domain/list-permisions';
 import { OrganizationRepository } from '../repository/organization.repository';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface Input {
   name: string;
@@ -25,7 +26,7 @@ export class CreateOrganizationUseCase {
     );
 
     if (existing) {
-      throw new BadRequestException('Organization already exists');
+      throw new BadException('Organization already exists');
     }
 
     const user = await this.organizationRepository.findByCreator(
@@ -34,18 +35,18 @@ export class CreateOrganizationUseCase {
     );
 
     if (!user) {
-      throw new BadRequestException('User not found');
+      throw new BadException('User not found');
     }
 
     const hasPermitted = user.can(ListPermissions.CREATE_ORGANIZATION);
     if (!hasPermitted) {
-      throw new BadRequestException('User not permitted');
+      throw new BadException('User not permitted');
     }
 
     const account =
       await this.organizationRepository.findByAccountId(accountId);
     if (!account) {
-      throw new BadRequestException('Account not found');
+      throw new BadException('Account not found');
     }
 
     const countOrganization =

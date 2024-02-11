@@ -1,5 +1,6 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { LiveRepository } from '../repository/live.repository';
+import { NotFoundException } from '@/shared/domain/errors/errors';
 
 interface InputData {
   link: string;

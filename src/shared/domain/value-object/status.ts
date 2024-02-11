@@ -1,3 +1,5 @@
+import { BadException } from '../errors/errors';
+
 export class Status {
   private _value: string;
   constructor(private readonly data?: string) {
@@ -11,11 +13,11 @@ export class Status {
 
   private validate() {
     if (!this.value) {
-      throw new Error('Status is required');
+      throw new BadException('Status is required');
     }
 
     if (!['ACTIVE', 'INACTIVE'].includes(this.value)) {
-      throw new Error('Invalid status');
+      throw new BadException('Invalid status');
     }
 
     this._value = this.value;

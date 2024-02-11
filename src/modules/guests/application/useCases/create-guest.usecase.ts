@@ -1,7 +1,8 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { Guest } from '@/modules/guests/domain/guest';
 import { GuestRepository } from '../repository/guest.repository';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface Input {
   email: string;
@@ -24,7 +25,7 @@ export class CreateGuestUseCase {
       eventId,
     );
     if (existingGuest) {
-      throw new BadRequestException('Guest already exists');
+      throw new BadException('Guest already exists');
     }
 
     const guest = new Guest({

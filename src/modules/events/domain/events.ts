@@ -1,9 +1,9 @@
 import { Status } from '@/shared/domain/value-object/status';
-import { BadRequestException } from '@nestjs/common';
 import { FeatureFlags, FeatureFlagsProps } from './value-object/feature-flags';
 import { randomUUID } from 'crypto';
 import { EventType } from './value-object/event-type';
 import { InscriptionType } from './value-object/inscription-type';
+import { BadException } from '@/shared/domain/errors/errors';
 
 export interface EventsProps {
   id?: string;
@@ -107,14 +107,13 @@ export class Events {
   }
 
   private validate() {
-    if (!this._name) throw new BadRequestException('Name is required');
-    if (!this._url) throw new BadRequestException('Url is required');
+    if (!this._name) throw new BadException('Name is required');
+    if (!this._url) throw new BadException('Url is required');
     if (!this._organizationId) {
-      throw new BadRequestException('OrganizationId is required');
+      throw new BadException('OrganizationId is required');
     }
 
-    if (!this._accountId)
-      throw new BadRequestException('AccountId is required');
+    if (!this._accountId) throw new BadException('AccountId is required');
   }
 
   toDTO() {

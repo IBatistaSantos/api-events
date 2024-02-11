@@ -1,3 +1,4 @@
+import { BadException } from '@/shared/domain/errors/errors';
 import { Status } from '@/shared/domain/value-object/status';
 import { randomUUID } from 'crypto';
 
@@ -165,19 +166,19 @@ export class Panelist {
 
   private validate() {
     if (!this._name) {
-      throw new Error('O nome do painelista é obrigatório');
+      throw new BadException('O nome do painelista é obrigatório');
     }
 
     if (!this._email) {
-      throw new Error('O email do painelista é obrigatório');
+      throw new BadException('O email do painelista é obrigatório');
     }
 
     if (!this._office) {
-      throw new Error('O cargo do painelista é obrigatório');
+      throw new BadException('O cargo do painelista é obrigatório');
     }
 
     if (!this._eventId) {
-      throw new Error('O evento do painelista é obrigatório');
+      throw new BadException('O evento do painelista é obrigatório');
     }
   }
 }

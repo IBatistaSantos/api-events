@@ -2,6 +2,7 @@ import { mock, MockProxy } from 'jest-mock-extended';
 
 import { CreateEventService } from '@/modules/events/domain/services/create-event.service';
 import { DateProvider } from '@/shared/infra/providers/date/date-provider';
+import { BadException } from '@/shared/domain/errors/errors';
 
 describe('CreateEventService', () => {
   let dateProviderMock: MockProxy<DateProvider>;
@@ -77,7 +78,7 @@ describe('CreateEventService', () => {
     };
 
     expect(() => createEventService.execute(params)).toThrow(
-      new Error('Date is required'),
+      new BadException('Date is required'),
     );
   });
 
@@ -95,7 +96,7 @@ describe('CreateEventService', () => {
     };
 
     expect(() => createEventService.execute(params)).toThrow(
-      new Error('Date is before current date'),
+      new BadException('Date is before current date'),
     );
   });
 });

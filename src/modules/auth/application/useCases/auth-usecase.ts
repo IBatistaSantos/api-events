@@ -1,7 +1,8 @@
 import { EncryptProvider } from '@/shared/infra/providers/encrypt/encrypt-provider';
 import { JWTProvider } from '@/shared/infra/providers/jwt/jwt.provider';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { AuthRepository } from '../repository/auth-repository';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface Input {
   email: string;
@@ -24,12 +25,12 @@ export class AuthenticationService {
     const user = await this.authRepository.findByEmail(email);
 
     if (!user) {
-      throw new BadRequestException(`Credentials invalid`);
+      throw new BadException(`Credentials invalid`);
     }
 
     const isMatch = await this.encryption.compare(password, user.password);
     if (!isMatch) {
-      throw new BadRequestException(`Credentials invalid`);
+      throw new BadException(`Credentials invalid`);
     }
 
     const accessToken = this.jwtService.generateToken({

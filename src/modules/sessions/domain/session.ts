@@ -1,3 +1,4 @@
+import { BadException } from '@/shared/domain/errors/errors';
 import { Status } from '@/shared/domain/value-object/status';
 import { randomUUID } from 'crypto';
 
@@ -128,15 +129,15 @@ export class Session {
 
   private validate() {
     if (!this._eventId) {
-      throw new Error('EventId is required');
+      throw new BadException('EventId is required');
     }
 
     if (!this._date) {
-      throw new Error('Date is required');
+      throw new BadException('Date is required');
     }
 
     if (!this._hourStart) {
-      throw new Error('HourStart is required');
+      throw new BadException('HourStart is required');
     }
   }
 }

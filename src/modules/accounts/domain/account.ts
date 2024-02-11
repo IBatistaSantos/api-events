@@ -4,6 +4,7 @@ import {
   AccountPermissions,
 } from './value-object/account-permission';
 import { AccountType } from './value-object/account-type';
+import { BadException } from '@/shared/domain/errors/errors';
 
 export interface AccountProps {
   id?: string;
@@ -66,19 +67,19 @@ export class Account {
 
   validateMaxEvent(quantity: number): void {
     if (this.isFree() && quantity >= 3) {
-      throw new Error('Exceeded the maximum number of events');
+      throw new BadException('Exceeded the maximum number of events');
     }
   }
 
   validateMaxOrganization(quantity: number): void {
     if (this.isFree() && quantity >= 1) {
-      throw new Error('Exceeded the maximum number of organizations');
+      throw new BadException('Exceeded the maximum number of organizations');
     }
   }
 
   validateMaxParticipants(quantity: number): void {
     if (this.isFree() && quantity >= 100) {
-      throw new Error('Exceeded the maximum number of participants');
+      throw new BadException('Exceeded the maximum number of participants');
     }
   }
 }

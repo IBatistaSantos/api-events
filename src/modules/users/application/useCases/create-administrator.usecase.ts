@@ -1,9 +1,10 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UserRepository } from '../repository/user.repository';
 import { User } from '../../domain/user';
 import { ListPermissions } from '@/modules/permissions/domain/list-permisions';
 import { EmailService } from '@/shared/infra/services/mail/email.provider';
 import { EncryptProvider } from '@/shared/infra/providers/encrypt/encrypt-provider';
+import { BadException } from '@/shared/domain/errors/errors';
 
 interface Input {
   name: string;
@@ -28,16 +29,16 @@ export class CreateAdministratorUseCase {
     const { name, email, organizationIds } = params;
     const userExists = await this.userRepository.findByEmail(params.email);
     if (userExists) {
-      throw new Error('User already exists');
+      throw new BadException('User already exists');
     }
 
     const manager = await this.userRepository.findById(params.userId);
     if (!manager) {
-      throw new Error('Manager not found');
+      throw new BadException('Manager not found');
     }
 
     const isPermitted = manager.can(ListPermissions.CREATE_ADMINISTRATOR);
-    if (!isPermitted) throw new BadRequestException('User not permitted');
+    if (!isPermitted) throw new BadException('User not permitted');
 
     const accountId = manager.accountId;
 
@@ -56,7 +57,7 @@ export class CreateAdministratorUseCase {
     const organizations =
       await this.userRepository.findOrganizationByIds(organizationIds);
     if (!organizations || !organizations.length) {
-      throw new BadRequestException('Must have at least one organization');
+      throw new BadException('Must have at least one organization');
     }
 
     user.addOrganizations(organizations, manager);

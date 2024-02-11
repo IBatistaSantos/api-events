@@ -1,12 +1,8 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { SessionRepository } from '../repository/session.repository';
 import { Session } from '../../domain/session';
 import { DateProvider } from '@/shared/infra/providers/date/date-provider';
+import { BadException, NotFoundException } from '@/shared/domain/errors/errors';
 
 interface Input {
   sessionId: string;
@@ -32,7 +28,7 @@ export class FinishSessionUseCase {
     }
 
     if (!session.isCurrent) {
-      throw new BadRequestException('Session is not current');
+      throw new BadException('Session is not current');
     }
 
     const dateWithHours = `${session.date}T${session.hourStart}`;
@@ -44,7 +40,7 @@ export class FinishSessionUseCase {
     const today = this.dateProvider.today(new Date(dateWithHours));
 
     if (!isBeforeDateSession && !today) {
-      throw new BadRequestException(
+      throw new BadException(
         'Session not finished, because the date is not today',
       );
     }

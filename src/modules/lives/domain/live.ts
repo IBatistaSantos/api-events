@@ -2,6 +2,7 @@ import { Status } from '@/shared/domain/value-object/status';
 import { Chat, ChatProps } from './value-object/chat';
 import { randomUUID } from 'crypto';
 import { TranslationLive } from './value-object/translation';
+import { BadException } from '@/shared/domain/errors/errors';
 
 type TypeLink = 'YOUTUBE' | 'VIMEO' | 'WHEREBY' | 'TEAMS' | 'ZOOM' | 'OTHER';
 
@@ -218,26 +219,26 @@ export class Live {
 
   private validate() {
     if (!this._sessionId) {
-      throw new Error('The session id is required');
+      throw new BadException('The session id is required');
     }
 
     if (!this._eventId) {
-      throw new Error('The event id is required');
+      throw new BadException('The event id is required');
     }
 
     if (!this._link) {
-      throw new Error('The link is required');
+      throw new BadException('The link is required');
     }
 
     if (!this._typeLink) {
-      throw new Error('The type link is required');
+      throw new BadException('The type link is required');
     }
 
     const type = this._typeLink;
     if (
       !['YOUTUBE', 'VIMEO', 'WHEREBY', 'TEAMS', 'ZOOM', 'OTHER'].includes(type)
     ) {
-      throw new Error('The type link is invalid');
+      throw new BadException('The type link is invalid');
     }
   }
 

@@ -1,3 +1,4 @@
+import { BadException } from '@/shared/domain/errors/errors';
 import { Status } from '@/shared/domain/value-object/status';
 
 describe('UserStatus', () => {
@@ -8,7 +9,9 @@ describe('UserStatus', () => {
   });
 
   it('Deve retornar um erro quando o status for invalido', () => {
-    expect(() => new Status('INVALID')).toThrow(new Error('Invalid status'));
+    expect(() => new Status('INVALID')).toThrow(
+      new BadException('Invalid status'),
+    );
   });
 
   it('Deve retornar true quando o status for ACTIVE', () => {

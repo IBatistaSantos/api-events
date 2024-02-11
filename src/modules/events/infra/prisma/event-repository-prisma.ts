@@ -8,6 +8,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/shared/infra/prisma/repository/prisma.client.service';
 import { EventType, InscriptionType, UserStatus } from '@prisma/client';
 import { Permission } from '@/modules/permissions/domain/permission';
+import { BadException } from '@/shared/domain/errors/errors';
 
 @Injectable()
 export class EventRepositoryPrisma implements EventRepository {
@@ -73,7 +74,7 @@ export class EventRepositoryPrisma implements EventRepository {
     });
 
     if (!featuresFlags) {
-      throw new Error('Error to create features flags');
+      throw new BadException('Error to create features flags');
     }
 
     await this.prismaService.event.create({

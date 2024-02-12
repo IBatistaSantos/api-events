@@ -7,6 +7,65 @@ import { UserStatus } from '@prisma/client';
 @Injectable()
 export class PanelistPrismaRepository implements PanelistRepository {
   constructor(private readonly prismaService: PrismaService) {}
+  async findByIds(ids: string[]): Promise<Panelist[]> {
+    const panelists = await this.prismaService.panelist.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+        status: 'ACTIVE',
+      },
+    });
+
+    if (!panelists || !panelists.length) return [];
+
+    return panelists.map(
+      (panelist) =>
+        new Panelist({
+          id: panelist.id,
+          name: panelist.name,
+          email: panelist.email,
+          eventId: panelist.eventId,
+          office: panelist.office,
+          description: panelist.description,
+          colorPrincipal: panelist.colorPrincipal,
+          createdAt: panelist.createdAt,
+          increaseSize: panelist.increaseSize,
+          position: panelist.position,
+          isPrincipal: panelist.isPrincipal,
+          photo: panelist.photo,
+          sectionName: panelist.sectionName,
+          status: panelist.status as UserStatus,
+          updatedAt: panelist.updatedAt,
+        }),
+    );
+  }
+  async updateMany(panelists: Panelist[]): Promise<void> {
+    await this.prismaService.panelist.updateMany({
+      where: {
+        id: {
+          in: panelists.map((panelist) => panelist.id),
+        },
+        status: 'ACTIVE',
+      },
+      data: panelists.map((panelist) => ({
+        name: panelist.name,
+        email: panelist.email,
+        eventId: panelist.eventId,
+        office: panelist.office,
+        description: panelist.description,
+        colorPrincipal: panelist.colorPrincipal,
+        createdAt: panelist.createdAt,
+        increaseSize: panelist.increaseSize,
+        position: panelist.position,
+        isPrincipal: panelist.isPrincipal,
+        photo: panelist.photo,
+        sectionName: panelist.sectionName,
+        status: panelist.status as UserStatus,
+        updatedAt: panelist.updatedAt,
+      })),
+    });
+  }
 
   async findByEventId(eventId: string): Promise<Panelist[]> {
     const panelists = await this.prismaService.panelist.findMany({
@@ -29,6 +88,7 @@ export class PanelistPrismaRepository implements PanelistRepository {
           description: panelist.description,
           colorPrincipal: panelist.colorPrincipal,
           createdAt: panelist.createdAt,
+          position: panelist.position,
           increaseSize: panelist.increaseSize,
           isPrincipal: panelist.isPrincipal,
           photo: panelist.photo,
@@ -57,6 +117,7 @@ export class PanelistPrismaRepository implements PanelistRepository {
       office: panelists.office,
       description: panelists.description,
       colorPrincipal: panelists.colorPrincipal,
+      position: panelists.position,
       createdAt: panelists.createdAt,
       increaseSize: panelists.increaseSize,
       isPrincipal: panelists.isPrincipal,
@@ -88,6 +149,7 @@ export class PanelistPrismaRepository implements PanelistRepository {
       colorPrincipal: panelists.colorPrincipal,
       createdAt: panelists.createdAt,
       increaseSize: panelists.increaseSize,
+      position: panelists.position,
       isPrincipal: panelists.isPrincipal,
       photo: panelists.photo,
       sectionName: panelists.sectionName,
@@ -140,6 +202,7 @@ export class PanelistPrismaRepository implements PanelistRepository {
         colorPrincipal: panelist.colorPrincipal,
         createdAt: panelist.createdAt,
         increaseSize: panelist.increaseSize,
+        position: panelist.position,
         isPrincipal: panelist.isPrincipal,
         photo: panelist.photo,
         sectionName: panelist.sectionName,

@@ -19,6 +19,7 @@ import { DetailsPanelistUseCase } from '../useCases/details-panelist.usecase';
 import { ListPanelistUseCase } from '../useCases/list-panelist.usecase';
 import { UpdatePanelistUseCase } from '../useCases/update-panelist.usecase';
 import { UpdatePanelistDTO } from './dtos/update-panelist.dto';
+import { UpdatePositionPanelistUseCase } from '../useCases/update-position-panelist.usecase';
 
 @Controller(`${baseRoute.base_url_v1}/panelists`)
 @ApiTags('panelists')
@@ -29,6 +30,7 @@ export class PanelistController {
     private readonly detailsPanelistUseCase: DetailsPanelistUseCase,
     private readonly listPanelistUseCase: ListPanelistUseCase,
     private readonly updatePanelistUseCase: UpdatePanelistUseCase,
+    private readonly updatePositionPanelistUseCase: UpdatePositionPanelistUseCase,
   ) {}
 
   @Post()
@@ -101,6 +103,14 @@ export class PanelistController {
   async getPanelistsByEvent(@Param('eventId') eventId: string) {
     return await this.listPanelistUseCase.execute({
       eventId,
+    });
+  }
+
+  @Put('/position')
+  @UseGuards(AuthGuard('jwt'))
+  async updatePositionPanelist(@Body() body: { panelistIds: string[] }) {
+    return await this.updatePositionPanelistUseCase.execute({
+      panelistIds: body.panelistIds,
     });
   }
 }

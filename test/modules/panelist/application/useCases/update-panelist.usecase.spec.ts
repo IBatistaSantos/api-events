@@ -64,6 +64,7 @@ describe('UpdatePanelistUseCase', () => {
       colorPrincipal: response.colorPrincipal,
       description: response.description,
       increaseSize: response.increaseSize,
+      position: response.position,
       isPrincipal: true,
       eventId: panelist.eventId,
       photo: response.photo,

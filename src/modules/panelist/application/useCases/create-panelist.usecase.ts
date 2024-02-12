@@ -8,6 +8,7 @@ interface Input {
   email: string;
   office: string;
   eventId: string;
+  position?: number;
   description?: string;
   sectionName?: string;
   photo?: string;
@@ -24,14 +25,20 @@ export class CreatePanelistUseCase {
   ) {}
 
   async execute(props: Input) {
-    const { email, eventId } = props;
+    const { email, eventId, position } = props;
     const existing = await this.panelistRepository.findByEmail(email, eventId);
 
     if (existing) {
       throw new BadException('Painelista já cadastrado com este email');
     }
 
-    const panelist = new Panelist(props);
+    const numberOfPanelist =
+      await this.panelistRepository.countByEventId(eventId);
+
+    const panelist = new Panelist({
+      ...props,
+      position: position || numberOfPanelist + 1,
+    });
 
     await this.panelistRepository.save(panelist);
 

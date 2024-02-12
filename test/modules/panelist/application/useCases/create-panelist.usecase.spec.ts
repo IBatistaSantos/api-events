@@ -25,6 +25,7 @@ describe('CreatePanelistUseCase', () => {
     }).compile();
     repository.findByEmail.mockResolvedValue(undefined);
     repository.save.mockResolvedValue();
+    repository.countByEventId.mockResolvedValue(0);
     provider = module.get<CreatePanelistUseCase>(CreatePanelistUseCase);
   });
 
@@ -43,6 +44,7 @@ describe('CreatePanelistUseCase', () => {
     expect(response.eventId).toBe(params.eventId);
     expect(response.name).toBe(params.name);
     expect(response.office).toBe(params.office);
+    expect(response.position).toBe(1);
 
     expect(response).toEqual({
       ...params,
@@ -51,6 +53,7 @@ describe('CreatePanelistUseCase', () => {
       description: response.description,
       increaseSize: response.increaseSize,
       isPrincipal: false,
+      position: 1,
       photo: response.photo,
       sectionName: response.sectionName,
       status: response.status,

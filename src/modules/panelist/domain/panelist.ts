@@ -9,6 +9,7 @@ interface PanelistProps {
   description?: string;
   office: string;
   eventId: string;
+  position?: number;
   sectionName?: string;
   photo?: string;
   isPrincipal?: boolean;
@@ -21,7 +22,7 @@ interface PanelistProps {
 
 type PanelistUpdateProps = Omit<
   PanelistProps,
-  'id' | 'eventId' | 'createdAt' | 'updatedAt' | 'status'
+  'id' | 'eventId' | 'position' | 'createdAt' | 'updatedAt' | 'status'
 >;
 
 export class Panelist {
@@ -34,6 +35,7 @@ export class Panelist {
   private _eventId: string;
   private _sectionName: string;
   private _isPrincipal: boolean;
+  private _position: number;
   private _colorPrincipal: string;
   private _increaseSize: boolean;
   private _status: Status;
@@ -52,6 +54,7 @@ export class Panelist {
     this._isPrincipal = props.isPrincipal || false;
     this._colorPrincipal = props.colorPrincipal || null;
     this._increaseSize = props.increaseSize || false;
+    this._position = props.position || 0;
     this._status = new Status(props.status);
 
     this._createdAt = props.createdAt || new Date();
@@ -116,6 +119,10 @@ export class Panelist {
     return this._updatedAt;
   }
 
+  get position(): number {
+    return this._position;
+  }
+
   delete() {
     this._status.deactivate();
   }
@@ -144,6 +151,7 @@ export class Panelist {
       eventId: this._eventId,
       photo: this._photo,
       sectionName: this._sectionName,
+      position: this._position,
       isPrincipal: this._isPrincipal,
       colorPrincipal: this._colorPrincipal,
       increaseSize: this._increaseSize,
@@ -161,6 +169,11 @@ export class Panelist {
       if (!a.isPrincipal && b.isPrincipal) {
         return 1;
       }
+
+      if (a.position < b.position) {
+        return -1;
+      }
+
       return 0;
     });
   }

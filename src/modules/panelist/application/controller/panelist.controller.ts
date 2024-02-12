@@ -20,6 +20,7 @@ import { ListPanelistUseCase } from '../useCases/list-panelist.usecase';
 import { UpdatePanelistUseCase } from '../useCases/update-panelist.usecase';
 import { UpdatePanelistDTO } from './dtos/update-panelist.dto';
 import { UpdatePositionPanelistUseCase } from '../useCases/update-position-panelist.usecase';
+import { UpdatePositionPanelistDTO } from './dtos/update-position-panelist.dto';
 
 @Controller(`${baseRoute.base_url_v1}/panelists`)
 @ApiTags('panelists')
@@ -108,7 +109,7 @@ export class PanelistController {
 
   @Put('/position')
   @UseGuards(AuthGuard('jwt'))
-  async updatePositionPanelist(@Body() body: { panelistIds: string[] }) {
+  async updatePositionPanelist(@Body() body: UpdatePositionPanelistDTO) {
     return await this.updatePositionPanelistUseCase.execute({
       panelistIds: body.panelistIds,
     });

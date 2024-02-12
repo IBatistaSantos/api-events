@@ -141,6 +141,10 @@ export class Panelist {
     this._updatedAt = new Date();
   }
 
+  updatePosition(position: number) {
+    this._position = position;
+  }
+
   toJSON() {
     return {
       id: this._id,

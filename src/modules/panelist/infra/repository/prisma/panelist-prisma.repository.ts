@@ -96,6 +96,15 @@ export class PanelistPrismaRepository implements PanelistRepository {
     });
   }
 
+  async countByEventId(eventId: string): Promise<number> {
+    return await this.prismaService.panelist.count({
+      where: {
+        eventId,
+        status: 'ACTIVE',
+      },
+    });
+  }
+
   async save(panelist: Panelist): Promise<void> {
     await this.prismaService.panelist.create({
       data: {

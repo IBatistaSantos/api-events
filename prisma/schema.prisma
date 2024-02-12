@@ -302,6 +302,7 @@ model Panelist {
   office         String
   eventId        String     @map("event_id")
   photo          String?
+  position       Int        @default(0) @map("position")
   sectionName    String?    @map("section_name")
   isPrincipal    Boolean    @default(false) @map("is_principal")
   colorPrincipal String?    @map("color_principal")

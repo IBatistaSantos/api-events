@@ -29,6 +29,7 @@ describe('ListPanelistUseCase', () => {
         eventId: faker.string.uuid(),
         name: faker.person.fullName(),
         office: faker.company.name(),
+        position: 3,
       }),
 
       new Panelist({
@@ -37,6 +38,7 @@ describe('ListPanelistUseCase', () => {
         name: faker.person.fullName(),
         office: faker.company.name(),
         isPrincipal: true,
+        position: 5,
       }),
 
       new Panelist({
@@ -44,6 +46,7 @@ describe('ListPanelistUseCase', () => {
         eventId: faker.string.uuid(),
         name: faker.person.fullName(),
         office: faker.company.name(),
+        position: 2,
       }),
     ]);
 
@@ -59,5 +62,7 @@ describe('ListPanelistUseCase', () => {
 
     expect(response.length).toBe(3);
     expect(response[0].isPrincipal).toBeTruthy();
+    expect(response[1].position).toBe(2);
+    expect(response[2].position).toBe(3);
   });
 });

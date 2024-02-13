@@ -183,6 +183,7 @@ model Event {
   Live          Live[]
   Guest         Guest[]
   Panelist      Panelist[]
+  SponsorBanner SponsorBanner[]
 
   @@map("events")
 }
@@ -313,4 +314,20 @@ model Panelist {
   event          Event      @relation(fields: [eventId], references: [id])
 
   @@map("panelists")
+}
+
+model SponsorBanner {
+  id        String     @id @default(uuid())
+  url       String
+  desktop   String?    @map("desktop")
+  mobile    String?    @map("mobile")
+  tablet    String?    @map("tablet")
+  eventId   String     @map("event_id")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  deletedAt DateTime?  @map("deleted_at")
+  status    UserStatus @default(ACTIVE)
+  event     Event      @relation(fields: [eventId], references: [id])
+
+  @@map("sponsor_banners")
 }

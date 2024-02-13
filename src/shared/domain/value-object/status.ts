@@ -3,7 +3,7 @@ import { BadException } from '../errors/errors';
 export class Status {
   private _value: string;
   constructor(private readonly data?: string) {
-    this._value = data || 'ACTIVE';
+    this._value = data?.toUpperCase() || 'ACTIVE';
     this.validate();
   }
 

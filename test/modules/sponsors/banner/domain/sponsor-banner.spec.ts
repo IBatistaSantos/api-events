@@ -31,35 +31,63 @@ describe('SponsorBanner', () => {
     expect(sponsorBanner.deletedAt).toBeNull();
   });
 
-  it('Deve retornar um erro ao criar a config da banner dos patrocinadores sem url', () => {
-    expect(() => {
-      sponsorBanner = new SponsorBanner({
-        desktop: 'desktop-image.jpg',
-        mobile: 'mobile-image.jpg',
-        tablet: 'tablet-image.jpg',
-        url: '',
-        eventId: '123',
-        status: 'active',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        deletedAt: null,
-      });
-    }).toThrow('A url é obrigatória');
+  describe('validate', () => {
+    it('Deve retornar um erro ao criar a config da banner dos patrocinadores sem url', () => {
+      expect(() => {
+        sponsorBanner = new SponsorBanner({
+          desktop: 'desktop-image.jpg',
+          mobile: 'mobile-image.jpg',
+          tablet: 'tablet-image.jpg',
+          url: '',
+          eventId: '123',
+          status: 'active',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+        });
+      }).toThrow('A url é obrigatória');
+    });
+
+    it('Deve retornar um erro ao criar a config da banner dos patrocinadores sem eventId', () => {
+      expect(() => {
+        sponsorBanner = new SponsorBanner({
+          url: 'https://example.com',
+          desktop: 'desktop-image.jpg',
+          eventId: '',
+          mobile: 'mobile-image.jpg',
+          tablet: 'tablet-image.jpg',
+          status: 'active',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+        });
+      }).toThrow('O Id do evento é obrigatório');
+    });
   });
 
-  it('Deve retornar um erro ao criar a config da banner dos patrocinadores sem eventId', () => {
-    expect(() => {
-      sponsorBanner = new SponsorBanner({
-        url: 'https://example.com',
-        desktop: 'desktop-image.jpg',
-        eventId: '',
-        mobile: 'mobile-image.jpg',
-        tablet: 'tablet-image.jpg',
-        status: 'active',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        deletedAt: null,
+  describe('update', () => {
+    it('Deve atualizar a configuração da banner dos patrocinadores', () => {
+      sponsorBanner.update({
+        url: 'https://example.com.br',
+        desktop: 'new-desktop-image.jpg',
+        mobile: 'new-mobile-image.jpg',
+        tablet: 'new-tablet-image.jpg',
       });
-    }).toThrow('O Id do evento é obrigatório');
+
+      expect(sponsorBanner.url).toBe('https://example.com.br');
+      expect(sponsorBanner.desktop).toBe('new-desktop-image.jpg');
+      expect(sponsorBanner.mobile).toBe('new-mobile-image.jpg');
+      expect(sponsorBanner.tablet).toBe('new-tablet-image.jpg');
+      expect(sponsorBanner.updatedAt).toBeInstanceOf(Date);
+    });
+  });
+
+  describe('delete', () => {
+    it('Deve desativar a configuração da banner dos patrocinadores', () => {
+      sponsorBanner.delete();
+
+      expect(sponsorBanner.status).toBe('INACTIVE');
+      expect(sponsorBanner.deletedAt).toBeInstanceOf(Date);
+    });
   });
 });

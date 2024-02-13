@@ -82,6 +82,43 @@ export class SponsorBanner {
     return this._deletedAt;
   }
 
+  update(params: Partial<SponsorBannerProps>) {
+    if (params.url) {
+      this._url = params.url;
+    }
+    if (params.desktop) {
+      this._desktop = params.desktop;
+    }
+    if (params.mobile) {
+      this._mobile = params.mobile;
+    }
+    if (params.tablet) {
+      this._tablet = params.tablet;
+    }
+
+    this._updatedAt = new Date();
+  }
+
+  delete() {
+    this._status.deactivate();
+    this._deletedAt = new Date();
+  }
+
+  toJSON() {
+    return {
+      id: this._id,
+      url: this._url,
+      desktop: this._desktop,
+      mobile: this._mobile,
+      tablet: this._tablet,
+      eventId: this._eventId,
+      status: this._status.value,
+      createdAt: this._createdAt,
+      updatedAt: this._updatedAt,
+      deletedAt: this._deletedAt,
+    };
+  }
+
   private validate() {
     if (!this._url) {
       throw new BadException('A url é obrigatória');

@@ -10,6 +10,7 @@ import { SessionModule } from './modules/sessions/session.module';
 import { LiveModule } from './modules/lives/live.module';
 import { GuestModule } from './modules/guests/guest.module';
 import { PanelistModule } from './modules/panelist/panelist.module';
+import { SponsorModule } from './modules/sponsors/sponsor.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { PanelistModule } from './modules/panelist/panelist.module';
     LiveModule,
     GuestModule,
     PanelistModule,
+    SponsorModule,
   ],
   controllers: [],
   providers: [],

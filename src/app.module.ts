@@ -11,9 +11,11 @@ import { LiveModule } from './modules/lives/live.module';
 import { GuestModule } from './modules/guests/guest.module';
 import { PanelistModule } from './modules/panelist/panelist.module';
 import { SponsorModule } from './modules/sponsors/sponsor.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     PrismaModule,
     AccountModule,
     AuthenticationModule,

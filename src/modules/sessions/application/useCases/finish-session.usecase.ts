@@ -3,6 +3,8 @@ import { SessionRepository } from '../repository/session.repository';
 import { Session } from '../../domain/session';
 import { DateProvider } from '@/shared/infra/providers/date/date-provider';
 import { BadException, NotFoundException } from '@/shared/domain/errors/errors';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { FinishSessionEvent } from '../../domain/events/finish-session.event';
 
 interface Input {
   sessionId: string;
@@ -17,6 +19,8 @@ export class FinishSessionUseCase {
 
     @Inject('DateProvider')
     private readonly dateProvider: DateProvider,
+
+    private readonly emitter: EventEmitter2,
   ) {}
 
   async execute(params: Input) {
@@ -58,7 +62,20 @@ export class FinishSessionUseCase {
       current.changeCurrent(true);
       await this.sessionRepository.update(current);
     }
+
     session.finish(hourEnd);
+
     await this.sessionRepository.update(session);
+
+    this.emitter.emit(
+      'session.finish',
+      new FinishSessionEvent({
+        sessionId: session.id,
+        payload: {
+          date: session.date,
+          eventId: session.eventId,
+        },
+      }),
+    );
   }
 }

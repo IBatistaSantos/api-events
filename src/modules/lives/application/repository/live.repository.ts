@@ -10,4 +10,5 @@ export interface LiveRepository {
   removeMainLive(liveIds: string[]): Promise<void>;
   save(live: Live): Promise<void>;
   update(live: Live): Promise<void>;
+  finishLive(liveIds: string[]): Promise<void>;
 }

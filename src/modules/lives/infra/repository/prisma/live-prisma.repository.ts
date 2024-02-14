@@ -290,4 +290,20 @@ export class LivePrismaRepository implements LiveRepository {
       },
     });
   }
+
+  async finishLive(liveIds: string[]): Promise<void> {
+    await this.prismaService.live.updateMany({
+      where: {
+        id: {
+          in: liveIds,
+        },
+        status: 'ACTIVE',
+      },
+      data: {
+        updatedAt: new Date(),
+        finished: true,
+        finishedAt: new Date(),
+      },
+    });
+  }
 }

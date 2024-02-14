@@ -3,6 +3,7 @@ import { FinishSessionUseCase } from '@/modules/sessions/application/useCases/fi
 import { Session } from '@/modules/sessions/domain/session';
 import { DateProvider } from '@/shared/infra/providers/date/date-provider';
 import { faker } from '@faker-js/faker';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MockProxy, mock } from 'jest-mock-extended';
 
@@ -25,6 +26,10 @@ describe('FinishSessionUseCase', () => {
         {
           provide: 'DateProvider',
           useValue: (dateProvider = mock<DateProvider>()),
+        },
+        {
+          provide: EventEmitter2,
+          useClass: EventEmitter2,
         },
       ],
     }).compile();

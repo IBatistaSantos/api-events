@@ -10,6 +10,7 @@ import { DisableChatLiveUseCase } from './application/useCases/disable-chat-live
 import { UpdateLiveUseCase } from './application/useCases/update-live.usecase';
 import { DisableReactionLiveUseCase } from './application/useCases/disable-reaction-live.usecase';
 import { ReloadLiveUseCase } from './application/useCases/reload-live.usecase';
+import { FinishLivesSessionFinishedListener } from './application/listeners';
 
 @Module({
   controllers: [LiveController],
@@ -23,6 +24,7 @@ import { ReloadLiveUseCase } from './application/useCases/reload-live.usecase';
     DisableChatLiveUseCase,
     DisableReactionLiveUseCase,
     ReloadLiveUseCase,
+    FinishLivesSessionFinishedListener,
     {
       provide: 'LiveRepository',
       useClass: LivePrismaRepository,

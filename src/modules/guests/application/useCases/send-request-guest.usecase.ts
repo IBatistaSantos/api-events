@@ -24,6 +24,15 @@ export class SendRequestGuestUseCase {
       throw new BadException('Convidado já cadastrado com este email');
     }
 
+    const event = await this.guestRepository.findEvent(eventId);
+    if (!event) {
+      throw new BadException('Evento não encontrado');
+    }
+
+    if (!event.private) {
+      throw new BadException('O evento não é privado');
+    }
+
     const guest = new Guest({
       name,
       email,

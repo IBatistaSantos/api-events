@@ -8,7 +8,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import baseRoute from '@/config/routes/base-route';
 import { CreateScheduleUseCase } from '../useCases/create-schedule.usecase';
 import { ListScheduleUseCase } from '../useCases/list-schedule.usecase';
@@ -34,11 +34,86 @@ export class ScheduleController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
+  @ApiResponse({
+    status: 201,
+    description: 'Item da agenda criado com sucesso',
+    schema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          format: 'uuid',
+        },
+        title: {
+          type: 'string',
+        },
+        description: {
+          type: 'string',
+        },
+        type: {
+          type: 'string',
+        },
+        hourStart: {
+          type: 'string',
+        },
+        hourEnd: {
+          type: 'string',
+        },
+        eventId: {
+          type: 'string',
+          format: 'uuid',
+        },
+        sessionId: {
+          type: 'string',
+          format: 'uuid',
+        },
+      },
+    },
+  })
   async create(@Body() data: CreateScheduleDTO) {
     return await this.createScheduleUseCase.execute(data);
   }
 
   @Get('event/:eventId')
+  @ApiResponse({
+    status: 200,
+    description: 'Itens da agenda listados com sucesso',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+            format: 'uuid',
+          },
+          title: {
+            type: 'string',
+          },
+          description: {
+            type: 'string',
+          },
+          type: {
+            type: 'string',
+          },
+          hourStart: {
+            type: 'string',
+          },
+          hourEnd: {
+            type: 'string',
+          },
+          eventId: {
+            type: 'string',
+            format: 'uuid',
+          },
+          sessionId: {
+            type: 'string',
+            format: 'uuid',
+          },
+        },
+      },
+    },
+  })
   async list(@Param('eventId') eventId: string) {
     return await this.listScheduleUseCase.execute(eventId);
   }
@@ -51,6 +126,42 @@ export class ScheduleController {
 
   @UseGuards(AuthGuard('jwt'))
   @Put(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Item da agenda atualizado com sucesso',
+    schema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          format: 'uuid',
+        },
+        title: {
+          type: 'string',
+        },
+        description: {
+          type: 'string',
+        },
+        type: {
+          type: 'string',
+        },
+        hourStart: {
+          type: 'string',
+        },
+        hourEnd: {
+          type: 'string',
+        },
+        eventId: {
+          type: 'string',
+          format: 'uuid',
+        },
+        sessionId: {
+          type: 'string',
+          format: 'uuid',
+        },
+      },
+    },
+  })
   async update(@Param('id') id: string, @Body() data: UpdateScheduleDTO) {
     return await this.updateScheduleUseCase.execute(id, data);
   }

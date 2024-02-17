@@ -154,8 +154,9 @@ export class GuestController {
       ],
     },
   })
-  async listGuests(@Param('eventId') eventId: string) {
-    return await this.listGuestUseCase.execute({ eventId });
+  async listGuests(@Param('eventId') eventId: string, @GetUser() user: any) {
+    const userId = user.id;
+    return await this.listGuestUseCase.execute({ eventId, userId });
   }
 
   @Post('/invite')

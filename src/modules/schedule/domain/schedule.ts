@@ -3,6 +3,7 @@ import { PanelistSchedule } from './value-object/panelist-schedule';
 import { ScheduleType } from './value-object/scheduele-type';
 import { BadException } from '@/shared/domain/errors/errors';
 import { randomUUID } from 'crypto';
+import { Panelist } from '@/modules/panelist/domain/panelist';
 
 interface PanelistScheduleProps {
   id: string;
@@ -12,7 +13,7 @@ interface PanelistScheduleProps {
 
 interface ScheduleProps {
   id?: string;
-  type: string;
+  type?: string;
   sessionId: string;
   eventId: string;
   title: string;
@@ -97,6 +98,45 @@ export class Schedule {
 
   get status() {
     return this._status.value;
+  }
+
+  addPanelist(panelist: Panelist[]) {
+    this._panelist = panelist.map(
+      (panelist) =>
+        new PanelistSchedule({
+          id: panelist.id,
+          name: panelist.name,
+          description: panelist.description,
+        }),
+    );
+  }
+
+  updatePanelist(panelist: Panelist[]) {
+    this._panelist = panelist.map(
+      (panelist) =>
+        new PanelistSchedule({
+          id: panelist.id,
+          name: panelist.name,
+          description: panelist.description,
+        }),
+    );
+  }
+
+  updatePosition(position: number) {
+    this._position = position;
+  }
+
+  update(props: Partial<ScheduleProps>) {
+    this._type = new ScheduleType(props.type);
+    this._title = props.title || this._title;
+    this._description = props.description || this._description;
+    this._hourStart = props.hourStart || this._hourStart;
+    this._hourEnd = props.hourEnd || this._hourEnd;
+    this._sessionId = props.sessionId || this._sessionId;
+  }
+
+  delete() {
+    this._status.deactivate();
   }
 
   toJSON() {

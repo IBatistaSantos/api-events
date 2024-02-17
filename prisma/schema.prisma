@@ -49,6 +49,12 @@ enum GuestStatus {
   CONFIRMED
 }
 
+enum ScheduleType {
+  SCHEDULE
+  WARNING
+  BREAK
+}
+
 model Account {
   id            String         @id @default(uuid())
   type          AccountType
@@ -184,6 +190,7 @@ model Event {
   Guest         Guest[]
   Panelist      Panelist[]
   SponsorBanner SponsorBanner[]
+  Schedule      Schedule[]
 
   @@map("events")
 }
@@ -220,6 +227,7 @@ model Session {
   status    UserStatus @default(ACTIVE)
   Event     Event      @relation(fields: [eventId], references: [id])
   Live      Live[]
+  Schedule  Schedule[]
 
   @@map("sessions")
 }
@@ -330,4 +338,24 @@ model SponsorBanner {
   event     Event      @relation(fields: [eventId], references: [id])
 
   @@map("sponsor_banners")
+}
+
+model Schedule {
+  id          String       @id @default(uuid())
+  type        ScheduleType @default(SCHEDULE)
+  sessionId   String       @map("session_id")
+  eventId     String       @map("event_id")
+  title       String       @map("title")
+  description String?      @map("description")
+  hourStart   String       @map("hour_start")
+  hourEnd     String?      @map("hour_end")
+  position    Int          @default(0) @map("position")
+  status      UserStatus   @default(ACTIVE)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  session Session @relation(fields: [sessionId], references: [id])
+  event   Event   @relation(fields: [eventId], references: [id])
+
+  @@map("schedules")
 }

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PrismaModule } from './shared/infra/prisma/prisma.module';
 import { AccountModule } from './modules/accounts/account.module';
 import { AuthenticationModule } from './modules/auth/auth.module';
@@ -11,7 +12,7 @@ import { LiveModule } from './modules/lives/live.module';
 import { GuestModule } from './modules/guests/guest.module';
 import { PanelistModule } from './modules/panelist/panelist.module';
 import { SponsorModule } from './modules/sponsors/sponsor.module';
-import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ScheduleModule } from './modules/schedule/schedule.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     GuestModule,
     PanelistModule,
     SponsorModule,
+    ScheduleModule,
   ],
   controllers: [],
   providers: [],

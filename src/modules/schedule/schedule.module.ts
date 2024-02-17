@@ -5,10 +5,11 @@ import { DeleteScheduleUseCase } from './application/useCases/delete-schedule.us
 import { UpdateScheduleUseCase } from './application/useCases/update-schedule.usecase';
 import { UpdatePositionItemScheduleUseCase } from './application/useCases/update-position-item-schedule.usecase';
 import { SchedulePrismaRepository } from './infra/repository/prisma/schedule-prisma.repository';
+import { ScheduleController } from './application/controller/schedule.controller';
 
 @Module({
   imports: [],
-  controllers: [],
+  controllers: [ScheduleController],
   providers: [
     CreateScheduleUseCase,
     ListScheduleUseCase,

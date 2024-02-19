@@ -17,6 +17,8 @@ import { ListVotingUseCase } from '../useCases/list-voting.usecase';
 import { FinishVotingUseCase } from '../useCases/finish-voting.usecase';
 import { ActivateVotingUseCase } from '../useCases/actived-voting.usecase';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateVotingDTO } from './dtos/create-voting.dto';
+import { UpdateVotingDTO } from './dtos/update-voting.dto';
 
 @Controller(`${baseRoute.base_url_v1}/votings`)
 export class VotingController {
@@ -39,13 +41,13 @@ export class VotingController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  async createVoting(@Body() voting: any) {
+  async createVoting(@Body() voting: CreateVotingDTO) {
     return await this.createVotingUseCase.execute(voting);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put(':id')
-  async updateVoting(@Body() voting: any, @Param('id') id: string) {
+  async updateVoting(@Body() voting: UpdateVotingDTO, @Param('id') id: string) {
     return await this.updateVotingUseCase.execute({
       votingId: id,
       params: voting,

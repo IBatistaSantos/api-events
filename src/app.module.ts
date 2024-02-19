@@ -13,6 +13,7 @@ import { GuestModule } from './modules/guests/guest.module';
 import { PanelistModule } from './modules/panelist/panelist.module';
 import { SponsorModule } from './modules/sponsors/sponsor.module';
 import { ScheduleModule } from './modules/schedule/schedule.module';
+import { VotingModule } from './modules/votings/voting.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ScheduleModule } from './modules/schedule/schedule.module';
     PanelistModule,
     SponsorModule,
     ScheduleModule,
+    VotingModule,
   ],
   controllers: [],
   providers: [],

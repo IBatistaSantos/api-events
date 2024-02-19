@@ -98,4 +98,18 @@ describe('Voting', () => {
       });
     }).toThrow('Publico alvo inválido');
   });
+
+  it('Deve lançar uma exceção se o ID da live for invalido', () => {
+    expect(() => {
+      new Voting({
+        liveId: '',
+        questions: [
+          {
+            title: 'Qual é o seu nome?',
+            type: 'text',
+          },
+        ],
+      });
+    }).toThrow('LiveId inválido');
+  });
 });

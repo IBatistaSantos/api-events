@@ -253,6 +253,7 @@ model Live {
   session          Session           @relation(fields: [sessionId], references: [id])
   event            Event             @relation(fields: [eventId], references: [id])
   LiveTranslation  LiveTranslation[]
+  Voting           Voting[]
 
   @@map("lives")
 }
@@ -358,4 +359,37 @@ model Schedule {
   event   Event   @relation(fields: [eventId], references: [id])
 
   @@map("schedules")
+}
+
+model Voting {
+  id             String    @id @default(uuid())
+  targetAudience String?   @map("target_audience")
+  activated      Boolean   @default(false)
+  timeInSeconds  Int?      @map("time_in_seconds")
+  startDate      DateTime? @map("start_date")
+  endDate        DateTime? @map("end_date")
+  liveId         String    @map("live_id")
+
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  status    UserStatus @default(ACTIVE)
+
+  Live     Live       @relation(fields: [liveId], references: [id])
+  Question Question[]
+
+  @@map("votings")
+}
+
+model Question {
+  id        String     @id @default(uuid())
+  title     String
+  type      String
+  options   String[]   @map("options")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  status    UserStatus @default(ACTIVE)
+  Voting    Voting     @relation(fields: [votingId], references: [id])
+  votingId  String     @map("voting_id")
+
+  @@map("questions")
 }

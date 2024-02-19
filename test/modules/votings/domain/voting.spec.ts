@@ -1,8 +1,10 @@
 import { Voting } from '@/modules/votings/domain/voting';
+import { faker } from '@faker-js/faker';
 
 describe('Voting', () => {
   it('Deve criar uma enquete', () => {
     const voting = new Voting({
+      liveId: faker.string.uuid(),
       questions: [
         {
           title: 'Qual é o seu nome?',
@@ -34,6 +36,7 @@ describe('Voting', () => {
 
   it('Deve ativar a enquete', () => {
     const voting = new Voting({
+      liveId: faker.string.uuid(),
       questions: [
         {
           title: 'Qual é o seu nome?',
@@ -50,6 +53,7 @@ describe('Voting', () => {
 
   it('Deve desativar a enquete', () => {
     const voting = new Voting({
+      liveId: faker.string.uuid(),
       questions: [
         {
           title: 'Qual é o seu nome?',
@@ -66,6 +70,7 @@ describe('Voting', () => {
 
   it('Deve lançar uma exceção se a enquete ainda nao tenha sido ativada', () => {
     const voting = new Voting({
+      liveId: faker.string.uuid(),
       questions: [
         {
           title: 'Qual é o seu nome?',
@@ -82,6 +87,7 @@ describe('Voting', () => {
   it('Deve lançar uma exceção se o publico algo for invalido', () => {
     expect(() => {
       new Voting({
+        liveId: faker.string.uuid(),
         questions: [
           {
             title: 'Qual é o seu nome?',

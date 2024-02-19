@@ -7,6 +7,7 @@ interface VotingProps {
   id?: string;
   targetAudience?: TargetAudience;
   questions: QuestionsProps[];
+  liveId?: string;
   activated?: boolean;
   timeInSeconds?: number;
   startDate?: Date;
@@ -16,12 +17,13 @@ interface VotingProps {
   updatedAt?: Date;
 }
 
-type TargetAudience = 'all' | 'digital' | 'presencial';
+export type TargetAudience = 'all' | 'digital' | 'presencial';
 
 export class Voting {
   private _id: string;
   private _targetAudience: TargetAudience;
   private _questions: Questions;
+  private _liveId?: string;
   private _activated: boolean;
   private _timeInSeconds?: number;
   private _startDate: Date;
@@ -34,6 +36,7 @@ export class Voting {
     this._id = props.id || randomUUID();
     this._targetAudience = props.targetAudience || 'all';
     this._questions = new Questions(props.questions);
+    this._liveId = props.liveId;
     this._activated = props.activated || false;
     this._timeInSeconds = props.timeInSeconds || null;
     this._startDate = props.startDate;
@@ -69,6 +72,10 @@ export class Voting {
     return this._startDate;
   }
 
+  get liveId(): string {
+    return this._liveId;
+  }
+
   get endDate(): Date {
     return this._endDate;
   }
@@ -85,6 +92,10 @@ export class Voting {
     return this._updatedAt;
   }
 
+  delete() {
+    this._status.deactivate();
+  }
+
   activate() {
     this._activated = true;
     this._startDate = new Date();
@@ -98,10 +109,45 @@ export class Voting {
     this._endDate = new Date();
   }
 
+  update(params: Partial<VotingProps>) {
+    if (this._activated || this._endDate) {
+      throw new BadException('Votacao ja iniciada e/ou finalizada');
+    }
+
+    this._targetAudience = params.targetAudience || this._targetAudience;
+    this._timeInSeconds = params.timeInSeconds || this._timeInSeconds;
+
+    if (params.questions) {
+      this._questions = new Questions(params.questions);
+    }
+
+    this._updatedAt = new Date();
+  }
+
+  toJSON() {
+    return {
+      id: this._id,
+      targetAudience: this._targetAudience,
+      liveId: this._liveId,
+      questions: this._questions.toJSON(),
+      activated: this._activated,
+      timeInSeconds: this._timeInSeconds,
+      startDate: this._startDate,
+      endDate: this._endDate,
+      status: this._status.value,
+      createdAt: this._createdAt,
+      updatedAt: this._updatedAt,
+    };
+  }
+
   private validate() {
     const targetAudience = ['all', 'digital', 'presencial'];
     if (!targetAudience.includes(this._targetAudience)) {
       throw new BadException('Publico alvo inválido');
+    }
+
+    if (!this._liveId) {
+      throw new BadException('LiveId inválido');
     }
   }
 }

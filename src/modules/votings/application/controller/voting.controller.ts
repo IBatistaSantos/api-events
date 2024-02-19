@@ -10,13 +10,15 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
 import { CreateVotingUseCase } from '../useCases/create-voting.usecase';
 import { UpdateVotingUseCase } from '../useCases/update-voting.usecase';
 import { DeleteVotingUseCase } from '../useCases/delete-voting.usecase';
 import { ListVotingUseCase } from '../useCases/list-voting.usecase';
 import { FinishVotingUseCase } from '../useCases/finish-voting.usecase';
 import { ActivateVotingUseCase } from '../useCases/actived-voting.usecase';
-import { AuthGuard } from '@nestjs/passport';
+
 import { CreateVotingDTO } from './dtos/create-voting.dto';
 import { UpdateVotingDTO } from './dtos/update-voting.dto';
 

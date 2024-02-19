@@ -1,11 +1,12 @@
 import { BadException } from '@/shared/domain/errors/errors';
 import { Status } from '@/shared/domain/value-object/status';
 import { randomUUID } from 'crypto';
+import { Questions, QuestionsProps } from './question';
 
 interface VotingProps {
   id?: string;
   targetAudience?: TargetAudience;
-  questions: string;
+  questions: QuestionsProps[];
   activated?: boolean;
   timeInSeconds?: number;
   startDate?: Date;
@@ -20,7 +21,7 @@ type TargetAudience = 'all' | 'digital' | 'presencial';
 export class Voting {
   private _id: string;
   private _targetAudience: TargetAudience;
-  private _questions: string;
+  private _questions: Questions;
   private _activated: boolean;
   private _timeInSeconds?: number;
   private _startDate: Date;
@@ -32,7 +33,7 @@ export class Voting {
   constructor(props: VotingProps) {
     this._id = props.id || randomUUID();
     this._targetAudience = props.targetAudience || 'all';
-    this._questions = props.questions;
+    this._questions = new Questions(props.questions);
     this._activated = props.activated || false;
     this._timeInSeconds = props.timeInSeconds || null;
     this._startDate = props.startDate;
@@ -52,8 +53,8 @@ export class Voting {
     return this._targetAudience;
   }
 
-  get questions(): string {
-    return this._questions;
+  get questions() {
+    return this._questions.toJSON();
   }
 
   get activated(): boolean {
@@ -91,7 +92,7 @@ export class Voting {
 
   deactivate() {
     if (!this._activated) {
-      throw new BadException('Votação já está desativada');
+      throw new BadException('A enquete ainda não foi ativada');
     }
     this._activated = false;
     this._endDate = new Date();

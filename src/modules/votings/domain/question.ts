@@ -21,7 +21,7 @@ export class Questions {
         type: question.type,
         title: question.title,
         description: question.description || null,
-        options: question.options || null,
+        options: question.options || [],
       };
     });
 
@@ -39,14 +39,14 @@ export class Questions {
         throw new BadException('Tipo de pergunta inválido');
       }
       if (!question.title) {
-        throw new Error('O título da pergunta é obrigatório');
+        throw new BadException('O título da pergunta é obrigatório');
       }
       if (
         question.type === 'multiple-choice' ||
         question.type === 'single-choice'
       ) {
         if (!question.options || question.options.length < 2) {
-          throw new Error(
+          throw new BadException(
             'Perguntas de múltipla escolha devem ter no mínimo duas opções',
           );
         }

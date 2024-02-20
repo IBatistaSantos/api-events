@@ -384,7 +384,7 @@ model Question {
   id        String     @id @default(uuid())
   title     String
   type      String
-  options   String[]   @map("options")
+  options   String[]   @default([]) @map("options")
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
   status    UserStatus @default(ACTIVE)

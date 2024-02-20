@@ -18,7 +18,7 @@ describe('Voting', () => {
       {
         id: expect.any(String),
         description: null,
-        options: null,
+        options: [],
         title: 'Qual é o seu nome?',
         type: 'text',
       },

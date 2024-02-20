@@ -20,7 +20,7 @@ describe('Questions', () => {
         id: expect.any(String),
         title: 'Qual é o seu nome?',
         description: null,
-        options: null,
+        options: [],
         type: 'text',
       },
       {

@@ -1,19 +1,25 @@
 import { BadException } from '@/shared/domain/errors/errors';
 import { Field, FieldProps } from '../field';
 
+export interface Option {
+  label: string;
+  value: string;
+  additionalFields?: Field[];
+}
+
 export interface FieldCheckboxProps extends FieldProps {
-  options: string[];
+  options: Option[];
 }
 
 export class FieldCheckbox extends Field {
-  private _options: string[];
+  private _options: Option[];
   constructor(props: FieldCheckboxProps) {
     super({ ...props, type: 'checkbox' });
 
     this._options = props.options;
   }
 
-  get options(): string[] {
+  get options() {
     return this._options;
   }
 
@@ -22,7 +28,10 @@ export class FieldCheckbox extends Field {
       throw new BadException('Campo é obrigatório');
     }
 
-    if (!this._options.includes(value)) {
+    const isOptionValid = this._options.some(
+      (option) => option.value === value,
+    );
+    if (!isOptionValid) {
       throw new BadException('Opção inválida');
     }
   }

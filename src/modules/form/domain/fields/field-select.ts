@@ -1,20 +1,23 @@
 import { BadException } from '@/shared/domain/errors/errors';
 import { Field, FieldProps } from '../field';
 
+export interface Option {
+  label: string;
+  value: string;
+  additionalFields?: Field[];
+}
+
 export interface FieldSelectProps extends FieldProps {
-  options: string[];
-  additionalOption?: any;
+  options: Option[];
 }
 
 export class FieldSelect extends Field {
-  private _options: string[];
-  private _additionalOption: any;
+  private _options: Option[];
 
   constructor(props: FieldSelectProps) {
     super({ ...props, type: 'select' });
 
     this._options = props.options;
-    this._additionalOption = props.additionalOption || null;
 
     if (!this._options.length) {
       throw new BadException('Opções são obrigatórias');
@@ -30,24 +33,22 @@ export class FieldSelect extends Field {
       throw new BadException('Selecione uma opção');
     }
 
-    if (!this._options.includes(value)) {
+    const isOptionValid = this._options.some(
+      (option) => option.value === value,
+    );
+    if (!isOptionValid) {
       throw new BadException('Opção inválida');
     }
   }
 
-  get options(): string[] {
+  get options() {
     return this._options;
-  }
-
-  get additionalOption(): any {
-    return this._additionalOption;
   }
 
   toJSON() {
     return {
       ...super.toJSON(),
       options: this._options,
-      additionalOption: this._additionalOption,
     };
   }
 }

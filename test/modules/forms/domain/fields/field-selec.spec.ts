@@ -6,7 +6,16 @@ describe('FieldSelect', () => {
       label: 'Sexo',
       type: 'select',
       placeholder: 'Selecione seu sexo',
-      options: ['Masculino', 'Feminino'],
+      options: [
+        {
+          label: 'Masculino',
+          value: 'Masculino',
+        },
+        {
+          label: 'Feminino',
+          value: 'Feminino',
+        },
+      ],
     });
 
     expect(field.toJSON()).toEqual({
@@ -16,8 +25,16 @@ describe('FieldSelect', () => {
       required: false,
       placeholder: 'Selecione seu sexo',
       entireLine: false,
-      options: ['Masculino', 'Feminino'],
-      additionalOption: null,
+      options: [
+        {
+          label: 'Masculino',
+          value: 'Masculino',
+        },
+        {
+          label: 'Feminino',
+          value: 'Feminino',
+        },
+      ],
     });
   });
 
@@ -27,7 +44,16 @@ describe('FieldSelect', () => {
         label: '',
         type: 'select',
         placeholder: 'Selecione seu sexo',
-        options: ['Masculino', 'Feminino'],
+        options: [
+          {
+            label: 'Masculino',
+            value: 'Masculino',
+          },
+          {
+            label: 'Feminino',
+            value: 'Feminino',
+          },
+        ],
       });
     }).toThrow('Label é obrigatório');
   });
@@ -49,7 +75,12 @@ describe('FieldSelect', () => {
         label: 'Sexo',
         type: 'select',
         placeholder: 'Selecione seu sexo',
-        options: ['Masculino'],
+        options: [
+          {
+            label: 'Masculino',
+            value: 'Masculino',
+          },
+        ],
       });
     }).toThrow('Deve haver pelo menos duas opções');
   });
@@ -60,7 +91,16 @@ describe('FieldSelect', () => {
         label: 'Sexo',
         type: 'select',
         placeholder: 'Selecione seu sexo',
-        options: ['Masculino', 'Feminino'],
+        options: [
+          {
+            label: 'Masculino',
+            value: 'Masculino',
+          },
+          {
+            label: 'Feminino',
+            value: 'Feminino',
+          },
+        ],
       });
 
       expect(() => {
@@ -73,7 +113,16 @@ describe('FieldSelect', () => {
         label: 'Sexo',
         type: 'select',
         placeholder: 'Selecione seu sexo',
-        options: ['Masculino', 'Feminino'],
+        options: [
+          {
+            label: 'Masculino',
+            value: 'Masculino',
+          },
+          {
+            label: 'Feminino',
+            value: 'Feminino',
+          },
+        ],
         required: true,
       });
 
@@ -87,7 +136,16 @@ describe('FieldSelect', () => {
         label: 'Sexo',
         type: 'select',
         placeholder: 'Selecione seu sexo',
-        options: ['Masculino', 'Feminino'],
+        options: [
+          {
+            label: 'Masculino',
+            value: 'Masculino',
+          },
+          {
+            label: 'Feminino',
+            value: 'Feminino',
+          },
+        ],
       });
 
       expect(() => {

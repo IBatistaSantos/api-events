@@ -5,7 +5,16 @@ describe('FieldCheckbox', () => {
     const field = new FieldCheckbox({
       label: 'Aceito os termos',
       type: 'checkbox',
-      options: ['Sim', 'Não'],
+      options: [
+        {
+          label: 'Sim',
+          value: 'Sim',
+        },
+        {
+          label: 'Não',
+          value: 'Não',
+        },
+      ],
       placeholder: 'Aceito os termos',
     });
 
@@ -16,7 +25,16 @@ describe('FieldCheckbox', () => {
       type: 'checkbox',
       required: false,
       entireLine: false,
-      options: ['Sim', 'Não'],
+      options: [
+        {
+          label: 'Sim',
+          value: 'Sim',
+        },
+        {
+          label: 'Não',
+          value: 'Não',
+        },
+      ],
     });
   });
 
@@ -25,7 +43,16 @@ describe('FieldCheckbox', () => {
       const field = new FieldCheckbox({
         label: 'Aceito os termos',
         type: 'checkbox',
-        options: ['Sim', 'Não'],
+        options: [
+          {
+            label: 'Sim',
+            value: 'Sim',
+          },
+          {
+            label: 'Não',
+            value: 'Não',
+          },
+        ],
         placeholder: 'Aceito os termos',
       });
 
@@ -38,7 +65,16 @@ describe('FieldCheckbox', () => {
       const field = new FieldCheckbox({
         label: 'Aceito os termos',
         type: 'checkbox',
-        options: ['Sim', 'Não'],
+        options: [
+          {
+            label: 'Sim',
+            value: 'Sim',
+          },
+          {
+            label: 'Não',
+            value: 'Não',
+          },
+        ],
         placeholder: 'Aceito os termos',
         required: true,
       });
@@ -52,7 +88,16 @@ describe('FieldCheckbox', () => {
       const field = new FieldCheckbox({
         label: 'Aceito os termos',
         type: 'checkbox',
-        options: ['Sim', 'Não'],
+        options: [
+          {
+            label: 'Sim',
+            value: 'Sim',
+          },
+          {
+            label: 'Não',
+            value: 'Não',
+          },
+        ],
         placeholder: 'Aceito os termos',
       });
 

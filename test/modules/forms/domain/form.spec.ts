@@ -282,7 +282,7 @@ describe('Form', () => {
       expect(result).toEqual([
         'O campo Nome é obrigatório',
         'O campo Idade é obrigatório',
-        'O campo Sexo é obrigatório',
+        'O campo Sexo é obrigatório. Selecione uma opção válida',
       ]);
     });
   });

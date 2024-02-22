@@ -29,10 +29,12 @@ describe('FieldSelect', () => {
         {
           label: 'Masculino',
           value: 'Masculino',
+          additionalFields: null,
         },
         {
           label: 'Feminino',
           value: 'Feminino',
+          additionalFields: null,
         },
       ],
     });
@@ -151,6 +153,238 @@ describe('FieldSelect', () => {
       expect(() => {
         field.validateField({ Sexo: 'Outro' });
       }).toThrow('O campo Sexo é inválido. Selecione uma opção válida');
+    });
+  });
+
+  describe('additionalFields', () => {
+    it('Deve adicionar campos adicionais', () => {
+      const field = new FieldSelect({
+        label: 'Tipo de Pessoa',
+        type: 'select',
+        placeholder: 'Selecione o tipo de pessoa',
+        options: [
+          {
+            label: 'Pessoa Física',
+            value: 'PF',
+            additionalFields: [
+              {
+                label: 'CPF',
+                type: 'text',
+                required: true,
+                placeholder: 'Digite seu CPF',
+              },
+            ],
+          },
+          {
+            label: 'Pessoa Jurídica',
+            value: 'PJ',
+            additionalFields: [
+              {
+                label: 'CNPJ',
+                type: 'text',
+                required: true,
+                placeholder: 'Digite seu CNPJ',
+              },
+            ],
+          },
+        ],
+      });
+
+      const result = field.validateField({
+        'Tipo de Pessoa': 'PF',
+        CPF: '12345678901',
+      });
+
+      expect(result).toBeUndefined();
+    });
+
+    it('Deve lançar uma exceção se o campo adicional for obrigatório e não for preenchido', () => {
+      const field = new FieldSelect({
+        label: 'Tipo de Pessoa',
+        type: 'select',
+        placeholder: 'Selecione o tipo de pessoa',
+        options: [
+          {
+            label: 'Pessoa Física',
+            value: 'PF',
+            additionalFields: [
+              {
+                label: 'CPF',
+                type: 'text',
+                required: true,
+                placeholder: 'Digite seu CPF',
+              },
+            ],
+          },
+          {
+            label: 'Pessoa Jurídica',
+            value: 'PJ',
+            additionalFields: [
+              {
+                label: 'CNPJ',
+                type: 'text',
+                required: true,
+                placeholder: 'Digite seu CNPJ',
+              },
+            ],
+          },
+        ],
+      });
+
+      expect(() => {
+        field.validateField({ 'Tipo de Pessoa': 'PF' });
+      }).toThrow('O campo CPF é obrigatório');
+    });
+
+    it('Deve validar os campos adicionais', () => {
+      const field = new FieldSelect({
+        label: 'País',
+        type: 'select',
+        placeholder: 'Selecione o seu país',
+        options: [
+          {
+            label: 'Brasil',
+            value: 'BRA',
+            additionalFields: [
+              {
+                label: 'Estado',
+                type: 'select',
+                required: true,
+                placeholder: 'Selecione o seu estado',
+                options: [
+                  {
+                    label: 'São Paulo',
+                    value: 'SP',
+                    additionalFields: [
+                      {
+                        label: 'Cidade',
+                        type: 'select',
+                        required: true,
+                        placeholder: 'Selecione a sua cidade',
+                        options: [
+                          {
+                            label: 'São Paulo',
+                            value: 'SP-CITY',
+                            additionalFields: [
+                              {
+                                label: 'Bairro',
+                                type: 'text',
+                                required: true,
+                                placeholder: 'Digite o seu bairro',
+                              },
+                            ],
+                          },
+                          {
+                            label: 'Campinas',
+                            value: 'CP',
+                            additionalFields: [
+                              {
+                                label: 'Bairro',
+                                type: 'text',
+                                required: true,
+                                placeholder: 'Digite o seu bairro',
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    label: 'Rio de Janeiro',
+                    value: 'RJ',
+                    additionalFields: [
+                      {
+                        label: 'Cidade',
+                        type: 'select',
+                        required: true,
+                        placeholder: 'Selecione a sua cidade',
+                        options: [
+                          {
+                            label: 'Rio de Janeiro',
+                            value: 'RJ',
+                          },
+                          {
+                            label: 'Niterói',
+                            value: 'NT',
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            label: 'Estados Unidos',
+            value: 'USA',
+            additionalFields: [
+              {
+                label: 'Estado',
+                type: 'select',
+                required: true,
+                placeholder: 'Selecione o seu estado',
+                options: [
+                  {
+                    label: 'Texas',
+                    value: 'TX',
+                    additionalFields: [
+                      {
+                        label: 'Cidade',
+                        type: 'select',
+                        required: true,
+                        placeholder: 'Selecione a sua cidade',
+                        options: [
+                          {
+                            label: 'Houston',
+                            value: 'HOU',
+                          },
+                          {
+                            label: 'Dallas',
+                            value: 'DAL',
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    label: 'Califórnia',
+                    value: 'CA',
+                    additionalFields: [
+                      {
+                        label: 'Cidade',
+                        type: 'select',
+                        required: true,
+                        placeholder: 'Selecione a sua cidade',
+                        options: [
+                          {
+                            label: 'Los Angeles',
+                            value: 'LA',
+                          },
+                          {
+                            label: 'San Francisco',
+                            value: 'SF',
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      const result = field.validateField({
+        País: 'BRA',
+        Estado: 'SP',
+        Cidade: 'SP-CITY',
+        Bairro: 'Vila Mariana',
+      });
+
+      expect(result).toBeUndefined();
     });
   });
 });

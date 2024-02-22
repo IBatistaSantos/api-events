@@ -15,13 +15,19 @@ export interface Option {
   additionalFields?: Field[];
 }
 
+export interface OptionProps {
+  label: string;
+  value: string;
+  additionalFields?: FieldProps[];
+}
+
 interface FieldProps {
   id?: string;
   label: string;
   type: string;
   required?: boolean;
   placeholder: string;
-  options?: Option[];
+  options?: OptionProps[];
 }
 
 export class Form {

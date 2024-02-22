@@ -27,7 +27,7 @@ describe('FieldNumber', () => {
       });
 
       expect(() => {
-        field.validateField(18);
+        field.validateField({ Idade: 20 });
       }).not.toThrow();
     });
 
@@ -40,7 +40,7 @@ describe('FieldNumber', () => {
       });
 
       expect(() => {
-        field.validateField('');
+        field.validateField({ Idade: '' });
       }).toThrow('Número é obrigatório');
     });
 
@@ -52,7 +52,7 @@ describe('FieldNumber', () => {
       });
 
       expect(() => {
-        field.validateField('AAA');
+        field.validateField({ Idade: 'vinte' });
       }).toThrow('Número inválido');
     });
   });

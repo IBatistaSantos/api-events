@@ -23,7 +23,9 @@ export class FieldCheckbox extends Field {
     return this._options;
   }
 
-  validateField(value: any): void {
+  validateField(info: Record<string, any>): void {
+    const value = info[this.label];
+
     if (this._required && !value) {
       throw new BadException('Campo é obrigatório');
     }

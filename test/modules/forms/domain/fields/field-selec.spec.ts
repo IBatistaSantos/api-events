@@ -150,7 +150,7 @@ describe('FieldSelect', () => {
 
       expect(() => {
         field.validateField({ Sexo: 'Outro' });
-      }).toThrow('Opção inválida');
+      }).toThrow('O campo Sexo é inválido. Selecione uma opção válida');
     });
   });
 });

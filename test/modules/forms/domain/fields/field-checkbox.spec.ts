@@ -81,7 +81,7 @@ describe('FieldCheckbox', () => {
 
       expect(() => {
         field.validateField({ 'Aceito os termos': '' });
-      }).toThrow('Campo é obrigatório');
+      }).toThrow(`O campo Aceito os termos é obrigatório`);
     });
 
     it('Deve lançar uma exceção se a opção for inválida', () => {
@@ -103,7 +103,9 @@ describe('FieldCheckbox', () => {
 
       expect(() => {
         field.validateField({ 'Aceito os termos': 'Talvez' });
-      }).toThrow('Opção inválida');
+      }).toThrow(
+        'O campo Aceito os termos é inválido. Selecione uma opção válida',
+      );
     });
   });
 });

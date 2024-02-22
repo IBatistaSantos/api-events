@@ -41,7 +41,7 @@ describe('FieldNumber', () => {
 
       expect(() => {
         field.validateField({ Idade: '' });
-      }).toThrow('Número é obrigatório');
+      }).toThrow('O campo Idade é obrigatório');
     });
 
     it('Deve lançar uma exceção se o campo não for um número', () => {
@@ -53,7 +53,7 @@ describe('FieldNumber', () => {
 
       expect(() => {
         field.validateField({ Idade: 'vinte' });
-      }).toThrow('Número inválido');
+      }).toThrow('O campo Idade é inválido. Deve ser um número!');
     });
   });
 });

@@ -43,7 +43,7 @@ describe('FieldPassword', () => {
 
       expect(() => {
         field.validateField({ Senha: '' });
-      }).toThrow('Senha é obrigatória');
+      }).toThrow('O campo Senha é obrigatório');
     });
 
     it('Deve lançar uma exceção se a senha for muito curta', () => {
@@ -56,7 +56,7 @@ describe('FieldPassword', () => {
 
       expect(() => {
         field.validateField({ Senha: '12345' });
-      }).toThrow('Senha é muito curta');
+      }).toThrow('O campo Senha é muito curto. Mínimo de 6 caracteres');
     });
 
     it('Deve lançar uma exceção se a senha for muito longa', () => {
@@ -69,7 +69,7 @@ describe('FieldPassword', () => {
 
       expect(() => {
         field.validateField({ Senha: '1234567' });
-      }).toThrow('Senha é muito longa');
+      }).toThrow('O campo Senha é muito longo. Máximo de 6 caractere');
     });
   });
 });

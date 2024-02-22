@@ -64,7 +64,7 @@ describe('Field', () => {
 
       expect(() => {
         field.validateField({ Nome: '' });
-      }).toThrow('Texto é obrigatório');
+      }).toThrow('O campo Nome é obrigatório');
     });
 
     it('Deve lançar uma exceção se nao for um texto valido', () => {
@@ -78,7 +78,7 @@ describe('Field', () => {
 
       expect(() => {
         field.validateField({ Nome: 123 });
-      }).toThrow('Texto inválido');
+      }).toThrow('O campo Nome é inválido. Deve ser um texto válido!');
     });
   });
 });

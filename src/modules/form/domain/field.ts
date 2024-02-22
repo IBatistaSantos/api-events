@@ -1,5 +1,5 @@
-import { BadException } from '@/shared/domain/errors/errors';
 import { randomUUID } from 'crypto';
+import { BadException } from '@/shared/domain/errors/errors';
 
 export interface FieldProps {
   id?: string;
@@ -12,11 +12,11 @@ export interface FieldProps {
 
 export abstract class Field {
   private _id: string;
-  private _label: string;
-  private _type: string;
+  protected _label: string;
+  protected _type: string;
   protected _required: boolean;
   protected _placeholder: string;
-  private _entireLine: boolean;
+  protected _entireLine: boolean;
 
   constructor(props: FieldProps) {
     this._id = props.id || randomUUID();

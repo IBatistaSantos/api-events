@@ -17,7 +17,9 @@ export class FieldText extends Field {
     return this._regexValidation;
   }
 
-  validateField(value: any): void {
+  validateField(info: Record<string, any>): void {
+    const value = info[this.label];
+
     if (this._required && !value) {
       throw new BadException('Texto é obrigatório');
     }

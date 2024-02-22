@@ -4,7 +4,7 @@ generator client {
 
 generator erd {
   provider    = "prisma-erd-generator"
-  output      = "./erd.png"
+  output      = "./erd.svg"
   theme       = "dark"
   ignoreEnums = true
 }

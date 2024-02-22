@@ -29,7 +29,7 @@ describe('FieldPassword', () => {
       });
 
       expect(() => {
-        field.validateField('123456');
+        field.validateField({ Senha: '123456' });
       }).not.toThrow();
     });
 
@@ -42,7 +42,7 @@ describe('FieldPassword', () => {
       });
 
       expect(() => {
-        field.validateField('');
+        field.validateField({ Senha: '' });
       }).toThrow('Senha é obrigatória');
     });
 
@@ -55,7 +55,7 @@ describe('FieldPassword', () => {
       });
 
       expect(() => {
-        field.validateField('123');
+        field.validateField({ Senha: '12345' });
       }).toThrow('Senha é muito curta');
     });
 
@@ -68,7 +68,7 @@ describe('FieldPassword', () => {
       });
 
       expect(() => {
-        field.validateField('1234567');
+        field.validateField({ Senha: '1234567' });
       }).toThrow('Senha é muito longa');
     });
   });

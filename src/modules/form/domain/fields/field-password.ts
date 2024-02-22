@@ -24,7 +24,9 @@ export class FieldPassword extends Field {
     return this._maxLength;
   }
 
-  validateField(value: any): void {
+  validateField(info: Record<string, any>): void {
+    const value = info[this.label];
+
     if (this._required && !value) {
       throw new BadException('Senha é obrigatória');
     }

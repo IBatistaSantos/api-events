@@ -21,14 +21,16 @@ export class FieldText extends Field {
     const value = info[this.label];
 
     if (this._required && !value) {
-      throw new BadException('Texto é obrigatório');
+      throw new BadException(`O campo ${this.label} é obrigatório`);
     }
 
     if (
       this._regexValidation &&
       !new RegExp(this._regexValidation).test(value)
     ) {
-      throw new BadException('Texto inválido');
+      throw new BadException(
+        `O campo ${this.label} é inválido. Deve ser um texto válido!`,
+      );
     }
   }
 

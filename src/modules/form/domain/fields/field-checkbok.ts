@@ -1,11 +1,6 @@
 import { BadException } from '@/shared/domain/errors/errors';
 import { Field, FieldProps } from '../field';
-
-export interface Option {
-  label: string;
-  value: string;
-  additionalFields?: Field[];
-}
+import { Option } from '../form';
 
 export interface FieldCheckboxProps extends FieldProps {
   options: Option[];
@@ -27,14 +22,16 @@ export class FieldCheckbox extends Field {
     const value = info[this.label];
 
     if (this._required && !value) {
-      throw new BadException('Campo é obrigatório');
+      throw new BadException(`O campo ${this.label} é obrigatório`);
     }
 
     const isOptionValid = this._options.some(
       (option) => option.value === value,
     );
     if (!isOptionValid) {
-      throw new BadException('Opção inválida');
+      throw new BadException(
+        `O campo ${this.label} é inválido. Selecione uma opção válida`,
+      );
     }
   }
 

@@ -28,14 +28,18 @@ export class FieldPassword extends Field {
     const value = info[this.label];
 
     if (this._required && !value) {
-      throw new BadException('Senha é obrigatória');
+      throw new BadException(`O campo ${this.label} é obrigatório`);
     }
     if (this._minLength && value.length < this._minLength) {
-      throw new BadException('Senha é muito curta');
+      throw new BadException(
+        `O campo ${this.label} é muito curto. Mínimo de ${this._minLength} caracteres`,
+      );
     }
 
     if (this._maxLength && value.length > this._maxLength) {
-      throw new BadException('Senha é muito longa');
+      throw new BadException(
+        `O campo ${this.label} é muito longo. Máximo de ${this._maxLength} caracteres`,
+      );
     }
   }
 

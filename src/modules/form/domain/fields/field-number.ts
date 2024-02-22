@@ -9,11 +9,13 @@ export class FieldNumber extends Field {
   validateField(info: Record<string, any>): void {
     const value = info[this.label];
     if (this._required && !value) {
-      throw new BadException('Número é obrigatório');
+      throw new BadException(`O campo ${this.label} é obrigatório`);
     }
 
     if (isNaN(value)) {
-      throw new BadException('Número inválido');
+      throw new BadException(
+        `O campo ${this.label} é inválido. Deve ser um número!`,
+      );
     }
   }
 

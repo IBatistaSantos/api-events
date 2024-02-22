@@ -1,11 +1,6 @@
 import { BadException } from '@/shared/domain/errors/errors';
 import { Field, FieldProps } from '../field';
-
-export interface Option {
-  label: string;
-  value: string;
-  additionalFields?: Field[];
-}
+import { Option } from '../form';
 
 export interface FieldSelectProps extends FieldProps {
   options: Option[];
@@ -31,14 +26,18 @@ export class FieldSelect extends Field {
   validateField(info: Record<string, any>): void {
     const value = info[this.label];
     if (this._required && !value) {
-      throw new BadException('Selecione uma opção');
+      throw new BadException(
+        `O campo ${this.label} é obrigatório. Selecione uma opção válida`,
+      );
     }
 
     const isOptionValid = this._options.some(
       (option) => option.value === value,
     );
     if (!isOptionValid) {
-      throw new BadException('Opção inválida');
+      throw new BadException(
+        `O campo ${this.label} é inválido. Selecione uma opção válida`,
+      );
     }
   }
 

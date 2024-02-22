@@ -9,13 +9,19 @@ interface FormProps {
   fields: FieldProps[];
 }
 
+export interface Option {
+  label: string;
+  value: string;
+  additionalFields?: Field[];
+}
+
 interface FieldProps {
   id?: string;
   label: string;
   type: string;
   required?: boolean;
   placeholder: string;
-  options?: string[];
+  options?: Option[];
 }
 
 export class Form {
@@ -56,7 +62,21 @@ export class Form {
     };
   }
 
-  private buildFields(fields: FieldProps[]): Field[] {
+  validateForm(info: Record<string, any>): string[] {
+    const errors = [];
+
+    for (const field of this._fields) {
+      try {
+        field.validateField(info);
+      } catch (error) {
+        errors.push(error.message);
+      }
+    }
+
+    return errors;
+  }
+
+  protected buildFields(fields: FieldProps[]): Field[] {
     if (!fields.length) {
       throw new BadException('O formulário deve ter ao menos um campo');
     }

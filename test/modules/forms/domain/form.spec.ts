@@ -34,14 +34,36 @@ describe('Form', () => {
           type: 'checkbox',
           placeholder: 'Selecione seu sexo',
           required: true,
-          options: ['Masculino', 'Feminino'],
+          options: [
+            {
+              label: 'Masculino',
+              value: 'Masculino',
+            },
+            {
+              label: 'Feminino',
+              value: 'Feminino',
+            },
+          ],
         },
         {
           label: 'Estado Civil',
           type: 'select',
           placeholder: 'Selecione seu estado civil',
           required: true,
-          options: ['Solteiro', 'Casado', 'Divorciado'],
+          options: [
+            {
+              label: 'Solteiro',
+              value: 'Solteiro',
+            },
+            {
+              label: 'Casado',
+              value: 'Casado',
+            },
+            {
+              label: 'Divorciado',
+              value: 'Divorciado',
+            },
+          ],
         },
       ],
     });
@@ -103,7 +125,16 @@ describe('Form', () => {
             type: 'checkbox',
             placeholder: 'Selecione seu sexo',
             required: true,
-            options: ['Masculino', 'Feminino'],
+            options: [
+              {
+                label: 'Masculino',
+                value: 'Masculino',
+              },
+              {
+                label: 'Feminino',
+                value: 'Feminino',
+              },
+            ],
           },
         ],
       });
@@ -141,8 +172,117 @@ describe('Form', () => {
           required: true,
           placeholder: 'Selecione seu sexo',
           entireLine: false,
-          options: ['Masculino', 'Feminino'],
+          options: [
+            {
+              label: 'Masculino',
+              value: 'Masculino',
+            },
+            {
+              label: 'Feminino',
+              value: 'Feminino',
+            },
+          ],
         },
+      ]);
+    });
+  });
+
+  describe('validateForm', () => {
+    it('Deve validar um formulário', () => {
+      const form = new Form({
+        description: 'Formulário de teste',
+        id: faker.string.uuid(),
+        title: 'Formulário de teste',
+        fields: [
+          {
+            label: 'Nome',
+            type: 'text',
+            placeholder: 'Digite seu nome',
+            required: true,
+          },
+          {
+            label: 'Idade',
+            type: 'number',
+            placeholder: 'Digite sua idade',
+            required: true,
+          },
+          {
+            label: 'Sexo',
+            type: 'checkbox',
+            placeholder: 'Selecione seu sexo',
+            required: true,
+            options: [
+              {
+                label: 'Masculino',
+                value: 'Masculino',
+              },
+              {
+                label: 'Feminino',
+                value: 'Feminino',
+              },
+            ],
+          },
+        ],
+      });
+
+      const data = {
+        Nome: faker.person.firstName(),
+        Idade: 20,
+        Sexo: 'Masculino',
+      };
+      const result = form.validateForm(data);
+      expect(result).toEqual([]);
+    });
+
+    it('Deve lançar uma exceção se o formulário for inválido', () => {
+      const form = new Form({
+        description: 'Formulário de teste',
+        id: faker.string.uuid(),
+        title: 'Formulário de teste',
+        fields: [
+          {
+            label: 'Nome',
+            type: 'text',
+            placeholder: 'Digite seu nome',
+            required: true,
+          },
+          {
+            label: 'Idade',
+            type: 'number',
+            placeholder: 'Digite sua idade',
+            required: true,
+          },
+          {
+            label: 'Sexo',
+            type: 'checkbox',
+            placeholder: 'Selecione seu sexo',
+            required: true,
+            options: [
+              {
+                label: 'Masculino',
+                value: 'Masculino',
+              },
+              {
+                label: 'Feminino',
+                value: 'Feminino',
+              },
+            ],
+          },
+        ],
+      });
+
+      const data = {
+        Nome: '',
+        Idade: '',
+        Sexo: '',
+      };
+
+      const result = form.validateForm(data);
+
+      expect(result).toEqual([
+        'O campo Nome é obrigatório',
+        'O campo Idade é obrigatório',
+        'O campo Sexo é obrigatório',
       ]);
     });
   });

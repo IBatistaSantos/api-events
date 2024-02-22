@@ -1,4 +1,5 @@
 import { FieldText } from '@/modules/form/domain/fields/field-text';
+import { faker } from '@faker-js/faker';
 
 describe('Field', () => {
   it('Deve criar um campo de texto', () => {
@@ -50,7 +51,7 @@ describe('Field', () => {
       });
 
       expect(() => {
-        field.validateField('fulano');
+        field.validateField({ Nome: faker.person.firstName() });
       }).not.toThrow();
     });
     it('Deve lançar uma exceção se o campo for obrigatório e não for preenchido', () => {
@@ -62,7 +63,7 @@ describe('Field', () => {
       });
 
       expect(() => {
-        field.validateField('');
+        field.validateField({ Nome: '' });
       }).toThrow('Texto é obrigatório');
     });
 
@@ -76,7 +77,7 @@ describe('Field', () => {
       });
 
       expect(() => {
-        field.validateField(123);
+        field.validateField({ Nome: 123 });
       }).toThrow('Texto inválido');
     });
   });

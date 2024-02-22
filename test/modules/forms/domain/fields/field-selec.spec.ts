@@ -104,7 +104,7 @@ describe('FieldSelect', () => {
       });
 
       expect(() => {
-        field.validateField('Masculino');
+        field.validateField({ Sexo: 'Masculino' });
       }).not.toThrow();
     });
 
@@ -127,7 +127,7 @@ describe('FieldSelect', () => {
       });
 
       expect(() => {
-        field.validateField('');
+        field.validateField({ Sexo: '' });
       }).toThrow('Selecione uma opção');
     });
 
@@ -149,7 +149,7 @@ describe('FieldSelect', () => {
       });
 
       expect(() => {
-        field.validateField('Outro');
+        field.validateField({ Sexo: 'Outro' });
       }).toThrow('Opção inválida');
     });
   });

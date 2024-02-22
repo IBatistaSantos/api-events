@@ -57,7 +57,7 @@ describe('FieldCheckbox', () => {
       });
 
       expect(() => {
-        field.validateField('Sim');
+        field.validateField({ 'Aceito os termos': 'Sim' });
       }).not.toThrow();
     });
 
@@ -80,7 +80,7 @@ describe('FieldCheckbox', () => {
       });
 
       expect(() => {
-        field.validateField('');
+        field.validateField({ 'Aceito os termos': '' });
       }).toThrow('Campo é obrigatório');
     });
 
@@ -102,7 +102,7 @@ describe('FieldCheckbox', () => {
       });
 
       expect(() => {
-        field.validateField('Talvez');
+        field.validateField({ 'Aceito os termos': 'Talvez' });
       }).toThrow('Opção inválida');
     });
   });

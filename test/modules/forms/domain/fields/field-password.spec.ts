@@ -1,4 +1,4 @@
-import { FieldPassword } from '@/modules/form/domain/fields/field-password';
+import { FieldPassword } from '@/modules/forms/domain/fields/field-password';
 
 describe('FieldPassword', () => {
   it('Deve criar um campo de senha', () => {

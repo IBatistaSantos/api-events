@@ -1,4 +1,4 @@
-import { FieldText } from '@/modules/form/domain/fields/field-text';
+import { FieldText } from '@/modules/forms/domain/fields/field-text';
 import { faker } from '@faker-js/faker';
 
 describe('Field', () => {

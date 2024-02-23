@@ -1,13 +1,15 @@
-import { FieldNumber } from '@/modules/form/domain/fields/field-number';
-import { FieldPassword } from '@/modules/form/domain/fields/field-password';
-import { FieldText } from '@/modules/form/domain/fields/field-text';
-import { Form } from '@/modules/form/domain/form';
+import { FieldNumber } from '@/modules/forms/domain/fields/field-number';
+import { FieldPassword } from '@/modules/forms/domain/fields/field-password';
+import { FieldText } from '@/modules/forms/domain/fields/field-text';
+import { Form } from '@/modules/forms/domain/form';
 import { faker } from '@faker-js/faker';
 
 describe('Form', () => {
   it('Deve criar um formulário', () => {
     const form = new Form({
       description: 'Formulário de teste',
+      organizationId: faker.string.uuid(),
+      userId: faker.string.uuid(),
       id: faker.string.uuid(),
       title: 'Formulário de teste',
       fields: [
@@ -94,6 +96,8 @@ describe('Form', () => {
     expect(() => {
       new Form({
         description: 'Formulário de teste',
+        organizationId: faker.string.uuid(),
+        userId: faker.string.uuid(),
         id: faker.string.uuid(),
         title: 'Formulário de teste',
         fields: [],
@@ -107,6 +111,8 @@ describe('Form', () => {
         description: 'Formulário de teste',
         id: faker.string.uuid(),
         title: 'Formulário de teste',
+        organizationId: faker.string.uuid(),
+        userId: faker.string.uuid(),
         fields: [
           {
             label: 'Nome',
@@ -193,6 +199,8 @@ describe('Form', () => {
         description: 'Formulário de teste',
         id: faker.string.uuid(),
         title: 'Formulário de teste',
+        organizationId: faker.string.uuid(),
+        userId: faker.string.uuid(),
         fields: [
           {
             label: 'Nome',
@@ -237,6 +245,8 @@ describe('Form', () => {
     it('Deve lançar uma exceção se o formulário for inválido', () => {
       const form = new Form({
         description: 'Formulário de teste',
+        organizationId: faker.string.uuid(),
+        userId: faker.string.uuid(),
         id: faker.string.uuid(),
         title: 'Formulário de teste',
         fields: [

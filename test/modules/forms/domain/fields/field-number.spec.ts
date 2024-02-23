@@ -1,4 +1,4 @@
-import { FieldNumber } from '@/modules/form/domain/fields/field-number';
+import { FieldNumber } from '@/modules/forms/domain/fields/field-number';
 
 describe('FieldNumber', () => {
   it('Deve criar um campo de número', () => {

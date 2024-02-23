@@ -1,4 +1,4 @@
-import { FieldSelect } from '@/modules/form/domain/fields/field-select';
+import { FieldSelect } from '@/modules/forms/domain/fields/field-select';
 
 describe('FieldSelect', () => {
   it('Deve criar um campo de seleção', () => {

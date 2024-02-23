@@ -1,4 +1,4 @@
-import { FieldCheckbox } from '@/modules/form/domain/fields/field-checkbok';
+import { FieldCheckbox } from '@/modules/forms/domain/fields/field-checkbok';
 
 describe('FieldCheckbox', () => {
   it('Deve criar um campo de checkbox', () => {

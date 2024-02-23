@@ -110,6 +110,7 @@ model User {
   recuded          Guest[]            @relation("UserRecused")
   aproved          Guest[]            @relation("UserApproved")
   Guest            Guest[]
+  Form             Form[]
 
   @@map("users")
 }
@@ -152,6 +153,7 @@ model Organization {
   user             User               @relation(fields: [createdBy], references: [id])
   UserOrganization UserOrganization[]
   Event            Event[]
+  Form             Form[]
 
   @@map("organizations")
 }
@@ -392,4 +394,41 @@ model Question {
   votingId  String     @map("voting_id")
 
   @@map("questions")
+}
+
+model Form {
+  id             String       @id @default(uuid())
+  title          String
+  description    String?
+  userId         String       @map("user_id")
+  organizationId String       @map("organization_id")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+  status         UserStatus   @default(ACTIVE)
+  field          Field[]
+  user           User         @relation(fields: [userId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@map("forms")
+}
+
+model Field {
+  id              String  @id @default(uuid())
+  label           String
+  type            String
+  placeholder     String?
+  required        Boolean @default(false)
+  entireLine      Boolean @default(false) @map("entire_line")
+  minLenght       Int?    @map("min_lenght")
+  maxLenght       Int?    @map("max_lenght")
+  regexValidation String? @map("regex_validation")
+
+  options   String[]   @default([]) @map("options")
+  formId    String     @map("form_id")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  status    UserStatus @default(ACTIVE)
+  form      Form       @relation(fields: [formId], references: [id])
+
+  @@map("fields")
 }

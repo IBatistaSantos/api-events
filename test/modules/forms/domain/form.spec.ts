@@ -296,4 +296,111 @@ describe('Form', () => {
       ]);
     });
   });
+
+  describe('update', () => {
+    it('Deve atualizar o formulario', () => {
+      const form = new Form({
+        description: 'Formulário de teste',
+        id: faker.string.uuid(),
+        title: 'Formulário de teste',
+        organizationId: faker.string.uuid(),
+        userId: faker.string.uuid(),
+        fields: [
+          {
+            label: 'Nome',
+            type: 'text',
+            placeholder: 'Digite seu nome',
+            required: true,
+          },
+          {
+            label: 'Idade',
+            type: 'number',
+            placeholder: 'Digite sua idade',
+            required: true,
+          },
+          {
+            label: 'Sexo',
+            type: 'checkbox',
+            placeholder: 'Selecione seu sexo',
+            required: true,
+            options: [
+              {
+                label: 'Masculino',
+                value: 'Masculino',
+              },
+              {
+                label: 'Feminino',
+                value: 'Feminino',
+              },
+            ],
+          },
+        ],
+      });
+
+      const id = form.fields[0].id;
+      const data = {
+        description: 'Formulário de teste atualizado',
+        title: 'Formulário de teste atualizado',
+        fields: [
+          {
+            id: form.fields[0].id,
+            label: 'Nome',
+            type: 'text',
+            placeholder: 'Digite o seu nome',
+            required: true,
+          },
+          {
+            label: 'Idade',
+            type: 'number',
+            placeholder: 'Digite sua idade',
+            required: true,
+          },
+          {
+            label: 'Sexo',
+            type: 'checkbox',
+            placeholder: 'Selecione seu sexo',
+            required: true,
+            options: [
+              {
+                label: 'Masculino',
+                value: 'Masculino',
+              },
+              {
+                label: 'Feminino',
+                value: 'Feminino',
+              },
+            ],
+          },
+          {
+            label: 'Estado Civil',
+            type: 'select',
+            placeholder: 'Selecione seu estado civil',
+            required: true,
+            options: [
+              {
+                label: 'Solteiro',
+                value: 'Solteiro',
+              },
+              {
+                label: 'Casado',
+                value: 'Casado',
+              },
+              {
+                label: 'Divorciado',
+                value: 'Divorciado',
+              },
+            ],
+          },
+        ],
+      };
+
+      form.update(data);
+
+      expect(form.id).toBeDefined();
+      expect(form.fields.length).toBe(4);
+      expect(form.fields[0].id).toBe(id);
+      expect(form.fields[0].placeholder).toBe('Digite o seu nome');
+      expect(form.fields[3].label).toBe('Estado Civil');
+    });
+  });
 });

@@ -122,6 +122,22 @@ export class Form {
     this._status.deactivate();
   }
 
+  update(data: Partial<Omit<FormProps, 'id' | 'userId' | 'organizationId'>>) {
+    if (data.title) {
+      this._title = data.title;
+    }
+
+    if (data.description) {
+      this._description = data.description;
+    }
+
+    if (data.fields) {
+      this._fields = this.buildFields(data.fields);
+    }
+
+    this._updatedAt = new Date();
+  }
+
   protected buildFields(fields: FieldProps[]): Field[] {
     if (!fields.length) {
       throw new BadException('O formulário deve ter ao menos um campo');

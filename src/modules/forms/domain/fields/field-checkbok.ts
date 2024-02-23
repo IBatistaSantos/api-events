@@ -1,22 +1,12 @@
 import { BadException } from '@/shared/domain/errors/errors';
 import { Field, FieldProps } from '../field';
-import { Option, OptionProps } from '../form';
 import { FieldFactory } from '../field.factory';
-
-export interface FieldCheckboxProps extends FieldProps {
-  options: Option[];
-}
+import { Option, OptionProps } from '../form';
 
 export class FieldCheckbox extends Field {
-  private _options: Option[];
-  constructor(props: FieldCheckboxProps) {
+  constructor(props: FieldProps) {
     super({ ...props, type: 'checkbox' });
-
     this._options = this.buildOptions(props.options);
-  }
-
-  get options() {
-    return this._options;
   }
 
   private buildOptions(options: OptionProps[]): Option[] {

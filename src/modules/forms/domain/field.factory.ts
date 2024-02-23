@@ -1,22 +1,22 @@
 import { BadException } from '@/shared/domain/errors/errors';
 
 import { Field, FieldProps } from './field';
-import { FieldSelectableProps } from './field-selectable';
 
 import { FieldNumber } from './fields/field-number';
 import { FieldSelect } from './fields/field-select';
 import { FieldText } from './fields/field-text';
 import { FieldPassword } from './fields/field-password';
-import { FieldCheckbox, FieldCheckboxProps } from './fields/field-checkbok';
+import { FieldCheckbox } from './fields/field-checkbok';
+
 export class FieldFactory {
   static create(field: FieldProps): Field {
     switch (field.type) {
       case 'text':
         return new FieldText(field);
       case 'select':
-        return new FieldSelect(field as FieldSelectableProps);
+        return new FieldSelect(field);
       case 'checkbox':
-        return new FieldCheckbox(field as FieldCheckboxProps);
+        return new FieldCheckbox(field);
       case 'number':
         return new FieldNumber(field);
       case 'password':

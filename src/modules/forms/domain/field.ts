@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto';
 import { BadException } from '@/shared/domain/errors/errors';
+import { Option, OptionProps } from './form';
 
 export interface FieldProps {
   id?: string;
@@ -8,6 +9,7 @@ export interface FieldProps {
   placeholder: string;
   required?: boolean;
   entireLine?: boolean;
+  options?: OptionProps[];
 }
 
 export abstract class Field {
@@ -17,6 +19,7 @@ export abstract class Field {
   protected _required: boolean;
   protected _placeholder: string;
   protected _entireLine: boolean;
+  protected _options: Option[];
 
   constructor(props: FieldProps) {
     this._id = props.id || randomUUID();
@@ -53,6 +56,10 @@ export abstract class Field {
     return this._entireLine;
   }
 
+  get options(): Option[] {
+    return this._options;
+  }
+
   protected validate() {
     if (!this._label) {
       throw new BadException('Label é obrigatório');
@@ -73,6 +80,7 @@ export abstract class Field {
       required: this._required,
       placeholder: this._placeholder,
       entireLine: this._entireLine,
+      options: this._options,
     };
   }
 }

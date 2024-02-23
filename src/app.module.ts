@@ -14,6 +14,7 @@ import { PanelistModule } from './modules/panelist/panelist.module';
 import { SponsorModule } from './modules/sponsors/sponsor.module';
 import { ScheduleModule } from './modules/schedule/schedule.module';
 import { VotingModule } from './modules/votings/voting.module';
+import { FormModule } from './modules/forms/form.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { VotingModule } from './modules/votings/voting.module';
     SponsorModule,
     ScheduleModule,
     VotingModule,
+    FormModule,
   ],
   controllers: [],
   providers: [],

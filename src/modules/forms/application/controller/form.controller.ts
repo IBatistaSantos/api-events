@@ -9,14 +9,16 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from '@/shared/decorator/get-decorator';
 
 import { DeleteFormUseCase } from '../useCases/delete-form.usecase';
 import { UpdateFormUseCase } from '../useCases/update-form.usecase';
 import { DetailsFormUseCase } from '../useCases/details-form.usecase';
 import { CreateFormUseCase } from '../useCases/create-form.usecase';
+
 import { CreateFormDTO } from './dtos/create-form.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from '@/shared/decorator/get-decorator';
+import { UpdateFormDTO } from './dtos/update-form.dto';
 
 @Controller(`${baseRoute.base_url_v1}/forms`)
 export class FormController {
@@ -46,7 +48,10 @@ export class FormController {
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
-  async updateForm(@Param('id') id: string, @Body() updateFormDTO: any) {
+  async updateForm(
+    @Param('id') id: string,
+    @Body() updateFormDTO: UpdateFormDTO,
+  ) {
     return await this.updateFormUseCase.execute({
       formId: id,
       data: updateFormDTO,

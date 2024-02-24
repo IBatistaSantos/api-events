@@ -94,23 +94,24 @@ model InviteAccount {
 }
 
 model User {
-  id               String             @id @default(uuid())
-  name             String
-  email            String
-  password         String
-  status           UserStatus         @default(ACTIVE)
-  type             UserType           @default(ADMIN)
-  account          Account            @relation(fields: [accountId], references: [id])
-  accountId        String             @map("account_id")
-  createdAt        DateTime           @default(now()) @map("created_at")
-  updatedAt        DateTime           @updatedAt @map("updated_at")
-  permissions      UserPermissions[]
-  organizations    Organization[]
-  UserOrganization UserOrganization[]
-  recuded          Guest[]            @relation("UserRecused")
-  aproved          Guest[]            @relation("UserApproved")
-  Guest            Guest[]
-  Form             Form[]
+  id                  String             @id @default(uuid())
+  name                String
+  email               String
+  password            String
+  status              UserStatus         @default(ACTIVE)
+  type                UserType           @default(ADMIN)
+  account             Account            @relation(fields: [accountId], references: [id])
+  accountId           String             @map("account_id")
+  tokenForgotPassword String?
+  createdAt           DateTime           @default(now()) @map("created_at")
+  updatedAt           DateTime           @updatedAt @map("updated_at")
+  permissions         UserPermissions[]
+  organizations       Organization[]
+  UserOrganization    UserOrganization[]
+  recuded             Guest[]            @relation("UserRecused")
+  aproved             Guest[]            @relation("UserApproved")
+  Guest               Guest[]
+  Form                Form[]
 
   @@map("users")
 }

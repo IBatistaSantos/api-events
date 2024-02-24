@@ -44,6 +44,21 @@ export class ListEventUseCase {
     }
 
     const events = await this.eventRepository.list(accountId, organizationId);
-    return events.map((event) => event.toDTO());
+
+    return events.map((event) => {
+      return {
+        ...event,
+        sessions: this.sortSessions(event.sessions),
+      };
+    });
+  }
+
+  private sortSessions(sessions: any[]) {
+    return sessions.sort((a, b) => {
+      if (a.isCurrent === b.isCurrent) {
+        return Number(new Date(b.date)) - Number(new Date(a.date));
+      }
+      return a.isCurrent ? -1 : 1;
+    });
   }
 }

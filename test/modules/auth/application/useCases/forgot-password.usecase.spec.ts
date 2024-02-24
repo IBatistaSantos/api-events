@@ -6,12 +6,11 @@ import { AuthRepository } from '@/modules/auth/application/repository/auth-repos
 import { User } from '@/modules/users/domain/user';
 import { EncryptProvider } from '@/shared/infra/providers/encrypt/encrypt-provider';
 import { ForgotPasswordUseCase } from '@/modules/auth/application/useCases/forgot-password.usecase';
-import { EmailService } from '@/shared/infra/services/mail/email.provider';
+import { SendMailUseCase } from '@/modules/notifications/application/useCases/send-mail.usecase';
 
 describe('ForgotPasswordUseCase', () => {
   let provider: ForgotPasswordUseCase;
   let repository: MockProxy<AuthRepository>;
-  let emailService: MockProxy<EmailService>;
   let encryptProvider: MockProxy<EncryptProvider>;
   let user: User;
   beforeEach(async () => {
@@ -26,8 +25,10 @@ describe('ForgotPasswordUseCase', () => {
           useValue: (repository = mock<AuthRepository>()),
         },
         {
-          provide: 'EmailService',
-          useValue: (emailService = mock<EmailService>()),
+          provide: SendMailUseCase,
+          useClass: jest.fn().mockImplementation(() => ({
+            execute: jest.fn(),
+          })),
         },
         {
           provide: 'EncryptProvider',
@@ -47,7 +48,6 @@ describe('ForgotPasswordUseCase', () => {
       repository.findByEmail.mockResolvedValue(user);
 
     encryptProvider.encrypt.mockResolvedValue(faker.string.alphanumeric(10));
-    emailService.send.mockResolvedValue();
 
     provider = module.get<ForgotPasswordUseCase>(ForgotPasswordUseCase);
   });

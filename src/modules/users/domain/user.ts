@@ -118,6 +118,16 @@ export class User {
     this._tokenForgotPassword = token;
   }
 
+  clearForgotPasswordToken() {
+    this._tokenForgotPassword = null;
+  }
+
+  setPassword(password: string) {
+    this._password = password;
+
+    this.validate();
+  }
+
   applyPermission(admin: User, permission: Permission[]) {
     const isSameAccount = admin.accountId === this.accountId;
     if (!isSameAccount) {

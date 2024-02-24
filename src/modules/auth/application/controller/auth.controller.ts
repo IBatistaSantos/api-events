@@ -4,11 +4,16 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import baseRoute from '@/config/routes/base-route';
 import { AuthenticationService } from '../useCases/auth-usecase';
 import { AuthenticationDto } from './dtos/auth.dto';
+import { ForgotPasswordUseCase } from '../useCases/forgot-password.usecase';
+import { ForgotPasswordDTO } from './dtos/forgot-password.dto';
 
 @Controller(`${baseRoute.base_url_v1}/auth`)
 @ApiTags('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthenticationService) {}
+  constructor(
+    private readonly authService: AuthenticationService,
+    private readonly forgotPasswordService: ForgotPasswordUseCase,
+  ) {}
 
   @Post()
   @HttpCode(200)
@@ -84,5 +89,11 @@ export class AuthController {
   })
   async create(@Body() authenticationDto: AuthenticationDto) {
     return await this.authService.execute(authenticationDto);
+  }
+
+  @Post('forgot-password')
+  @HttpCode(200)
+  async forgotPassword(@Body() body: ForgotPasswordDTO) {
+    return await this.forgotPasswordService.execute(body);
   }
 }

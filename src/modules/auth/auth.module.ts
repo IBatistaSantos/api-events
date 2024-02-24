@@ -6,6 +6,8 @@ import { BcryptProvider } from '@/shared/infra/providers/encrypt/bcrypt/bcrypt-p
 import { JwtStrategy } from './application/jwt.strategy';
 import { JWTProviderImpl } from '@/shared/infra/providers/jwt/jwt-provider-impl';
 import { AuthController } from './application/controller/auth.controller';
+import { MailerSenderProvider } from '@/shared/infra/services/mail/mailerSender/mailer-sender.service';
+import { ForgotPasswordUseCase } from './application/useCases/forgot-password.usecase';
 
 @Module({
   imports: [
@@ -16,8 +18,10 @@ import { AuthController } from './application/controller/auth.controller';
   ],
   providers: [
     AuthenticationService,
+    ForgotPasswordUseCase,
     { provide: 'EncryptProvider', useClass: BcryptProvider },
     { provide: 'AuthRepository', useClass: AuthRepositoryPrisma },
+    { provide: 'EmailService', useClass: MailerSenderProvider },
     { provide: 'JWTProvider', useClass: JWTProviderImpl },
     JwtStrategy,
   ],

@@ -397,18 +397,17 @@ model Question {
 }
 
 model Form {
-  id              String            @id @default(uuid())
-  title           String
-  description     String?
-  userId          String            @map("user_id")
-  organizationId  String            @map("organization_id")
-  createdAt       DateTime          @default(now()) @map("created_at")
-  updatedAt       DateTime          @updatedAt @map("updated_at")
-  status          UserStatus        @default(ACTIVE)
-  field           Field[]
-  user            User              @relation(fields: [userId], references: [id])
-  organization    Organization      @relation(fields: [organizationId], references: [id])
-  AdditionalField AdditionalField[]
+  id             String       @id @default(uuid())
+  title          String
+  description    String?
+  userId         String       @map("user_id")
+  organizationId String       @map("organization_id")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+  status         UserStatus   @default(ACTIVE)
+  field          Field[]
+  user           User         @relation(fields: [userId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
 
   @@map("forms")
 }
@@ -429,39 +428,7 @@ model Field {
   updatedAt DateTime   @updatedAt @map("updated_at")
   status    UserStatus @default(ACTIVE)
   form      Form       @relation(fields: [formId], references: [id])
-  Options   Options[]
+  Options   Json[]
 
   @@map("fields")
-}
-
-model Options {
-  id              String            @id @default(uuid())
-  label           String
-  value           String
-  fieldId         String            @map("field_id")
-  createdAt       DateTime          @default(now()) @map("created_at")
-  updatedAt       DateTime          @updatedAt @map("updated_at")
-  status          UserStatus        @default(ACTIVE)
-  field           Field             @relation(fields: [fieldId], references: [id])
-  AdditionalField AdditionalField[]
-
-  @@map("options")
-}
-
-model AdditionalField {
-  id          String     @id @default(uuid())
-  label       String
-  type        String
-  placeholder String?
-  required    Boolean    @default(false)
-  optionId    String?    @map("option_id")
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
-  status      UserStatus @default(ACTIVE)
-
-  option Options? @relation(fields: [optionId], references: [id])
-  Form   Form     @relation(fields: [formId], references: [id])
-  formId String   @map("form_id")
-
-  @@map("additional_fields")
 }

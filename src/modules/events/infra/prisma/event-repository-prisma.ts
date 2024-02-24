@@ -17,6 +17,69 @@ import { BadException } from '@/shared/domain/errors/errors';
 export class EventRepositoryPrisma implements EventRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
+  async findById(id: string): Promise<any> {
+    const response = await this.prismaService.event.findUnique({
+      where: {
+        id,
+        status: 'ACTIVE',
+      },
+      include: {
+        featuresFlags: true,
+        Session: {
+          where: {
+            status: 'ACTIVE',
+          },
+        },
+      },
+    });
+
+    if (!response) return null;
+
+    const event = new Events({
+      accountId: response.accountId,
+      name: response.name,
+      organizationId: response.organizationId,
+      url: response.url,
+      id: response.id,
+      createdAt: response.createdAt,
+      private: response.private,
+      inscriptionType: response.incriptionType,
+      status: response.status,
+      type: response.type,
+      updatedAt: response.updatedAt,
+      featureFlags: {
+        auth: {
+          captcha: response.featuresFlags.captcha,
+          codeAccess: response.featuresFlags.codeAccess,
+          confirmEmail: response.featuresFlags.confirmEmail,
+          emailRequired: response.featuresFlags.emailRequired,
+          passwordRequired: response.featuresFlags.passwordRequired,
+          singleAccess: response.featuresFlags.singleAccess,
+        },
+        mail: {
+          sendMailInscription: response.featuresFlags.sendMailInscription,
+        },
+        sales: {
+          hasInstallments: response.featuresFlags.hasInstallments,
+          tickets: response.featuresFlags.ticket,
+        },
+      },
+    });
+
+    const sessions = response.Session.map((session) => {
+      return {
+        finished: session.finished,
+        date: session.date,
+        hourEnd: session.hourEnd,
+        hourStart: session.hourStart,
+        isCurrent: session.isCurrent,
+        id: session.id,
+      };
+    });
+
+    return { event, sessions };
+  }
+
   async list(
     accountId: string,
     organizationId?: string,

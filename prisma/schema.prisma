@@ -433,3 +433,32 @@ model Field {
 
   @@map("fields")
 }
+
+model Template {
+  id        String     @id @default(uuid())
+  content   String
+  body      String
+  subject   String
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  status    UserStatus @default(ACTIVE)
+  SendMail  SendMail[]
+
+  @@map("templates")
+}
+
+model SendMail {
+  id         String    @id @default(uuid())
+  to         String
+  messageId  String    @map("message_id")
+  content    String
+  templateId String    @map("template_id")
+  opened     Boolean   @default(false)
+  clicked    Boolean   @default(false)
+  openedAt   DateTime? @map("opened_at")
+  clickedAt  DateTime? @map("clicked_at")
+  template   Template  @relation(fields: [templateId], references: [id])
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  @@map("send_mails")
+}

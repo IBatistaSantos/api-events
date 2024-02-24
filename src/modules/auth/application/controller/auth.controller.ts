@@ -6,6 +6,8 @@ import { AuthenticationService } from '../useCases/auth-usecase';
 import { AuthenticationDto } from './dtos/auth.dto';
 import { ForgotPasswordUseCase } from '../useCases/forgot-password.usecase';
 import { ForgotPasswordDTO } from './dtos/forgot-password.dto';
+import { ResetPasswordUseCase } from '../useCases/reset-password.usecase';
+import { ResetPasswordDTO } from './dtos/reset-password.dto';
 
 @Controller(`${baseRoute.base_url_v1}/auth`)
 @ApiTags('auth')
@@ -13,6 +15,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthenticationService,
     private readonly forgotPasswordService: ForgotPasswordUseCase,
+    private readonly resetPasswordService: ResetPasswordUseCase,
   ) {}
 
   @Post()
@@ -95,5 +98,11 @@ export class AuthController {
   @HttpCode(200)
   async forgotPassword(@Body() body: ForgotPasswordDTO) {
     return await this.forgotPasswordService.execute(body);
+  }
+
+  @Post('reset-password')
+  @HttpCode(200)
+  async resetPassword(@Body() body: ResetPasswordDTO) {
+    return await this.resetPasswordService.execute(body);
   }
 }

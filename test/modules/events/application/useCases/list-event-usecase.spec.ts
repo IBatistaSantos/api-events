@@ -1,7 +1,6 @@
 import { Account } from '@/modules/accounts/domain/account';
 import { EventRepository } from '@/modules/events/application/repository/event.repository';
 import { ListEventUseCase } from '@/modules/events/application/useCases/list-event-usecase';
-import { Events } from '@/modules/events/domain/events';
 import { Organization } from '@/modules/organization/domain/organization';
 import { Permission } from '@/modules/permissions/domain/permission';
 import { User } from '@/modules/users/domain/user';
@@ -59,12 +58,28 @@ describe('ListEventUseCase', () => {
     );
 
     repository.list.mockResolvedValue([
-      new Events({
+      {
         accountId,
-        organizationId: organization.id,
+        createdAt: new Date(),
+        id: faker.string.uuid(),
+        inscriptionType: 'FREE',
         name: faker.company.name(),
+        organizationId: organization.id,
+        private: false,
+        sessions: [
+          {
+            date: faker.date.recent().toISOString(),
+            hourEnd: '22:00',
+            hourStart: '20:00',
+            id: faker.string.uuid(),
+            isCurrent: true,
+          },
+        ],
+        status: 'ACTIVE',
+        type: 'LIVE',
+        updatedAt: new Date(),
         url: faker.internet.url(),
-      }),
+      },
     ]);
     provider = module.get<ListEventUseCase>(ListEventUseCase);
   });

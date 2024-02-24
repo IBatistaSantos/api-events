@@ -1,11 +1,35 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { EventRepository } from '../repository/event.repository';
 import { BadException } from '@/shared/domain/errors/errors';
+import { sortSessions } from '../../main/utils/sort-session';
 
 interface Input {
   userId: string;
   accountId: string;
   organizationId?: string;
+}
+
+interface SessionOutput {
+  date: string;
+  hourEnd: string;
+  hourStart: string;
+  isCurrent: boolean;
+  id: string;
+}
+
+export interface ListEventOutput {
+  accountId: string;
+  name: string;
+  organizationId: string;
+  url: string;
+  id: string;
+  createdAt: Date;
+  private: boolean;
+  inscriptionType: string;
+  status: string;
+  sessions: SessionOutput[];
+  type: string;
+  updatedAt: Date;
 }
 
 @Injectable()
@@ -15,7 +39,7 @@ export class ListEventUseCase {
     private readonly eventRepository: EventRepository,
   ) {}
 
-  async execute(params: Input) {
+  async execute(params: Input): Promise<ListEventOutput[]> {
     const { userId, organizationId, accountId } = params;
     const manager = await this.eventRepository.findManagerById(userId);
     if (!manager) {
@@ -48,17 +72,8 @@ export class ListEventUseCase {
     return events.map((event) => {
       return {
         ...event,
-        sessions: this.sortSessions(event.sessions),
+        sessions: sortSessions(event.sessions),
       };
-    });
-  }
-
-  private sortSessions(sessions: any[]) {
-    return sessions.sort((a, b) => {
-      if (a.isCurrent === b.isCurrent) {
-        return Number(new Date(b.date)) - Number(new Date(a.date));
-      }
-      return a.isCurrent ? -1 : 1;
     });
   }
 }

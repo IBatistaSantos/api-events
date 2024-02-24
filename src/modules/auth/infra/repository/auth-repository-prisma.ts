@@ -2,11 +2,15 @@ import { PrismaService } from '@/shared/infra/prisma/repository/prisma.client.se
 
 import { Injectable } from '@nestjs/common';
 import { User } from '@/modules/users/domain/user';
-import { AuthRepository } from '../../application/repository/auth-repository';
+import {
+  AuthRepository,
+  UpdateForgotPasswordInput,
+} from '../../application/repository/auth-repository';
 
 @Injectable()
 export class AuthRepositoryPrisma implements AuthRepository {
   constructor(private readonly prisma: PrismaService) {}
+
   async findByEmail(email: string): Promise<User> {
     const user = await this.prisma.user.findFirst({
       where: { email },
@@ -48,6 +52,17 @@ export class AuthRepositoryPrisma implements AuthRepository {
       status: user.status,
       updatedAt: user.updatedAt,
       type: user.type,
+    });
+  }
+
+  async updateForgotPasswordToken(
+    params: UpdateForgotPasswordInput,
+  ): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: params.id },
+      data: {
+        tokenForgotPassword: params.token,
+      },
     });
   }
 }

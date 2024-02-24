@@ -1,11 +1,26 @@
 import baseRoute from '@/config/routes/base-route';
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateEventUseCase } from '../useCases/create-event-usecase';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/shared/decorator/get-decorator';
 import { CreateEventDTO } from './dtos/create-event.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ListEventUseCase } from '../useCases/list-event-usecase';
+import {
+  ListEventOutput,
+  ListEventUseCase,
+} from '../useCases/list-event-usecase';
+import {
+  DetailsEventOutput,
+  DetailsEventUseCase,
+} from '../useCases/details-event-usecase';
 
 @Controller(`${baseRoute.base_url_v1}/events`)
 @ApiTags('events')
@@ -13,6 +28,7 @@ export class EventController {
   constructor(
     private readonly createEventUseCase: CreateEventUseCase,
     private readonly listEventUseCase: ListEventUseCase,
+    private readonly detailsEventUseCase: DetailsEventUseCase,
   ) {}
 
   @Post()
@@ -131,7 +147,10 @@ export class EventController {
       },
     },
   })
-  async listEvents(@GetUser() user: any, @Query() organizationId: string) {
+  async listEvents(
+    @GetUser() user: any,
+    @Query() organizationId: string,
+  ): Promise<ListEventOutput[]> {
     const userId = user.id;
     const accountId = user.accountId;
     return await this.listEventUseCase.execute({
@@ -139,5 +158,11 @@ export class EventController {
       accountId,
       organizationId,
     });
+  }
+
+  @Get(':id')
+  @UseGuards(AuthGuard('jwt'))
+  async detailsEvent(@Param('id') id: string): Promise<DetailsEventOutput> {
+    return await this.detailsEventUseCase.execute(id);
   }
 }

@@ -44,7 +44,7 @@ export class ForgotPasswordUseCase {
       context: TemplateContext.FORGOT_PASSWORD,
       variables: {
         name: user.name,
-        link: `http://localhost:3000/reset-password/${token}`,
+        link: `${process.env.URL_FRONTEND}/${token}`,
       },
     });
   }

@@ -9,6 +9,7 @@ import { AuthController } from './application/controller/auth.controller';
 import { MailerSenderProvider } from '@/shared/infra/services/mail/mailerSender/mailer-sender.service';
 import { ForgotPasswordUseCase } from './application/useCases/forgot-password.usecase';
 import { ResetPasswordUseCase } from './application/useCases/reset-password.usecase';
+import { NotificationModule } from '../notifications/notification.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ResetPasswordUseCase } from './application/useCases/reset-password.usec
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
+    NotificationModule,
   ],
   providers: [
     AuthenticationService,

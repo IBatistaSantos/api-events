@@ -4,12 +4,14 @@ import { CreateEventUseCase } from './application/useCases/create-event-usecase'
 import { DateProviderDateFns } from '@/shared/infra/providers/date/implementations/dateFns/date-provider-datefns';
 import { EventRepositoryPrisma } from './infra/prisma/event-repository-prisma';
 import { ListEventUseCase } from './application/useCases/list-event-usecase';
+import { DetailsEventUseCase } from './application/useCases/details-event-usecase';
 
 @Module({
   controllers: [EventController],
   providers: [
     CreateEventUseCase,
     ListEventUseCase,
+    DetailsEventUseCase,
     {
       provide: 'EventRepository',
       useClass: EventRepositoryPrisma,

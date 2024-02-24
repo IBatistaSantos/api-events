@@ -27,10 +27,22 @@ export interface ListEventOutput {
   updatedAt: Date;
 }
 
+interface FindByIdOutput {
+  event: Events;
+  sessions: {
+    date: string;
+    hourEnd: string;
+    hourStart: string;
+    isCurrent: boolean;
+    id: string;
+  }[];
+}
+
 export interface EventRepository {
   save(event: Events): Promise<void>;
   saveSessions(sessions: Session[]): Promise<void>;
   countEventsByAccountId(accountId: string): Promise<number>;
+  findById(id: string): Promise<FindByIdOutput>;
   findByURL(url: string): Promise<Events>;
   findManagerById(id: string): Promise<User>;
   findOrganizationById(id: string): Promise<Organization>;

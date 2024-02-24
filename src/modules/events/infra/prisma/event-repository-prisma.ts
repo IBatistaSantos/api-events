@@ -2,7 +2,10 @@ import { Account } from '@/modules/accounts/domain/account';
 import { Organization } from '@/modules/organization/domain/organization';
 import { Session } from '@/modules/sessions/domain/session';
 import { User } from '@/modules/users/domain/user';
-import { EventRepository } from '../../application/repository/event.repository';
+import {
+  EventRepository,
+  ListEventOutput,
+} from '../../application/repository/event.repository';
 import { Events } from '../../domain/events';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/shared/infra/prisma/repository/prisma.client.service';
@@ -14,20 +17,36 @@ import { BadException } from '@/shared/domain/errors/errors';
 export class EventRepositoryPrisma implements EventRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async list(accountId: string, organizationId?: string): Promise<Events[]> {
+  async list(
+    accountId: string,
+    organizationId?: string,
+  ): Promise<ListEventOutput[]> {
     const events = await this.prismaService.event.findMany({
       where: {
         ...(organizationId && { organizationId }),
         status: 'ACTIVE',
         accountId,
       },
-      include: { featuresFlags: true },
+      include: {
+        Session: {
+          where: {
+            status: 'ACTIVE',
+          },
+          select: {
+            date: true,
+            hourEnd: true,
+            hourStart: true,
+            isCurrent: true,
+            id: true,
+          },
+        },
+      },
     });
 
     if (!events) return [];
 
     return events.map((event) => {
-      return new Events({
+      return {
         accountId: event.accountId,
         name: event.name,
         organizationId: event.organizationId,
@@ -37,26 +56,18 @@ export class EventRepositoryPrisma implements EventRepository {
         private: event.private,
         inscriptionType: event.incriptionType,
         status: event.status,
+        sessions: event.Session.map((session) => {
+          return {
+            date: session.date,
+            hourEnd: session.hourEnd,
+            hourStart: session.hourStart,
+            isCurrent: session.isCurrent,
+            id: session.id,
+          };
+        }),
         type: event.type,
         updatedAt: event.updatedAt,
-        featureFlags: {
-          auth: {
-            captcha: event.featuresFlags.captcha,
-            codeAccess: event.featuresFlags.codeAccess,
-            confirmEmail: event.featuresFlags.confirmEmail,
-            emailRequired: event.featuresFlags.emailRequired,
-            passwordRequired: event.featuresFlags.passwordRequired,
-            singleAccess: event.featuresFlags.singleAccess,
-          },
-          mail: {
-            sendMailInscription: event.featuresFlags.sendMailInscription,
-          },
-          sales: {
-            hasInstallments: event.featuresFlags.hasInstallments,
-            tickets: event.featuresFlags.ticket,
-          },
-        },
-      });
+      };
     });
   }
   async save(event: Events): Promise<void> {

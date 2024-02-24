@@ -11,6 +11,29 @@ import {
 export class AuthRepositoryPrisma implements AuthRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  async findByToken(token: string): Promise<User> {
+    const user = await this.prisma.user.findFirst({
+      where: { tokenForgotPassword: token },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return new User({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      accountId: user.accountId,
+      createdAt: user.createdAt,
+      status: user.status,
+      tokenForgotPassword: user.tokenForgotPassword,
+      updatedAt: user.updatedAt,
+      type: user.type,
+    });
+  }
+
   async findByEmail(email: string): Promise<User> {
     const user = await this.prisma.user.findFirst({
       where: { email },
@@ -62,6 +85,16 @@ export class AuthRepositoryPrisma implements AuthRepository {
       where: { id: params.id },
       data: {
         tokenForgotPassword: params.token,
+      },
+    });
+  }
+
+  async resetPassword(params: { id: string; password: string }): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: params.id },
+      data: {
+        password: params.password,
+        tokenForgotPassword: null,
       },
     });
   }

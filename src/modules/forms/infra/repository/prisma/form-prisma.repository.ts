@@ -28,19 +28,11 @@ export class FormRepositoryPrisma implements FormRepository {
     });
   }
 
-  async findById(id: string): Promise<Form> {
+  async findById(id: string): Promise<any> {
     const response = await this.prisma.form.findUnique({
       where: { id, status: 'ACTIVE' },
       include: {
-        field: {
-          include: {
-            Options: {
-              include: {
-                AdditionalField: true,
-              },
-            },
-          },
-        },
+        field: true,
       },
     });
 
@@ -53,24 +45,7 @@ export class FormRepositoryPrisma implements FormRepository {
         type: field.type,
         required: field.required,
         placeholder: field.placeholder,
-        options: field.Options.map((option) => {
-          return {
-            id: option.id,
-            value: option.value,
-            label: option.label,
-            additionalField: option.AdditionalField.length
-              ? option.AdditionalField.map((additionalField) => {
-                  return {
-                    id: additionalField.id,
-                    label: additionalField.label,
-                    type: additionalField.type,
-                    required: additionalField.required,
-                    placeholder: additionalField.placeholder,
-                  };
-                })
-              : null,
-          };
-        }),
+        options: field.Options,
       };
     });
 
@@ -78,7 +53,7 @@ export class FormRepositoryPrisma implements FormRepository {
       id: response.id,
       title: response.title,
       description: response.description,
-      fields,
+      fields: fields as any,
       organizationId: response.organizationId,
       userId: response.userId,
       status: response.status,
@@ -88,7 +63,7 @@ export class FormRepositoryPrisma implements FormRepository {
   }
 
   async save(form: Form): Promise<void> {
-    const responseForm = await this.prisma.form.create({
+    await this.prisma.form.create({
       data: {
         id: form.id,
         title: form.title,
@@ -96,39 +71,19 @@ export class FormRepositoryPrisma implements FormRepository {
         organizationId: form.organizationId,
         userId: form.userId,
         status: form.status as UserStatus,
-      },
-    });
-
-    await this.prisma.field.createMany({
-      data: form.fields.map((field) => {
-        return {
-          id: field.id,
-          label: field.label,
-          type: field.type,
-          required: field.required,
-          placeholder: field.placeholder,
-          options: field.options.map((option) => {
+        field: {
+          create: form.fields.map((field) => {
             return {
-              value: option.value,
-              label: option.label,
-              AdditionalField: {
-                create: option.additionalFields
-                  ? option.additionalFields.map((additionalField) => {
-                      return {
-                        id: additionalField.id,
-                        label: additionalField.label,
-                        type: additionalField.type,
-                        required: additionalField.required,
-                        placeholder: additionalField.placeholder,
-                      };
-                    })
-                  : [],
-              },
+              label: field.label,
+              placeholder: field.placeholder,
+              entireLine: field.entireLine,
+              id: field.id,
+              type: field.type,
+              Options: field.options as any,
             };
           }),
-          formId: responseForm.id,
-        };
-      }),
+        },
+      },
     });
   }
 
@@ -139,6 +94,19 @@ export class FormRepositoryPrisma implements FormRepository {
         title: form.title,
         description: form.description,
         status: form.status as UserStatus,
+        field: {
+          deleteMany: {},
+          create: form.fields.map((field) => {
+            return {
+              label: field.label,
+              placeholder: field.placeholder,
+              entireLine: field.entireLine,
+              id: field.id,
+              type: field.type,
+              Options: field.options as any,
+            };
+          }),
+        },
       },
     });
 

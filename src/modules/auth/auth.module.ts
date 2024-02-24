@@ -8,6 +8,7 @@ import { JWTProviderImpl } from '@/shared/infra/providers/jwt/jwt-provider-impl'
 import { AuthController } from './application/controller/auth.controller';
 import { MailerSenderProvider } from '@/shared/infra/services/mail/mailerSender/mailer-sender.service';
 import { ForgotPasswordUseCase } from './application/useCases/forgot-password.usecase';
+import { ResetPasswordUseCase } from './application/useCases/reset-password.usecase';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ForgotPasswordUseCase } from './application/useCases/forgot-password.us
   providers: [
     AuthenticationService,
     ForgotPasswordUseCase,
+    ResetPasswordUseCase,
     { provide: 'EncryptProvider', useClass: BcryptProvider },
     { provide: 'AuthRepository', useClass: AuthRepositoryPrisma },
     { provide: 'EmailService', useClass: MailerSenderProvider },

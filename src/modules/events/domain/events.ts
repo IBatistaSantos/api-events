@@ -126,7 +126,6 @@ export class Events {
       organizationId: this._organizationId,
       accountId: this._accountId,
       private: this._private,
-      sessionId: this._sessionId,
       featureFlags: this._featureFlags.value,
       status: this._status.value,
       createdAt: this._createdAt.toISOString(),

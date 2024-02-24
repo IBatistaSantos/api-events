@@ -18,6 +18,7 @@ interface UserProps {
   password: string;
   type: string;
   accountId: string;
+  tokenForgotPassword?: string;
   organizations?: Organization[];
   permissions?: Permission[];
   status?: string;
@@ -32,6 +33,7 @@ export class User {
   private _password: string;
   private _type: UserType;
   private _accountId: string;
+  private _tokenForgotPassword: string;
   private _permissions: UserPermissions;
   private _status: Status;
   private _createdAt: Date;
@@ -50,6 +52,7 @@ export class User {
     this._updatedAt = props.updatedAt || new Date();
     this._permissions = new UserPermissions(props.permissions);
     this._organizations = new UserOrganizations(props.organizations ?? []);
+    this._tokenForgotPassword = props.tokenForgotPassword || null;
 
     this.validate();
   }
@@ -76,6 +79,10 @@ export class User {
 
   get password() {
     return this._password;
+  }
+
+  get tokenForgotPassword() {
+    return this._tokenForgotPassword;
   }
 
   get status() {
@@ -105,6 +112,10 @@ export class User {
 
   isMaster() {
     return this._type.isMaster();
+  }
+
+  setForgotPasswordToken(token: string) {
+    this._tokenForgotPassword = token;
   }
 
   applyPermission(admin: User, permission: Permission[]) {

@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { NotFoundException } from '@/shared/domain/errors/errors';
-import { EmailService } from '@/shared/infra/services/mail/email.provider';
 import { EncryptProvider } from '@/shared/infra/providers/encrypt/encrypt-provider';
 import { AuthRepository } from '../repository/auth-repository';
+import { SendMailUseCase } from '@/modules/notifications/application/useCases/send-mail.usecase';
+import { TemplateContext } from '@/modules/notifications/domain/template';
 
 interface Input {
   email: string;
@@ -14,8 +15,7 @@ export class ForgotPasswordUseCase {
     @Inject('AuthRepository')
     private readonly authRepository: AuthRepository,
 
-    @Inject('EmailService')
-    private readonly emailService: EmailService,
+    private readonly emailService: SendMailUseCase,
 
     @Inject('EncryptProvider')
     private readonly encryption: EncryptProvider,
@@ -36,13 +36,16 @@ export class ForgotPasswordUseCase {
       token,
     });
 
-    await this.emailService.send({
+    await this.emailService.execute({
       to: {
         email: user.email,
         name: user.name,
       },
-      subject: 'Recuperação de senha',
-      body: `Olá ${user.name}, clique no link para recuperar sua senha: http://localhost:3000/reset-password/${token}`,
+      context: TemplateContext.FORGOT_PASSWORD,
+      variables: {
+        name: user.name,
+        link: `http://localhost:3000/reset-password/${token}`,
+      },
     });
   }
 }

@@ -13,7 +13,7 @@ export class AuthRepositoryPrisma implements AuthRepository {
 
   async findByToken(token: string): Promise<User> {
     const user = await this.prisma.user.findFirst({
-      where: { tokenForgotPassword: token },
+      where: { tokenForgotPassword: token, status: 'ACTIVE' },
     });
 
     if (!user) {
@@ -36,7 +36,7 @@ export class AuthRepositoryPrisma implements AuthRepository {
 
   async findByEmail(email: string): Promise<User> {
     const user = await this.prisma.user.findFirst({
-      where: { email },
+      where: { email, status: 'ACTIVE' },
     });
 
     if (!user) {
@@ -58,7 +58,7 @@ export class AuthRepositoryPrisma implements AuthRepository {
 
   async findById(id: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
-      where: { id },
+      where: { id, status: 'ACTIVE' },
     });
 
     if (!user) {

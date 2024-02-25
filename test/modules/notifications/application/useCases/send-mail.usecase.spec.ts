@@ -1,10 +1,7 @@
 import { MailProvider } from '@/modules/notifications/application/providers/mail.provider';
 import { NotificationRepository } from '@/modules/notifications/application/repository/notification.repository';
 import { SendMailUseCase } from '@/modules/notifications/application/useCases/send-mail.usecase';
-import {
-  Template,
-  TemplateContext,
-} from '@/modules/notifications/domain/template';
+import { Template } from '@/modules/notifications/domain/template';
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MockProxy, mock } from 'jest-mock-extended';
@@ -33,7 +30,7 @@ describe('SendMailUseCase', () => {
     notificationRepository.findByContext.mockResolvedValue(
       new Template({
         body: `Olá, {{name}}!`,
-        context: TemplateContext.FORGOT_PASSWORD,
+        context: 'FORGOT_PASSWORD',
         subject: 'Recuperação de senha',
       }),
     );
@@ -43,7 +40,7 @@ describe('SendMailUseCase', () => {
   it('Deve enviar um email', async () => {
     const name = faker.person.fullName();
     await sendMailUseCase.execute({
-      context: TemplateContext.FORGOT_PASSWORD,
+      context: 'FORGOT_PASSWORD',
       to: {
         email: faker.internet.email(),
         name,
@@ -65,7 +62,7 @@ describe('SendMailUseCase', () => {
     expect(notificationRepository.save).toHaveBeenCalledTimes(1);
     expect(notificationRepository.save).toHaveBeenCalledWith({
       messageId: 'messageId',
-      context: TemplateContext.FORGOT_PASSWORD,
+      context: 'FORGOT_PASSWORD',
       to: expect.any(String),
       templateId: expect.any(String),
     });
@@ -75,7 +72,7 @@ describe('SendMailUseCase', () => {
     notificationRepository.findByContext.mockResolvedValue(null);
     await expect(
       sendMailUseCase.execute({
-        context: TemplateContext.FORGOT_PASSWORD,
+        context: 'FORGOT_PASSWORD',
         to: {
           email: faker.internet.email(),
           name: faker.person.fullName(),

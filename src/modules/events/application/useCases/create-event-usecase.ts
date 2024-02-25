@@ -4,6 +4,7 @@ import { EventRepository } from '../repository/event.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { ListPermissions } from '@/modules/permissions/domain/list-permisions';
 import { BadException } from '@/shared/domain/errors/errors';
+import { SendMailUseCase } from '@/modules/notifications/application/useCases/send-mail.usecase';
 
 interface Input {
   name: string;
@@ -23,6 +24,8 @@ export class CreateEventUseCase {
     private eventRepository: EventRepository,
     @Inject('DateProvider')
     private dateProvider: DateProvider,
+
+    private readonly sendMailUseCase: SendMailUseCase,
   ) {}
 
   async execute(params: Input) {
@@ -87,6 +90,22 @@ export class CreateEventUseCase {
 
     await this.eventRepository.save(event);
     await this.eventRepository.saveSessions(sessions);
+
+    await this.sendMailUseCase.execute({
+      to: {
+        name: 'Time de Eventos',
+        email: 'israel@evnts.com.br',
+      },
+      context: 'CREATE_EVENT',
+      variables: {
+        name: 'Time de Eventos',
+        eventName: event.name,
+        link: `${process.env.FRONT_URL}/evento/${event.url}`,
+        organization: {
+          name: organization.name,
+        },
+      },
+    });
 
     return {
       id: event.id,

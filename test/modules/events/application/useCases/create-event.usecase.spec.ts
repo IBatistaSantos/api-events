@@ -10,6 +10,7 @@ import { User } from '@/modules/users/domain/user';
 import { Permission } from '@/modules/permissions/domain/permission';
 import { Organization } from '@/modules/organization/domain/organization';
 import { Account } from '@/modules/accounts/domain/account';
+import { SendMailUseCase } from '@/modules/notifications/application/useCases/send-mail.usecase';
 
 describe('CreateEventUseCase', () => {
   let provider: CreateEventUseCase;
@@ -23,6 +24,10 @@ describe('CreateEventUseCase', () => {
         {
           provide: CreateEventUseCase,
           useClass: CreateEventUseCase,
+        },
+        {
+          provide: SendMailUseCase,
+          useValue: mock<SendMailUseCase>(),
         },
         {
           provide: 'EventRepository',

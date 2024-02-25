@@ -19,8 +19,10 @@ import { CreateFormUseCase } from '../useCases/create-form.usecase';
 
 import { CreateFormDTO } from './dtos/create-form.dto';
 import { UpdateFormDTO } from './dtos/update-form.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller(`${baseRoute.base_url_v1}/forms`)
+@ApiTags('forms')
 export class FormController {
   constructor(
     private readonly createFormUseCase: CreateFormUseCase,

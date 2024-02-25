@@ -1,18 +1,15 @@
-import {
-  Template,
-  TemplateContext,
-} from '@/modules/notifications/domain/template';
+import { Template } from '@/modules/notifications/domain/template';
 
 describe('Template', () => {
   it('Deve criar um template', () => {
     const template = new Template({
       body: `Olá {{name}}`,
-      context: TemplateContext.FORGOT_PASSWORD,
+      context: 'FORGOT_PASSWORD',
       subject: 'Recuperação de senha',
     });
 
     expect(template.id).toBeDefined();
-    expect(template.context).toBe(TemplateContext.FORGOT_PASSWORD);
+    expect(template.context).toBe('FORGOT_PASSWORD');
     expect(template.subject).toBe('Recuperação de senha');
     expect(template.body).toBe('Olá {{name}}');
   });
@@ -31,7 +28,7 @@ describe('Template', () => {
     expect(() => {
       new Template({
         body: null,
-        context: TemplateContext.FORGOT_PASSWORD,
+        context: 'FORGOT_PASSWORD',
         subject: 'Recuperação de senha',
       });
     }).toThrow();
@@ -41,7 +38,7 @@ describe('Template', () => {
     expect(() => {
       new Template({
         body: `Olá {{name}}`,
-        context: TemplateContext.FORGOT_PASSWORD,
+        context: 'FORGOT_PASSWORD',
         subject: null,
       });
     }).toThrow();
@@ -51,7 +48,7 @@ describe('Template', () => {
     it('Deve substituir as variáveis do corpo do email', () => {
       const template = new Template({
         body: `Olá {{name}}`,
-        context: TemplateContext.FORGOT_PASSWORD,
+        context: 'FORGOT_PASSWORD',
         subject: 'Recuperação de senha',
       });
 
@@ -63,7 +60,7 @@ describe('Template', () => {
     it('Deve substituir as variáveis do assunto do email', () => {
       const template = new Template({
         body: `Olá {{name}}`,
-        context: TemplateContext.FORGOT_PASSWORD,
+        context: 'FORGOT_PASSWORD',
         subject: 'Recuperação de senha para {{name}}',
       });
 
@@ -76,7 +73,7 @@ describe('Template', () => {
     it('Deve substituir as variáveis do corpo e do assunto do email', () => {
       const template = new Template({
         body: `Olá {{name}}`,
-        context: TemplateContext.FORGOT_PASSWORD,
+        context: 'FORGOT_PASSWORD',
         subject:
           'Recuperação de senha para {{name}} para o evento {{eventName}}',
       });
@@ -86,6 +83,22 @@ describe('Template', () => {
       expect(parsed.subject).toBe(
         'Recuperação de senha para Fulano para o evento Evento',
       );
+      expect(parsed.body).toBe('Olá Fulano');
+    });
+
+    it('Deve substituir as variáveis do corpo em um objeto', () => {
+      const template = new Template({
+        body: 'Olá {{user.name}}',
+        context: 'FORGOT_PASSWORD',
+        subject: 'Recuperação de senha',
+      });
+
+      const parsed = template.parse({
+        user: {
+          name: 'Fulano',
+        },
+      });
+
       expect(parsed.body).toBe('Olá Fulano');
     });
   });

@@ -1,10 +1,10 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { NotificationRepository } from '../repository/notification.repository';
-import { TemplateContext } from '../../domain/template';
+import { TemplateContextValue } from '../../domain/template';
 import { MailProvider } from '../providers/mail.provider';
 
 interface SendEmailParams {
-  context: TemplateContext;
+  context: TemplateContextValue;
   to: {
     name: string;
     email: string;

@@ -3,7 +3,6 @@ import { NotFoundException } from '@/shared/domain/errors/errors';
 import { EncryptProvider } from '@/shared/infra/providers/encrypt/encrypt-provider';
 import { AuthRepository } from '../repository/auth-repository';
 import { SendMailUseCase } from '@/modules/notifications/application/useCases/send-mail.usecase';
-import { TemplateContext } from '@/modules/notifications/domain/template';
 
 interface Input {
   email: string;
@@ -41,7 +40,7 @@ export class ForgotPasswordUseCase {
         email: user.email,
         name: user.name,
       },
-      context: TemplateContext.FORGOT_PASSWORD,
+      context: 'FORGOT_PASSWORD',
       variables: {
         name: user.name,
         link: `${process.env.URL_FRONTEND}/${token}`,

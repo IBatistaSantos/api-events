@@ -2,17 +2,19 @@ import { BadException } from '@/shared/domain/errors/errors';
 import { Status } from '@/shared/domain/value-object/status';
 import { randomUUID } from 'crypto';
 
-export enum TemplateContext {
+enum TemplateContext {
   FORGOT_PASSWORD = 'forgot_password',
   CREATE_ACCOUNT = 'create_account',
   CREATE_EVENT = 'create_event',
 }
 
+export type TemplateContextValue = keyof typeof TemplateContext;
+
 interface TemplateProps {
   id?: string;
   subject: string;
   body: string;
-  context: TemplateContext;
+  context: TemplateContextValue;
   status?: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -20,7 +22,7 @@ interface TemplateProps {
 
 export class Template {
   private _id: string;
-  private _context: TemplateContext;
+  private _context: TemplateContextValue;
   private _subject: string;
   private _body: string;
   private _status: Status;
@@ -55,16 +57,26 @@ export class Template {
     return this._body;
   }
 
-  parse(variables: Record<string, unknown>) {
-    this.validate();
-
+  private parseBody(variables: Record<string, any>) {
     let bodyParsed = this._body;
     Object.keys(variables).forEach((key) => {
-      bodyParsed = bodyParsed.replace(`{{${key}}}`, variables[key] as string);
+      if (typeof variables[key] === 'object') {
+        Object.keys(variables[key]).forEach((value) => {
+          bodyParsed = bodyParsed.replace(
+            `{{${key}.${value}}}`,
+            variables[key][value] as string,
+          );
+        });
+      } else {
+        bodyParsed = bodyParsed.replace(`{{${key}}}`, variables[key] as string);
+      }
     });
 
-    let subjectParsed = this._subject;
+    return bodyParsed;
+  }
 
+  parse(variables: Record<string, any>) {
+    let subjectParsed = this._subject;
     Object.keys(variables).forEach((key) => {
       subjectParsed = subjectParsed.replace(
         `{{${key}}}`,
@@ -72,7 +84,7 @@ export class Template {
       );
     });
 
-    return { body: bodyParsed, subject: subjectParsed };
+    return { body: this.parseBody(variables), subject: subjectParsed };
   }
 
   private validate() {

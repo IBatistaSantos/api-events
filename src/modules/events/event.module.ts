@@ -5,9 +5,11 @@ import { DateProviderDateFns } from '@/shared/infra/providers/date/implementatio
 import { EventRepositoryPrisma } from './infra/prisma/event-repository-prisma';
 import { ListEventUseCase } from './application/useCases/list-event-usecase';
 import { DetailsEventUseCase } from './application/useCases/details-event-usecase';
+import { NotificationModule } from '../notifications/notification.module';
 
 @Module({
   controllers: [EventController],
+  imports: [NotificationModule],
   providers: [
     CreateEventUseCase,
     ListEventUseCase,

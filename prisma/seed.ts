@@ -122,7 +122,7 @@ async function seed() {
     {
       content: 'CREATE_EVENT',
       subject: 'Novo evento criado!',
-      body: "<div style='width: 100%;max-width: 600px;margin: 0 auto;padding: 20px;text-align:center;'><div style='margin-bottom: 20px;'><img style='max-width: 200px;height: auto;' src='https://evnts.com.br/wp-content/uploads/2021/08/logo-evnts-1-1.png' alt='Logo da Evnts'></div><div style=' background-color: #fff;padding: 20px;border-radius: 10px;box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);'><h2>Novo Evento Criado</h2><p style= 'margin-bottom: 20px;'>Olá {{name}},</p><p style= 'margin-bottom: 20px;'>A organizacao {{organization.name}} acabou de criar o evento <b>{{eventName}}</b> </br> Clique no botão abaixo para visualizar o evento.</p><a href='{{link}}'style=' display: inline-block;background-color: #550098;color: #fff;text-decoration: none;padding: 10px 20px;border-radius: 5px;'>Acessar evento</a></div></div>",
+      body: "<div style='width: 100%;max-width: 600px;margin: 0 auto;padding: 20px;text-align:center;'><div style='margin-bottom: 20px;'><img style='max-width: 200px;height: auto;' src='https://evnts.com.br/wp-content/uploads/2021/08/logo-evnts-1-1.png' alt='Logo da Evnts'></div><div style=' background-color: #fff;padding: 20px;border-radius: 10px;box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);'><h2>Novo Evento Criado</h2><p style= 'margin-bottom: 20px;'>Olá {{name}},</p><p style= 'margin-bottom: 20px;'>A organizacao {{organization.name}} acabou de criar o evento <b>{{eventName}}</b><br/> Clique no botão abaixo para visualizar o evento.</p><a href='{{link}}'style=' display: inline-block;background-color: #550098;color: #fff;text-decoration: none;padding: 10px 20px;border-radius: 5px;'>Acessar evento</a></div></div>",
     },
   ];
 

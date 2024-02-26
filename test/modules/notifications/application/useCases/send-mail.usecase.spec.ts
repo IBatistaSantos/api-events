@@ -68,6 +68,19 @@ describe('SendMailUseCase', () => {
     });
   });
 
+  it('Não deve enviar um email de criação de evento em ambiente de desenvolvimento', async () => {
+    process.env.environment = 'development';
+    await sendMailUseCase.execute({
+      context: 'CREATE_EVENT',
+      to: {
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+      },
+    });
+
+    expect(mailProvider.send).not.toHaveBeenCalled();
+  });
+
   it('Deve lançar um erro caso o template não seja encontrado', async () => {
     notificationRepository.findByContext.mockResolvedValue(null);
     await expect(

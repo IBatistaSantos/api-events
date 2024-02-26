@@ -2,6 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { NotificationRepository } from '../repository/notification.repository';
 import { TemplateContextValue } from '../../domain/template';
 import { MailProvider } from '../providers/mail.provider';
+import config from '../../../../config/mailer/config';
 
 interface SendEmailParams {
   context: TemplateContextValue;
@@ -32,12 +33,25 @@ export class SendMailUseCase {
       throw new NotFoundException('Template nao encontrado');
     }
 
-    const { body, subject } = template.parse(variables);
+    if (
+      context === 'CREATE_EVENT' &&
+      process.env.ENVIRONMENT !== 'production'
+    ) {
+      return;
+    }
+
+    const templateParsed = template.parse(variables);
+    let subject = templateParsed.subject;
+
+    if (process.env.ENVIRONMENT === 'local') {
+      subject = `[DEV] - ${template.subject}`;
+      to.email = config.email_development;
+    }
 
     const messageId = await this.provider.send({
       to,
       subject,
-      body,
+      body: templateParsed.body,
     });
 
     console.log(`Email sent with messageId: ${messageId}`);
